@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ISD_Project.Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ISD_Project.Server.DataAccess
 {
@@ -7,15 +8,18 @@ namespace ISD_Project.Server.DataAccess
         protected readonly IConfiguration _configuration;
         
         //Constructor
-        public ApplicationDbContext(IConfiguration configuration)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,IConfiguration configuration) : base(options)
         {
             this._configuration = configuration;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
         }
+
+        public DbSet<User> Users { get; set; }
 
     }
 }
