@@ -3,6 +3,7 @@ using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace ISD_Project.Server.Services
 {
@@ -25,6 +26,7 @@ namespace ISD_Project.Server.Services
             _cryptoService.CreatePasswordHash(request.Password,
                 out byte[] passwordHash, out byte[] passwordSalt);
 
+          
             var user = new User
             {
                 Email = request.Email,
@@ -34,6 +36,15 @@ namespace ISD_Project.Server.Services
             };
 
             _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            var userRole = new UserRole
+            {
+                UserId = user.Id,
+                RoleId = (int)RoleType.Customer
+            };
+
+            _dbContext.UserRoles.Add(userRole);
             _dbContext.SaveChanges();
             return new OkObjectResult("User successfully created");
         }
