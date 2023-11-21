@@ -10,5 +10,8 @@
         public DateTime? VerifiedAt { get; set; }
         public string? PasswordResetToken { get; set; }
         public DateTime? RestTokenExpires { get; set; }
+
+        public ICollection<UserRole>? UserRoles { get; set; }
+
     }
 }

@@ -5,6 +5,7 @@ namespace ISD_Project.Server.Services
 {
     public interface IUserService
     {
+        //TODO: Using asynchronous methods
         IActionResult Register(UserRegisterRequest request);
         IActionResult Login(UserLoginRequest request);
         IActionResult Verify(string token);
