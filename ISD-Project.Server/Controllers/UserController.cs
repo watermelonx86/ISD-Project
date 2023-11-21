@@ -31,25 +31,25 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromForm] UserLoginRequest request)
+        public IActionResult Login([FromBody] UserLoginRequest request)
         {
             return _userService.Login(request);
         }
 
         [HttpPost("verify")]
-        public IActionResult Verify([FromForm] string token)
+        public IActionResult Verify([FromBody] string token)
         {
             return _userService.Verify(token);
         }
 
         [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword([FromForm] UserForgotPasswordRequest request)
+        public IActionResult ForgotPassword([FromBody] UserForgotPasswordRequest request)
         {
             return _userService.ForgotPassword(request);
         }
 
         [HttpPost("reset-password")]
-        public IActionResult ResetPassword([FromForm] UserResetPasswordRequest request)
+        public IActionResult ResetPassword([FromBody] UserResetPasswordRequest request)
         {
             return _userService.ResetPassword(request);
         }
