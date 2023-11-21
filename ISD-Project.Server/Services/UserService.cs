@@ -18,37 +18,51 @@ namespace ISD_Project.Server.Services
         }
         public IActionResult Register(UserRegisterRequest request)
         {
-            if (_dbContext.Users.Any(u => u.Email == request.Email))
+            using(var transaction = _dbContext.Database.BeginTransaction())
             {
-                return new BadRequestObjectResult("User already exists");
+                try
+                {
+                    if (_dbContext.Users.Any(u => u.Email == request.Email))
+                    {
+                        return new BadRequestObjectResult("User already exists");
+                    }
+
+                    _cryptoService.CreatePasswordHash(request.Password,
+                        out byte[] passwordHash, out byte[] passwordSalt);
+
+
+                    var user = new User
+                    {
+                        Email = request.Email,
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        VerificationToken = _cryptoService.CreateRandomToken()
+                    };
+
+                    _dbContext.Users.Add(user);
+                    _dbContext.SaveChanges();
+
+                    var userRole = new UserRole
+                    {
+                        UserId = user.Id,
+                        RoleId = (int)RoleType.Customer
+                    };
+
+                    _dbContext.UserRoles.Add(userRole);
+                    _dbContext.SaveChanges();
+
+                    transaction.Commit(); // Commit transaction if all commands succeed
+                    return new OkObjectResult("User successfully created");
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback(); // Rollback transaction if exception occurs
+                    return new StatusCodeResult(500); // Internal Server Error
+                }
             }
-
-            _cryptoService.CreatePasswordHash(request.Password,
-                out byte[] passwordHash, out byte[] passwordSalt);
-
-          
-            var user = new User
-            {
-                Email = request.Email,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                VerificationToken = _cryptoService.CreateRandomToken()
-            };
-
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
-
-            var userRole = new UserRole
-            {
-                UserId = user.Id,
-                RoleId = (int)RoleType.Customer
-            };
-
-            _dbContext.UserRoles.Add(userRole);
-            _dbContext.SaveChanges();
-            return new OkObjectResult("User successfully created");
         }
-        public IActionResult Login(UserLoginRequest request) {
+        public IActionResult Login(UserLoginRequest request)
+        {
             var user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user == null)
             {
@@ -59,7 +73,10 @@ namespace ISD_Project.Server.Services
             {
                 return new BadRequestObjectResult("Password is incorrect");
             }
-            Verify(user.VerificationToken);
+            if (user.VerificationToken != null)
+            {
+                Verify(user.VerificationToken);
+            }
 
             if (user.VerifiedAt == null)
             {
@@ -71,20 +88,23 @@ namespace ISD_Project.Server.Services
 
         public IActionResult Verify(string token)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return new BadRequestObjectResult("Token is null or empty");
+            }
+
             var user = _dbContext.Users.FirstOrDefault(u => u.VerificationToken == token);
             if (user == null)
             {
                 return new BadRequestObjectResult("Invalid token");
             }
 
-            //Luu y: Phai dung .UtcNow hay vi .Now, de tranh bi loi PostgreSQL
-            //ref more about UtcNow: https://stackoverflow.com/questions/62151/datetime-now-vs-datetime-utcnow
             user.VerifiedAt = System.DateTime.UtcNow;
             _dbContext.SaveChanges();
             return new OkObjectResult("User Verified");
         }
 
-        public IActionResult ForgotPassword(UserForgotPasswordRequest request) 
+        public IActionResult ForgotPassword(UserForgotPasswordRequest request)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
             if (user == null)
@@ -96,7 +116,7 @@ namespace ISD_Project.Server.Services
             _dbContext.SaveChanges();
             return new OkObjectResult("You may now reset your password");
         }
-        public IActionResult ResetPassword(UserResetPasswordRequest request) 
+        public IActionResult ResetPassword(UserResetPasswordRequest request)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.PasswordResetToken == request.Token);
             if (user == null)
