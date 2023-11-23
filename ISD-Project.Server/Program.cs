@@ -26,6 +26,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>();
 // inject services
 builder.Services.AddScoped<ICryptoService, CryptoService>();
+builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();

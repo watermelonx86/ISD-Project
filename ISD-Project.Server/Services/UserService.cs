@@ -1,140 +1,82 @@
 ﻿using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace ISD_Project.Server.Services
 {
     public class UserService : IUserService
     {
+        //Your code here
         private readonly ApplicationDbContext _dbContext;
-        private readonly ICryptoService _cryptoService;
-        public UserService(ApplicationDbContext dbContext, ICryptoService cryptoService)
+
+        public UserService(ApplicationDbContext dbContext)
         {
-            this._dbContext = dbContext;
-            this._cryptoService = cryptoService;
+            _dbContext = dbContext;
         }
-        public IActionResult Register(UserRegisterRequest request)
+
+        public IActionResult GetCustomer()
         {
-            using(var transaction = _dbContext.Database.BeginTransaction())
+            try
+            {
+                var listCustomer = _dbContext.Customers.ToList();
+                return new OkObjectResult(listCustomer);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        public IActionResult GetUser()
+        {
+            try
+            {
+                var listUser = _dbContext.Users.ToList();
+                return new OkObjectResult(listUser);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        public IActionResult CustomerRegister(CustomerRegisterRequest request)
+        {
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    if (_dbContext.Users.Any(u => u.Email == request.Email))
+                    if(request is null)
                     {
-                        return new BadRequestObjectResult("User already exists");
+                        return new BadRequestObjectResult("Request is null");
                     }
-
-                    _cryptoService.CreatePasswordHash(request.Password,
-                        out byte[] passwordHash, out byte[] passwordSalt);
-
-
-                    var user = new User
+                    if(_dbContext.Users.Any(u => u.Email ==  request.Email))
                     {
+                           return new BadRequestObjectResult("Email already exists");
+                    }
+                    var customer = new Customer
+                    {
+                        Name = request.Name,
+                        Gender = request.Gender,
+                        Address = request.Address,
                         Email = request.Email,
-                        PasswordHash = passwordHash,
-                        PasswordSalt = passwordSalt,
-                        VerificationToken = _cryptoService.CreateRandomToken()
+                        IdentityDocumentId = request.IdentityDocumentId,
+                        PhoneNumber = request.PhoneNumber
                     };
-
-                    _dbContext.Users.Add(user);
+                    _dbContext.Customers.Add(customer);
                     _dbContext.SaveChanges();
+                    transaction.Commit();
+                    return new OkObjectResult("Customer successfully created");
 
-                    var userRole = new UserRole
-                    {
-                        UserId = user.Id,
-                        RoleId = (int)RoleType.Customer
-                    };
-
-                    _dbContext.UserRoles.Add(userRole);
-                    _dbContext.SaveChanges();
-
-                    transaction.Commit(); // Commit transaction if all commands succeed
-                    return new OkObjectResult("User successfully created");
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback(); // Rollback transaction if exception occurs
+                    transaction.Rollback();
                     return new StatusCodeResult(500); // Internal Server Error
+
                 }
             }
-        }
-        public IActionResult Login(UserLoginRequest request)
-        {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
-            if (user == null)
-            {
-                return new BadRequestObjectResult("User does not exist");
-            }
-
-            if (!_cryptoService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return new BadRequestObjectResult("Password is incorrect");
-            }
-            if (user.VerificationToken != null)
-            {
-                Verify(user.VerificationToken);
-            }
-
-            if (user.VerifiedAt == null)
-            {
-                return new BadRequestObjectResult("User does not verified");
-            }
-
-            return new OkObjectResult($"Login Successfully, Hello {user.Email}");
-        }
-
-        public IActionResult Verify(string token)
-        {
-            if (string.IsNullOrEmpty(token))
-            {
-                return new BadRequestObjectResult("Token is null or empty");
-            }
-
-            var user = _dbContext.Users.FirstOrDefault(u => u.VerificationToken == token);
-            if (user == null)
-            {
-                return new BadRequestObjectResult("Invalid token");
-            }
-
-            user.VerifiedAt = System.DateTime.UtcNow;
-            _dbContext.SaveChanges();
-            return new OkObjectResult("User Verified");
-        }
-
-        public IActionResult ForgotPassword(UserForgotPasswordRequest request)
-        {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
-            if (user == null)
-            {
-                return new BadRequestObjectResult("User does not exist");
-            }
-            user.PasswordResetToken = _cryptoService.CreateRandomToken();
-            user.RestTokenExpires = System.DateTime.UtcNow.AddHours(1);
-            _dbContext.SaveChanges();
-            return new OkObjectResult("You may now reset your password");
-        }
-        public IActionResult ResetPassword(UserResetPasswordRequest request)
-        {
-            var user = _dbContext.Users.FirstOrDefault(u => u.PasswordResetToken == request.Token);
-            if (user == null)
-            {
-                return new BadRequestObjectResult("Invalid token");
-            }
-            if (user.RestTokenExpires < System.DateTime.UtcNow)
-            {
-                return new BadRequestObjectResult("Token has expired");
-            }
-            _cryptoService.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
-            user.PasswordResetToken = null;
-            user.RestTokenExpires = null;
-
-            _dbContext.SaveChanges();
-            return new OkObjectResult("Password successfully reset");
         }
     }
 }

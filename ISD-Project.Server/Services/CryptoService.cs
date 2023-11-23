@@ -23,7 +23,7 @@ namespace ISD_Project.Server.Services
         public string CreateRandomToken()
         {
             string token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-            if (_dbContext.Users.Any(u => u.VerificationToken == token))
+            if (_dbContext.UserAccounts.Any(u => u.VerificationToken == token))
             {
                 CreateRandomToken();
             }
