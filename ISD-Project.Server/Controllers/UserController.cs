@@ -2,6 +2,7 @@
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
@@ -14,8 +15,7 @@ namespace ISD_Project.Server.Controllers
 
     //TODO: Avoid providing too much information in error messages Register, Login, Verify
     //DONE: Fix violates principles single responsibility in CreatePasswordHash, CreateRandomToken, VerifyPasswordHash
-
-
+    //TODO: Use authentication
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -34,6 +34,12 @@ namespace ISD_Project.Server.Controllers
         public IActionResult Login([FromBody] UserLoginRequest request)
         {
             return _userService.Login(request);
+        }
+
+        [HttpGet("get_role")]
+        public IActionResult GetRole(int userId)
+        {
+            return _userService.GetUserRole(userId);
         }
 
         [HttpPost("verify")]

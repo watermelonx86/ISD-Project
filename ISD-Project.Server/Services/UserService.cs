@@ -22,7 +22,7 @@ namespace ISD_Project.Server.Services
             {
                 try
                 {
-                    if (_dbContext.Users.Any(u => u.Email == request.Email))
+                    if (_dbContext.UserAccounts.Any(u => u.Email == request.Email))
                     {
                         return new BadRequestObjectResult("User already exists");
                     }
@@ -31,7 +31,7 @@ namespace ISD_Project.Server.Services
                         out byte[] passwordHash, out byte[] passwordSalt);
 
 
-                    var user = new User
+                    var user = new UserAccount
                     {
                         Email = request.Email,
                         PasswordHash = passwordHash,
@@ -39,7 +39,7 @@ namespace ISD_Project.Server.Services
                         VerificationToken = _cryptoService.CreateRandomToken()
                     };
 
-                    _dbContext.Users.Add(user);
+                    _dbContext.UserAccounts.Add(user);
                     _dbContext.SaveChanges();
 
                     var userRole = new UserRole
@@ -63,7 +63,7 @@ namespace ISD_Project.Server.Services
         }
         public IActionResult Login(UserLoginRequest request)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
+            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.Email == request.Email);
             if (user == null)
             {
                 return new BadRequestObjectResult("User does not exist");
@@ -85,7 +85,6 @@ namespace ISD_Project.Server.Services
 
             return new OkObjectResult($"Login Successfully, Hello {user.Email}");
         }
-
         public IActionResult Verify(string token)
         {
             if (string.IsNullOrEmpty(token))
@@ -93,7 +92,7 @@ namespace ISD_Project.Server.Services
                 return new BadRequestObjectResult("Token is null or empty");
             }
 
-            var user = _dbContext.Users.FirstOrDefault(u => u.VerificationToken == token);
+            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.VerificationToken == token);
             if (user == null)
             {
                 return new BadRequestObjectResult("Invalid token");
@@ -103,10 +102,20 @@ namespace ISD_Project.Server.Services
             _dbContext.SaveChanges();
             return new OkObjectResult("User Verified");
         }
-
+        public IActionResult GetUserRole(int userId)
+        {
+            var userRoles = _dbContext.UserRoles
+                .Where(ur => ur.UserId == userId)
+                .Select(ur => ur.Role.Name).ToList();
+            if (userRoles == null || userRoles.Count == 0 )
+            {
+                return new NotFoundObjectResult("Not Found");
+            }
+            return new OkObjectResult(userRoles);
+        }
         public IActionResult ForgotPassword(UserForgotPasswordRequest request)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
+            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.Email == request.Email);
             if (user == null)
             {
                 return new BadRequestObjectResult("User does not exist");
@@ -118,7 +127,7 @@ namespace ISD_Project.Server.Services
         }
         public IActionResult ResetPassword(UserResetPasswordRequest request)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.PasswordResetToken == request.Token);
+            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.PasswordResetToken == request.Token);
             if (user == null)
             {
                 return new BadRequestObjectResult("Invalid token");
