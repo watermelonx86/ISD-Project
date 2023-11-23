@@ -7,6 +7,7 @@ namespace ISD_Project.Server.Models
     {
         [Key]
         public int Id { get; set; }
+        [Required, EmailAddress]
         public string Email { get; set; } = String.Empty;
         public byte[] PasswordHash { get; set; } = new byte[32];
         public byte[] PasswordSalt { get; set; } = new byte[32];

@@ -18,46 +18,46 @@ namespace ISD_Project.Server.Controllers
     //TODO: Use authentication
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IUserAccountService _userAccountService;
+        public UserController(IUserAccountService userService)
         {
-            this._userService = userService;
+            this._userAccountService = userService;
         }
 
         [HttpPost("register")]
         public IActionResult Register([FromBody] UserRegisterRequest request)
         {
-            return _userService.Register(request);
+            return _userAccountService.Register(request);
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserLoginRequest request)
         {
-            return _userService.Login(request);
+            return _userAccountService.Login(request);
         }
 
         [HttpGet("get_role")]
         public IActionResult GetRole(int userId)
         {
-            return _userService.GetUserRole(userId);
+            return _userAccountService.GetUserRole(userId);
         }
 
         [HttpPost("verify")]
         public IActionResult Verify([FromBody] string token)
         {
-            return _userService.Verify(token);
+            return _userAccountService.Verify(token);
         }
 
         [HttpPost("forgot-password")]
         public IActionResult ForgotPassword([FromBody] UserForgotPasswordRequest request)
         {
-            return _userService.ForgotPassword(request);
+            return _userAccountService.ForgotPassword(request);
         }
 
         [HttpPost("reset-password")]
         public IActionResult ResetPassword([FromBody] UserResetPasswordRequest request)
         {
-            return _userService.ResetPassword(request);
+            return _userAccountService.ResetPassword(request);
         }
     }
 }

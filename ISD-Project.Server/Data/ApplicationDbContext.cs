@@ -23,6 +23,9 @@ namespace ISD_Project.Server.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+            modelBuilder.Entity<User>()
                 .HasOne(u => u.UserAccount)
                 .WithOne(ua => ua.User)
                 .HasForeignKey<UserAccount>(ua => ua.UserId)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ISD_Project.Server.Models
@@ -10,6 +11,10 @@ namespace ISD_Project.Server.Models
         [Required]
         [StringLength(12)]
         public string IdentityDocumentId { get; set; } = String.Empty;
+
+        [Required, EmailAddress]
+        public string Email { get; set; } = String.Empty;
+
         [Required]
         public string Name { get; set; } = String.Empty;
         [Required]
