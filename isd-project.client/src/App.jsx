@@ -6,7 +6,7 @@ function App() {
     return (
         <div className = "w-creen h-auto flex flex-col" >
             <Header />
-            
+          
         </div>
     );
 }
