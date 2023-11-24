@@ -1,12 +1,12 @@
-import LoginForm from './components/LoginForm.jsx'
-import RegisterForm from './components/RegisterForm.jsx'
-import './App.css';
+/*import { useEffect, useState } from 'react';*/
+import './App.css'
+import Header from './components/Header.jsx'
 
 function App() {
     return (
-        <div>
-            <LoginForm />
-            <RegisterForm />
+        <div className = "w-creen h-auto flex flex-col" >
+            <Header />
+          
         </div>
     );
 }
