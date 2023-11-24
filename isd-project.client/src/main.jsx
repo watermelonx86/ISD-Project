@@ -1,9 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-// import App from './App.jsx'
-import './index.css'
-import LoginForm from './components/LoginForm.jsx'
-import RegisterForm from './components/RegisterForm.jsx'
+import App from './App.jsx'
+
 
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom';
