@@ -14,7 +14,7 @@ const RegisterForm = () => {
 
 
     const handleRegister = () => {
-        axios.post('https://localhost:7267/api/User/register', {
+        axios.post('https://localhost:7267/api/UserAccount/register', {
             email : email,
             password: password,
             confirmPassword: confirmPassword

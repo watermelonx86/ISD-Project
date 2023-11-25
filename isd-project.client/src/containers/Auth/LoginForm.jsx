@@ -12,7 +12,7 @@ const LoginForm = () => {
     const { isLoggedIn, login, logout } = useAuth();
 
     const handleLogin = () => {
-        axios.post('https://localhost:7267/api/User/login', {
+        axios.post('https://localhost:7267/api/UserAccount/login', {
             email: email,
             password: password
         })
