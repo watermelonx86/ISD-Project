@@ -17,10 +17,10 @@ namespace ISD_Project.Server.Controllers
             this._userService = userService;
         }
         //TODO Your code here
-        [HttpPost("add_customer")]
+        [HttpPost("add_customer2")]
         public Task<IActionResult> CustomerRegister(CustomerRegisterRequest request)
         {
-            return  _userService.CustomerRegister(request);
+            return _userService.CustomerRegister(request);
         }
 
         [HttpPost("add_customercaredept")]
