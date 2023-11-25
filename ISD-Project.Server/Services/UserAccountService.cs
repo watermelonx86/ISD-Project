@@ -132,7 +132,7 @@ namespace ISD_Project.Server.Services
                 .Select(ur => ur.Role.Name).ToListAsync();
             if (userRoles == null || userRoles.Count == 0 )
             {
-                return [];
+                return new List<string>();
             }
             return userRoles;
         }

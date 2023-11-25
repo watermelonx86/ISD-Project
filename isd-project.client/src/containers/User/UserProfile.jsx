@@ -5,6 +5,22 @@ import Header from '../HomePage/Header.jsx';
 
 const UserProfile = () => {
 
+    const UserInfo = () => {
+        const id = localStorage.getItem('id');
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+
+
+
+        // thực hiện các hành động khác với id, token, role ở đây
+        console.log('User Info:', { id, token, role });
+    }
+
+    //này để lúc bấm vào avatar là nó tự chạy cái hàm UserInfo
+    useEffect(() => {
+        UserInfo();
+    }, []);
+
     return (
         <section className="bg-gray-100  bg-opacity-50 h-screen">
             <Header />

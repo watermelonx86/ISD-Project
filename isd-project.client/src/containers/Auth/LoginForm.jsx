@@ -31,7 +31,6 @@ const LoginForm = () => {
                     /*history.push('/');*/
                     navigate('/');
                     login();
-                    console.log(response, isLoggedIn);
                 } else {
                     console.error(response.data); // Thông báo lỗi từ server
                     // Thực hiện xử lý khi đăng nhập không thành công
