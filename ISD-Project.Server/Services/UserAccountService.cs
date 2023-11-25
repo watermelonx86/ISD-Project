@@ -42,9 +42,18 @@ namespace ISD_Project.Server.Services
                         Email = request.Email,
                         PasswordHash = passwordHash,
                         PasswordSalt = passwordSalt,
-                        VerificationToken = await _cryptoService.CreateRandomToken()
+                        //VerificationToken = await _cryptoService.CreateRandomToken()
                     };
 
+                    var token = await _cryptoService.CreateToken(user);
+                    if (token != null)
+                    {
+                        user.VerificationToken = token;
+                    }
+                    else
+                    {
+                        return new BadRequestObjectResult("Token is null");
+                    }
                     await _dbContext.UserAccounts.AddAsync(user);
                     await _dbContext.SaveChangesAsync();
 
@@ -79,6 +88,7 @@ namespace ISD_Project.Server.Services
             {
                 return new BadRequestObjectResult("Password is incorrect");
             }
+
             if (user.VerificationToken != null)
             {
                 await Verify(user.VerificationToken);
@@ -89,7 +99,7 @@ namespace ISD_Project.Server.Services
                 return new BadRequestObjectResult("User does not verified");
             }
 
-            return new OkObjectResult($"Login Successfully, Hello {user.Email}");
+            return new OkObjectResult(user.VerificationToken);
         }
         public async Task<IActionResult> Verify(string token)
         {

@@ -1,16 +1,21 @@
 ﻿using ISD_Project.Server.DataAccess;
+using ISD_Project.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 namespace ISD_Project.Server.Services
 {
     public class CryptoService : ICryptoService
     {
         private readonly ApplicationDbContext _dbContext;
-        public CryptoService(ApplicationDbContext dbContext)
+        protected readonly IConfiguration _configuration;
+        public CryptoService(ApplicationDbContext dbContext, IConfiguration configuration)
         {
             this._dbContext = dbContext;
+            _configuration = configuration;
         }
         public async Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password)
         {
@@ -34,6 +39,25 @@ namespace ISD_Project.Server.Services
             }
             return token;
         }
+
+        public async Task<string> CreateToken(UserAccount userAccount)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, userAccount.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(1),
+                    signingCredentials: cred
+            );
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return await Task.FromResult(jwt);
+        }
+
         public async Task<bool> VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             return await Task.Run(() =>
