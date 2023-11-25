@@ -48,7 +48,10 @@ namespace ISD_Project.Server.DataAccess
 
             modelBuilder.Entity<Role>().HasData(
                  new Role { Id = 1, Name = "Customer" },
-                 new Role { Id = 2, Name = "Admin" }
+                 new Role { Id = 2, Name = "Admin" },
+                 new Role { Id = 3, Name = "FinancialDepartment" },
+                 new Role { Id = 4, Name = "ValidationDepartment" },
+                 new Role { Id = 5, Name = "CustomerCareDepartment" }
                 );
            
         }

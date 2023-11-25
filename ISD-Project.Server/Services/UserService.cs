@@ -2,12 +2,12 @@
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ISD_Project.Server.Services
 {
     public class UserService : IUserService
     {
-        //Your code here
         private readonly ApplicationDbContext _dbContext;
 
         public UserService(ApplicationDbContext dbContext)
@@ -15,12 +15,26 @@ namespace ISD_Project.Server.Services
             _dbContext = dbContext;
         }
 
-        public IActionResult GetCustomer()
+        public async Task<IActionResult> GetCustomer()
         {
             try
             {
-                var listCustomer = _dbContext.Customers.ToList();
-                return new OkObjectResult(listCustomer);
+                var listCustomer = await _dbContext.Customers.ToListAsync();
+                var listCustomerDto = new List<CustomerDto>();
+                foreach (var customer in listCustomer)
+                {
+                    var customerDto = new CustomerDto
+                    {
+                        Name = customer.Name,
+                        Gender = customer.Gender,
+                        Address = customer.Address,
+                        Email = customer.Email,
+                        IdentityDocumentId = customer.IdentityDocumentId,
+                        PhoneNumber = customer.PhoneNumber
+                    };
+                    listCustomerDto.Add(customerDto);
+                }
+                return new OkObjectResult(listCustomerDto);
             }
             catch (Exception)
             {
@@ -28,12 +42,26 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public IActionResult GetUser()
+        public async Task<IActionResult> GetUser()
         {
             try
-            {
-                var listUser = _dbContext.Users.ToList();
-                return new OkObjectResult(listUser);
+            { 
+                var listUser = await _dbContext.Users.ToListAsync();
+                var listUserDto = new List<UserDto>();
+                foreach(var user in listUser)
+                {
+                    var userDto = new UserDto
+                    {
+                        Name = user.Name,
+                        Gender = user.Gender,
+                        Address = user.Address,
+                        Email = user.Email,
+                        IdentityDocumentId = user.IdentityDocumentId,
+                        PhoneNumber = user.PhoneNumber
+                    };
+                    listUserDto.Add(userDto);
+                }
+                return new OkObjectResult(listUserDto);
             }
             catch (Exception)
             {
@@ -41,19 +69,19 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public IActionResult CustomerRegister(CustomerRegisterRequest request)
+        public async Task<IActionResult> CustomerRegister(CustomerRegisterRequest request)
         {
-            using (var transaction = _dbContext.Database.BeginTransaction())
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    if(request is null)
+                    if (request is null)
                     {
                         return new BadRequestObjectResult("Request is null");
                     }
-                    if(_dbContext.Users.Any(u => u.Email ==  request.Email))
+                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
                     {
-                           return new BadRequestObjectResult("Email already exists");
+                        return new BadRequestObjectResult("Email already exists");
                     }
                     var customer = new Customer
                     {
@@ -65,18 +93,57 @@ namespace ISD_Project.Server.Services
                         PhoneNumber = request.PhoneNumber
                     };
                     _dbContext.Customers.Add(customer);
-                    _dbContext.SaveChanges();
-                    transaction.Commit();
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
                     return new OkObjectResult("Customer successfully created");
 
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback();
+                    await transaction.RollbackAsync();
                     return new StatusCodeResult(500); // Internal Server Error
 
                 }
             }
         }
+
+        public async Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest request)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    if (request is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
+                    {
+                        return new BadRequestObjectResult("Email already exists");
+                    }
+                    var customer = new CustomerCareDepartment
+                    {
+                        Name = request.Name,
+                        Gender = request.Gender,
+                        Address = request.Address,
+                        Email = request.Email,
+                        IdentityDocumentId = request.IdentityDocumentId,
+                        PhoneNumber = request.PhoneNumber
+                    };
+                    _dbContext.CustomerCareDepartments.Add(customer);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Customer Care Department successfully created");
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
+
+                }
+            }
+        }
+
     }
 }
