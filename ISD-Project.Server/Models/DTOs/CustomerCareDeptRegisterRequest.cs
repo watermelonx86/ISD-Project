@@ -2,7 +2,7 @@
 
 namespace ISD_Project.Server.Models.DTOs
 {
-    public class CustomerRegisterRequest
+    public class CustomerCareDeptRegisterRequest
     {
         [Required]
         public string Name { get; set; } = String.Empty;

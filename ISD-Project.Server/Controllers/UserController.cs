@@ -12,7 +12,7 @@ namespace ISD_Project.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    //[Authorize]
     //TODO: Avoid providing too much information in error messages Register, Login, Verify
     //DONE: Fix violates principles single responsibility in CreatePasswordHash, CreateRandomToken, VerifyPasswordHash
     //TODO: Use authentication
@@ -25,37 +25,37 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserRegisterRequest request)
+        public Task<IActionResult> Register([FromBody] UserRegisterRequest request)
         {
             return _userAccountService.Register(request);
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserLoginRequest request)
+        public Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
             return _userAccountService.Login(request);
         }
 
         [HttpGet("get_role")]
-        public IActionResult GetRole(int userId)
+        public Task<IActionResult> GetRole(int userId)
         {
             return _userAccountService.GetUserRole(userId);
         }
 
         [HttpPost("verify")]
-        public IActionResult Verify([FromBody] string token)
+        public Task<IActionResult> Verify([FromBody] string token)
         {
             return _userAccountService.Verify(token);
         }
 
         [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword([FromBody] UserForgotPasswordRequest request)
+        public Task<IActionResult> ForgotPassword([FromBody] UserForgotPasswordRequest request)
         {
             return _userAccountService.ForgotPassword(request);
         }
 
         [HttpPost("reset-password")]
-        public IActionResult ResetPassword([FromBody] UserResetPasswordRequest request)
+        public Task<IActionResult> ResetPassword([FromBody] UserResetPasswordRequest request)
         {
             return _userAccountService.ResetPassword(request);
         }

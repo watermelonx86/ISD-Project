@@ -1,5 +1,6 @@
 ﻿using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace ISD_Project.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -16,19 +18,25 @@ namespace ISD_Project.Server.Controllers
         }
         //TODO Your code here
         [HttpPost("customer_register")]
-        public IActionResult CustomerRegister(CustomerRegisterRequest request)
+        public Task<IActionResult> CustomerRegister(CustomerRegisterRequest request)
         {
-            return _userService.CustomerRegister(request);
+            return  _userService.CustomerRegister(request);
+        }
+
+        [HttpPost("customercaredept_register")]
+        public Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest request)
+        {
+            return _userService.CustomerCareDeptRegister(request);
         }
 
         [HttpGet("get_user")]
-        public IActionResult GetUser()
+        public Task<IActionResult> GetUser()
         {
             return _userService.GetUser();
         }
 
         [HttpGet("get_customer")]
-        public IActionResult GetCustomer()
+        public Task<IActionResult> GetCustomer()
         {
             return _userService.GetCustomer();
         }

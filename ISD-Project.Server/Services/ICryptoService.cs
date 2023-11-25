@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ISD_Project.Server.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Services
 {
@@ -6,9 +7,10 @@ namespace ISD_Project.Server.Services
     {
         //TODO: Using asynchronous methods
 
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
-        string CreateRandomToken();
-        bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);
+        Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password);
+        Task<string> CreateRandomToken();
+        Task<string> CreateToken(UserAccount userAccount);
+        Task<bool> VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);
 
     }
 }
