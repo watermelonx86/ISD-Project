@@ -1,63 +1,44 @@
-﻿using ISD_Project.Server.DataAccess;
-using ISD_Project.Server.Models;
-using ISD_Project.Server.Models.DTOs;
+﻿using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace ISD_Project.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize]
-    //TODO: Avoid providing too much information in error messages Register, Login, Verify
-    //DONE: Fix violates principles single responsibility in CreatePasswordHash, CreateRandomToken, VerifyPasswordHash
-    //TODO: Use authentication
     public class UserController : ControllerBase
     {
-        private readonly IUserAccountService _userAccountService;
-        public UserController(IUserAccountService userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            this._userAccountService = userService;
+            this._userService = userService;
+        }
+        //TODO Your code here
+        [HttpPost("add_customer")]
+        public Task<IActionResult> CustomerRegister(CustomerRegisterRequest request)
+        {
+            return  _userService.CustomerRegister(request);
         }
 
-        [HttpPost("register")]
-        public Task<IActionResult> Register([FromBody] UserRegisterRequest request)
+        [HttpPost("add_customercaredept")]
+        public Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest request)
         {
-            return _userAccountService.Register(request);
+            return _userService.CustomerCareDeptRegister(request);
         }
 
-        [HttpPost("login")]
-        public Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        [HttpGet("get_user")]
+        public Task<IActionResult> GetUser()
         {
-            return _userAccountService.Login(request);
+            return _userService.GetUser();
         }
 
-        [HttpGet("get_role")]
-        public Task<IActionResult> GetRole(int userId)
+        [HttpGet("get_customer")]
+        public Task<IActionResult> GetCustomer()
         {
-            return _userAccountService.GetUserRole(userId);
-        }
-
-        [HttpPost("verify")]
-        public Task<IActionResult> Verify([FromBody] string token)
-        {
-            return _userAccountService.Verify(token);
-        }
-
-        [HttpPost("forgot-password")]
-        public Task<IActionResult> ForgotPassword([FromBody] UserForgotPasswordRequest request)
-        {
-            return _userAccountService.ForgotPassword(request);
-        }
-
-        [HttpPost("reset-password")]
-        public Task<IActionResult> ResetPassword([FromBody] UserResetPasswordRequest request)
-        {
-            return _userAccountService.ResetPassword(request);
+            return _userService.GetCustomer();
         }
     }
 }
