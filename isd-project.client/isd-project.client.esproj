@@ -9,7 +9,10 @@
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist</PublishAssetsDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\components\" />
+    <None Remove="src\components\**" />
+    <TypeScriptConfiguration Remove="src\components\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="src\containers\User\" />
     <Folder Include="src\store\actions\" />
   </ItemGroup>

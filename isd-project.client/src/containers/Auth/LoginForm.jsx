@@ -18,11 +18,14 @@ const LoginForm = () => {
         })
             .then(response => {
                 if (response.status === 200) {
-                    // Lưu token vào localStorage
-                    localStorage.setItem('token', response.data.token);
 
-                    // Lưu thông tin người dùng vào localStorage
-                    localStorage.setItem('user', JSON.stringify(response.data.user));
+                    const { id, token, role } = response.data
+                    console.log(response.data);
+                    // Lưu token vào localStorage
+                    localStorage.setItem('id', id);
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('role', role);
+                   
 
                     // Chuyển hướng đến trang chủ
                     /*history.push('/');*/

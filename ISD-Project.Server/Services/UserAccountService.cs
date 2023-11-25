@@ -98,8 +98,15 @@ namespace ISD_Project.Server.Services
             {
                 return new BadRequestObjectResult("User does not verified");
             }
+            var userDto = new UserLoginResponse
+            {
+                Id = user.Id,
+                Token = user.VerificationToken,
+                Role = await GetUserRole(user.Id)
+            };
 
-            return new OkObjectResult(user.VerificationToken);
+
+            return new OkObjectResult(userDto);
         }
         public async Task<IActionResult> Verify(string token)
         {
@@ -118,16 +125,16 @@ namespace ISD_Project.Server.Services
             await _dbContext.SaveChangesAsync();
             return new OkObjectResult("User Verified");
         }
-        public async Task<IActionResult> GetUserRole(int userId)
+        public async Task<List<String>> GetUserRole(int userId)
         {
             var userRoles = await _dbContext.UserRoles
                 .Where(ur => ur.UserId == userId)
                 .Select(ur => ur.Role.Name).ToListAsync();
             if (userRoles == null || userRoles.Count == 0 )
             {
-                return new NotFoundObjectResult("Not Found");
+                return [];
             }
-            return new OkObjectResult(userRoles);
+            return userRoles;
         }
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request)
         {
