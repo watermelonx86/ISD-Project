@@ -10,6 +10,7 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> GetUser();
         Task<IActionResult> GetCustomer();
         Task<IActionResult> CustomerRegister(CustomerRegisterRequest customerRegisterRequest);
+        Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest customerCareDeptRegisterRequest);
 
     }
 }

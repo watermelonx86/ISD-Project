@@ -106,5 +106,44 @@ namespace ISD_Project.Server.Services
                 }
             }
         }
+
+        public async Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest request)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    if (request is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
+                    {
+                        return new BadRequestObjectResult("Email already exists");
+                    }
+                    var customer = new CustomerCareDepartment
+                    {
+                        Name = request.Name,
+                        Gender = request.Gender,
+                        Address = request.Address,
+                        Email = request.Email,
+                        IdentityDocumentId = request.IdentityDocumentId,
+                        PhoneNumber = request.PhoneNumber
+                    };
+                    _dbContext.CustomerCareDepartments.Add(customer);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Customer Care Department successfully created");
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
+
+                }
+            }
+        }
+
     }
 }
