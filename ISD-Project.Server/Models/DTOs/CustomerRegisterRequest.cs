@@ -13,7 +13,8 @@ namespace ISD_Project.Server.Models.DTOs
         public string Email { get; set; } = String.Empty;
 
         [Required]
-        [StringLength(12)]
+        [StringLength(12, MinimumLength = 12)]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Only numbers are allowed.")]
         public string IdentityDocumentId { get; set; } = String.Empty;
 
         public string Address { get; set; } = String.Empty;

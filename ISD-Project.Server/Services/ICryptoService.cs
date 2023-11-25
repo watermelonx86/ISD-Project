@@ -6,9 +6,9 @@ namespace ISD_Project.Server.Services
     {
         //TODO: Using asynchronous methods
 
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
-        string CreateRandomToken();
-        bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);
+        Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password);
+        Task<string> CreateRandomToken();
+        Task<bool> VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);
 
     }
 }

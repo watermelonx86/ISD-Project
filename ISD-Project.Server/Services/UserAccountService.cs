@@ -2,7 +2,9 @@
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace ISD_Project.Server.Services
@@ -16,9 +18,9 @@ namespace ISD_Project.Server.Services
             this._dbContext = dbContext;
             this._cryptoService = cryptoService;
         }
-        public IActionResult Register(UserRegisterRequest request)
+        public async Task<IActionResult> Register(UserRegisterRequest request)
         {
-            using(var transaction = _dbContext.Database.BeginTransaction())
+            using(var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -27,13 +29,12 @@ namespace ISD_Project.Server.Services
                         return new BadRequestObjectResult("Request is null");
                     }
 
-                    if (_dbContext.UserAccounts.Any(u => u.Email == request.Email))
+                    if (await _dbContext.UserAccounts.AnyAsync(u => u.Email == request.Email))
                     {
                         return new BadRequestObjectResult("User already exists");
                     }
 
-                    _cryptoService.CreatePasswordHash(request.Password,
-                        out byte[] passwordHash, out byte[] passwordSalt);
+                    var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHash(request.Password);
 
 
                     var user = new UserAccount
@@ -41,11 +42,11 @@ namespace ISD_Project.Server.Services
                         Email = request.Email,
                         PasswordHash = passwordHash,
                         PasswordSalt = passwordSalt,
-                        VerificationToken = _cryptoService.CreateRandomToken()
+                        VerificationToken = await _cryptoService.CreateRandomToken()
                     };
 
-                    _dbContext.UserAccounts.Add(user);
-                    _dbContext.SaveChanges();
+                    await _dbContext.UserAccounts.AddAsync(user);
+                    await _dbContext.SaveChangesAsync();
 
                     var userRole = new UserRole
                     {
@@ -53,34 +54,34 @@ namespace ISD_Project.Server.Services
                         RoleId = (int)RoleType.Customer
                     };
 
-                    _dbContext.UserRoles.Add(userRole);
-                    _dbContext.SaveChanges();
+                    await _dbContext.UserRoles.AddAsync(userRole);
+                    await _dbContext.SaveChangesAsync();
 
-                    transaction.Commit(); // Commit transaction if all commands succeed
+                    await transaction.CommitAsync(); // Commit transaction if all commands succeed
                     return new OkObjectResult("User successfully created");
                 }
                 catch (Exception)
                 {
-                    transaction.Rollback(); // Rollback transaction if exception occurs
+                    await transaction.RollbackAsync(); // Rollback transaction if exception occurs
                     return new StatusCodeResult(500); // Internal Server Error
                 }
             }
         }
-        public IActionResult Login(UserLoginRequest request)
+        public async Task<IActionResult> Login(UserLoginRequest request)
         {
-            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.Email == request.Email);
+            var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
             {
                 return new BadRequestObjectResult("User does not exist");
             }
 
-            if (!_cryptoService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!await _cryptoService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return new BadRequestObjectResult("Password is incorrect");
             }
             if (user.VerificationToken != null)
             {
-                Verify(user.VerificationToken);
+                await Verify(user.VerificationToken);
             }
 
             if (user.VerifiedAt == null)
@@ -90,49 +91,49 @@ namespace ISD_Project.Server.Services
 
             return new OkObjectResult($"Login Successfully, Hello {user.Email}");
         }
-        public IActionResult Verify(string token)
+        public async Task<IActionResult> Verify(string token)
         {
             if (string.IsNullOrEmpty(token))
             {
                 return new BadRequestObjectResult("Token is null or empty");
             }
 
-            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.VerificationToken == token);
+            var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.VerificationToken == token);
             if (user == null)
             {
                 return new BadRequestObjectResult("Invalid token");
             }
 
             user.VerifiedAt = System.DateTime.UtcNow;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return new OkObjectResult("User Verified");
         }
-        public IActionResult GetUserRole(int userId)
+        public async Task<IActionResult> GetUserRole(int userId)
         {
-            var userRoles = _dbContext.UserRoles
+            var userRoles = await _dbContext.UserRoles
                 .Where(ur => ur.UserId == userId)
-                .Select(ur => ur.Role.Name).ToList();
+                .Select(ur => ur.Role.Name).ToListAsync();
             if (userRoles == null || userRoles.Count == 0 )
             {
                 return new NotFoundObjectResult("Not Found");
             }
             return new OkObjectResult(userRoles);
         }
-        public IActionResult ForgotPassword(UserForgotPasswordRequest request)
+        public async Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request)
         {
-            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.Email == request.Email);
+            var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
             {
                 return new BadRequestObjectResult("User does not exist");
             }
-            user.PasswordResetToken = _cryptoService.CreateRandomToken();
+            user.PasswordResetToken = await _cryptoService.CreateRandomToken();
             user.RestTokenExpires = System.DateTime.UtcNow.AddHours(1);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return new OkObjectResult("You may now reset your password");
         }
-        public IActionResult ResetPassword(UserResetPasswordRequest request)
+        public async Task<IActionResult> ResetPassword(UserResetPasswordRequest request)
         {
-            var user = _dbContext.UserAccounts.FirstOrDefault(u => u.PasswordResetToken == request.Token);
+            var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.PasswordResetToken == request.Token);
             if (user == null)
             {
                 return new BadRequestObjectResult("Invalid token");
@@ -141,13 +142,13 @@ namespace ISD_Project.Server.Services
             {
                 return new BadRequestObjectResult("Token has expired");
             }
-            _cryptoService.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHash(request.Password);
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.PasswordResetToken = null;
             user.RestTokenExpires = null;
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return new OkObjectResult("Password successfully reset");
         }
     }

@@ -12,31 +12,39 @@ namespace ISD_Project.Server.Services
         {
             this._dbContext = dbContext;
         }
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public async Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password)
         {
-            using (var hmac = new HMACSHA256())
+            return await Task.Run(() =>
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
+                using (var hmac = new HMACSHA256())
+                {
+                    return (
+                        passwordHash: hmac.ComputeHash(Encoding.UTF8.GetBytes(password)),
+                        passwordSalt: hmac.Key
+                    );
+                }
+            });
         }
-        public string CreateRandomToken()
+        public async Task<string> CreateRandomToken()
         {
             string token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-            if (_dbContext.UserAccounts.Any(u => u.VerificationToken == token))
+            if (await _dbContext.UserAccounts.AnyAsync(u => u.VerificationToken == token))
             {
-                CreateRandomToken();
+                await CreateRandomToken();
             }
             return token;
         }
-        public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        public async Task<bool> VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = new HMACSHA256(passwordSalt))
+            return await Task.Run(() =>
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                //Phai su dung SequenceEqual vi day la byte[] array
-                return computedHash.SequenceEqual(passwordHash);
-            }
+                using (var hmac = new HMACSHA256(passwordSalt))
+                {
+                    var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                    //Phai su dung SequenceEqual vi day la byte[] array
+                    return computedHash.SequenceEqual(passwordHash);
+                }
+            });
         }
     }
 }

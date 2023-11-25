@@ -7,9 +7,9 @@ namespace ISD_Project.Server.Services
     {
         //TODO: Using asynchronous methods
         //TODO: Your code here
-        IActionResult GetUser();
-        IActionResult GetCustomer();
-        IActionResult CustomerRegister(CustomerRegisterRequest customerRegisterRequest);
+        Task<IActionResult> GetUser();
+        Task<IActionResult> GetCustomer();
+        Task<IActionResult> CustomerRegister(CustomerRegisterRequest customerRegisterRequest);
 
     }
 }

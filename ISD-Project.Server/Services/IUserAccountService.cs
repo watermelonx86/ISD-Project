@@ -6,11 +6,11 @@ namespace ISD_Project.Server.Services
     public interface IUserAccountService
     {
         //TODO: Using asynchronous methods
-        IActionResult Register(UserRegisterRequest request);
-        IActionResult Login(UserLoginRequest request);
-        IActionResult Verify(string token);
-        IActionResult GetUserRole(int userId);
-        IActionResult ForgotPassword(UserForgotPasswordRequest request);
-        IActionResult ResetPassword(UserResetPasswordRequest request);
+        Task<IActionResult> Register(UserRegisterRequest request);
+        Task<IActionResult> Login(UserLoginRequest request);
+        Task<IActionResult> Verify(string token);
+        Task<IActionResult> GetUserRole(int userId);
+        Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request);
+        Task<IActionResult> ResetPassword(UserResetPasswordRequest request);
     }
 }
