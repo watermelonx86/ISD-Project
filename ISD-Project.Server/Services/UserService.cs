@@ -20,17 +20,18 @@ namespace ISD_Project.Server.Services
             try
             {
                 var listCustomer = await _dbContext.Customers.ToListAsync();
-                var listCustomerDto = new List<CustomerDto>();
+                var listCustomerDto = new List<UserDto>();
                 foreach (var customer in listCustomer)
                 {
-                    var customerDto = new CustomerDto
+                    var customerDto = new UserDto
                     {
                         Name = customer.Name,
                         Gender = customer.Gender,
                         Address = customer.Address,
                         Email = customer.Email,
                         IdentityDocumentId = customer.IdentityDocumentId,
-                        PhoneNumber = customer.PhoneNumber
+                        PhoneNumber = customer.PhoneNumber,
+                        
                     };
                     listCustomerDto.Add(customerDto);
                 }
@@ -69,7 +70,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> CustomerRegister(CustomerRegisterRequest request)
+        public async Task<IActionResult> AddCustomer(UserDto request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -107,7 +108,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest request)
+        public async Task<IActionResult> AddCustomerCareDept(UserDto request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
