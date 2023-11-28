@@ -98,11 +98,13 @@ namespace ISD_Project.Server.Services
             {
                 return new BadRequestObjectResult("User does not verified");
             }
+
             var userDto = new UserLoginResponse
             {
-                Id = user.Id,
+                UserAccountId = user.Id,
                 Token = user.VerificationToken,
-                Role = await GetUserRole(user.Id)
+                Role = await GetUserRole(user.Id),
+                UserId = user.UserId ?? 0
             };
 
 

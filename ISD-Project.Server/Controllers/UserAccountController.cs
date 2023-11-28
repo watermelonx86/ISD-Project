@@ -16,6 +16,7 @@ namespace ISD_Project.Server.Controllers
     //TODO: Avoid providing too much information in error messages Register, Login, Verify
     //DONE: Fix violates principles single responsibility in CreatePasswordHash, CreateRandomToken, VerifyPasswordHash
     //TODO: Use authentication
+
     public class UserAccountController : ControllerBase
     {
         private readonly IUserAccountService _userAccountService;
@@ -36,7 +37,7 @@ namespace ISD_Project.Server.Controllers
             return _userAccountService.Login(request);
         }
 
-        [HttpGet("get_role")]
+        [HttpGet("get-role")]
         public Task<List<string>> GetRole(int userId)
         {
             return _userAccountService.GetUserRole(userId);
