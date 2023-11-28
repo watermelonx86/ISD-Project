@@ -49,6 +49,7 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<ICryptoService, CryptoService>(); 
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IHealthInformationService, HealthInformationService>();
 
 var app = builder.Build();
 
