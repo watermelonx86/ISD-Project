@@ -104,7 +104,8 @@ namespace ISD_Project.Server.Services
                 UserAccountId = user.Id,
                 Token = user.VerificationToken,
                 Role = await GetUserRole(user.Id),
-                UserId = user.UserId ?? 0
+                UserId = user.UserId ?? 0,
+                IsActivated = user.IsActivated
             };
 
 
