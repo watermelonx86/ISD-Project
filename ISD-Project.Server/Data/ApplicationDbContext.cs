@@ -53,7 +53,6 @@ namespace ISD_Project.Server.DataAccess
                  new Role { Id = 4, Name = "ValidationDepartment" },
                  new Role { Id = 5, Name = "CustomerCareDepartment" }
                 );
-           
         }
         //User
         public DbSet<User> Users { get; set; }

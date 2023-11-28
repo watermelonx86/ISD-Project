@@ -29,7 +29,19 @@ namespace ISD_Project.Server.Controllers
             return _userService.AddCustomerCareDept(request);
         }
 
-        [HttpGet("get-user")]
+        [HttpPost("add_financialdept")]
+        public Task<IActionResult> FinancialDeptRegister(FinancialDto request)
+        {
+            return _userService.FinancialDeptAdd(request);
+        }
+
+        [HttpPost("add_validationdept")]
+        public Task<IActionResult> ValdationDeptRegister(ValidationDto request)
+        {
+            return _userService.ValidationDeptAdd(request);
+        }
+
+        [HttpGet("get_user")]
         public Task<IActionResult> GetUser()
         {
             return _userService.GetUser();
@@ -39,6 +51,30 @@ namespace ISD_Project.Server.Controllers
         public Task<IActionResult> GetCustomer()
         {
             return _userService.GetCustomer();
+        }
+
+        [HttpDelete("delete_customer/{id}")]
+        public Task<IActionResult> DeleteCustomer(int id)
+        {
+            return _userService.DeleteCustomer(id);
+        }
+
+        [HttpDelete("delete_customercare/{id}")]
+        public Task<IActionResult> DeleteCustomerCare(int id)
+        {
+            return _userService.DeleteCustomerCare(id);
+        }
+
+        [HttpDelete("delete_financialdept/{id}")]
+        public Task<IActionResult> DeleteFinancialDept(int id)
+        {
+            return _userService.DeleteFinancialDept(id);
+        }
+
+        [HttpDelete("delete_validationdept/{id}")]
+        public Task<IActionResult> DeleteValdationDept(int id)
+        {
+            return _userService.DeleteValdationDept(id);
         }
 
         [HttpGet("get-customer/{id}")]
