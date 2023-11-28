@@ -18,7 +18,7 @@ namespace ISD_Project.Server.Controllers
         }
         //TODO Your code here
         [HttpPost("add-customer")]
-        public Task<IActionResult> AddCustomer(UserDto request)
+        public Task<IActionResult> AddCustomer(CustomerDto request)
         {
             return  _userService.AddCustomer(request);
         }
@@ -53,6 +53,24 @@ namespace ISD_Project.Server.Controllers
             return _userService.GetCustomer();
         }
 
+        [HttpGet("get-customer-pending-approval")]
+        public Task<IActionResult> GetCustomerPendingApproval()
+        {
+            return _userService.GetCustomerPendingApproval();
+        }
+
+        [HttpGet("get-customer-approved")]
+        public Task<IActionResult> GetCustomerApproved()
+        {
+            return _userService.GetCustomerApproved();
+        }
+
+        [HttpGet("get-customer-rejected")]
+        public Task<IActionResult> GetCustomerRejected()
+        {
+            return _userService.GetCustomerRejected();
+        }
+
         [HttpDelete("delete-customer/{id}")]
         public Task<IActionResult> DeleteCustomer(int id)
         {
@@ -81,6 +99,12 @@ namespace ISD_Project.Server.Controllers
         public Task<IActionResult> GetCustomer(int id)
         {
             return _userService.GetCustomer(id);
+        }
+
+        [HttpGet("get-health-info-customer/{id}")]
+        public Task<IActionResult> GetHealthInformationOfCustomer(int id)
+        {
+            return _userService.GetHealthInformationOfCustomer(id);
         }
     }
 }
