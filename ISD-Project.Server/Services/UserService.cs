@@ -35,22 +35,6 @@ namespace ISD_Project.Server.Services
             {
                 var listCustomer = await _dbContext.Customers.ToListAsync();
                 var listCustomerDto = _mapper.Map<List<UserDto>>(listCustomer);
-                /*var listCustomerDto = new List<UserDto>();
-                foreach (var customer in listCustomer)
-                {
-                    var customerDto = new UserDto
-                    {
-                        Id = customer.Id,
-                        Name = customer.Name,
-                        Gender = customer.Gender,
-                        Address = customer.Address,
-                        Email = customer.Email,
-                        IdentityDocumentId = customer.IdentityDocumentId,
-                        PhoneNumber = customer.PhoneNumber,
-
-                    };
-                    listCustomerDto.Add(customerDto);
-                }*/
                 return new OkObjectResult(listCustomerDto);
             }
             catch (Exception)
@@ -69,16 +53,6 @@ namespace ISD_Project.Server.Services
                 } else
                 {
                     var customerDto = _mapper.Map<UserDto>(customer);
-                    /*var customerDto = new UserDto
-                    {
-                        Id = customer.Id,
-                        Name = customer.Name,
-                        Gender = customer.Gender,
-                        Address = customer.Address,
-                        Email = customer.Email,
-                        IdentityDocumentId = customer.IdentityDocumentId,
-                        PhoneNumber = customer.PhoneNumber
-                    };*/
                     return new OkObjectResult(customerDto);
                 }
                 
@@ -103,15 +77,6 @@ namespace ISD_Project.Server.Services
                         return new BadRequestObjectResult("Email already exists");
                     }
                     var customer = _mapper.Map<Customer>(request);
-                   /* var customer = new Customer
-                    {
-                        Name = request.Name,
-                        Gender = request.Gender,
-                        Address = request.Address,
-                        Email = request.Email,
-                        IdentityDocumentId = request.IdentityDocumentId,
-                        PhoneNumber = request.PhoneNumber
-                    };*/
                     _dbContext.Customers.Add(customer);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -140,15 +105,6 @@ namespace ISD_Project.Server.Services
                         return new BadRequestObjectResult("Email already exists");
                     }
                     var customerCareDept = _mapper.Map<CustomerCareDepartment>(request);
-                    /*var customer = new CustomerCareDepartment
-                    {
-                        Name = request.Name,
-                        Gender = request.Gender,
-                        Address = request.Address,
-                        Email = request.Email,
-                        IdentityDocumentId = request.IdentityDocumentId,
-                        PhoneNumber = request.PhoneNumber
-                    };*/
                     _dbContext.CustomerCareDepartments.Add(customerCareDept);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
