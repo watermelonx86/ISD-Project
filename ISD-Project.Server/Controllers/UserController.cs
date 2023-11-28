@@ -40,5 +40,11 @@ namespace ISD_Project.Server.Controllers
         {
             return _userService.GetCustomer();
         }
+
+        [HttpGet("get-customer/{id}")]
+        public Task<IActionResult> GetCustomer(int id)
+        {
+            return _userService.GetCustomer(id);
+        }
     }
 }

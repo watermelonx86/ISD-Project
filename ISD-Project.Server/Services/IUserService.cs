@@ -9,6 +9,7 @@ namespace ISD_Project.Server.Services
         //TODO: Your code here
         Task<IActionResult> GetUser();
         Task<IActionResult> GetCustomer();
+        Task<IActionResult> GetCustomer(int  id);
         Task<IActionResult> AddCustomer(UserDto request);
         Task<IActionResult> AddCustomerCareDept(UserDto request);
 

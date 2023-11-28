@@ -55,13 +55,16 @@ namespace ISD_Project.Server.DataAccess
                 );
            
         }
-
+        //User
         public DbSet<User> Users { get; set; }
+        // Child classes of User
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<FinancialDepartment> FinancialDepartments { get; set; }
         public DbSet<ValidationDepartment> ValidationDepartments { get; set; }
         public DbSet<CustomerCareDepartment> CustomerCareDepartments { get; set; }
+        //
+        public DbSet<HealthInformation> HealthInformation { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }

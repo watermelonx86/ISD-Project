@@ -15,9 +15,15 @@ namespace ISD_Project.Server.Models
         public DateTime? VerifiedAt { get; set; }
         public string? PasswordResetToken { get; set; }
         public DateTime? RestTokenExpires { get; set; }
+        public int IsActivated { get; set; } = (int) AccountStatus.Inactive;
         public ICollection<UserRole>? UserRoles { get; set; }
         public int? UserId { get; set; }
-        public User? User { get; set; }
+        public virtual User? User { get; set; }
 
+    }
+    public enum AccountStatus
+    {
+        Inactive,
+        Active,
     }
 }
