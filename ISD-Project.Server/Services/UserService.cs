@@ -120,7 +120,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> FinancialDeptAdd(FinancialDto request)
+        public async Task<IActionResult> FinancialDeptAdd(UserDto request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -135,20 +135,11 @@ namespace ISD_Project.Server.Services
                     {
                         return new BadRequestObjectResult("Email already exists");
                     }
-
-                    var financial = new FinancialDepartment
-                    {
-                        Name = request.Name,
-                        Gender = request.Gender,
-                        Address = request.Address,
-                        Email = request.Email,
-                        IdentityDocumentId = request.IdentityDocumentId,
-                        PhoneNumber = request.PhoneNumber
-                    };
-                    _dbContext.FinancialDepartments.Add(financial);
+                    var financialDept = _mapper.Map<FinancialDepartment>(request);
+                    _dbContext.FinancialDepartments.Add(financialDept);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return new OkObjectResult("Financial successfully created");
+                    return new OkObjectResult("Financial Department successfully created");
 
                 }
                 catch (Exception)
@@ -159,7 +150,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> ValidationDeptAdd(ValidationDto request)
+        public async Task<IActionResult> ValidationDeptAdd(UserDto request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -174,20 +165,11 @@ namespace ISD_Project.Server.Services
                     {
                         return new BadRequestObjectResult("Email already exists");
                     }
-
-                    var validation = new ValidationDepartment
-                    {
-                        Name = request.Name,
-                        Gender = request.Gender,
-                        Address = request.Address,
-                        Email = request.Email,
-                        IdentityDocumentId = request.IdentityDocumentId,
-                        PhoneNumber = request.PhoneNumber
-                    };
-                    _dbContext.ValidationDepartments.Add(validation);
+                    var validationDept = _mapper.Map<ValidationDepartment>(request);
+                    _dbContext.ValidationDepartments.Add(validationDept);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return new OkObjectResult("Validation successfully created");
+                    return new OkObjectResult("Validation Department successfully created");
 
                 }
                 catch (Exception)
@@ -204,11 +186,11 @@ namespace ISD_Project.Server.Services
             {
                 try
                 {
-                    Customer customer = _dbContext.Customers.Find(id);
+                    var customer = await _dbContext.Customers.FindAsync(id);
 
                     if (customer is null)
                     {
-                        return new BadRequestObjectResult("Request is null");
+                        return new BadRequestObjectResult("Customer doesn't exist");
                     }
 
                     _dbContext.Customers.Remove(customer);
@@ -230,11 +212,11 @@ namespace ISD_Project.Server.Services
             {
                 try
                 {
-                    CustomerCareDepartment customerCareDepartment = _dbContext.CustomerCareDepartments.Find(id);
+                    var customerCareDepartment = await _dbContext.CustomerCareDepartments.FindAsync(id);
 
                     if (customerCareDepartment is null)
                     {
-                        return new BadRequestObjectResult("Request is null");
+                        return new BadRequestObjectResult("Customer Care Department doesn't exist");
                     }
 
                     _dbContext.CustomerCareDepartments.Remove(customerCareDepartment);
@@ -257,11 +239,11 @@ namespace ISD_Project.Server.Services
             {
                 try
                 {
-                    FinancialDepartment financialDepartment = _dbContext.FinancialDepartments.Find(id);
+                    var financialDepartment = await _dbContext.FinancialDepartments.FindAsync(id);
 
                     if (financialDepartment is null)
                     {
-                        return new BadRequestObjectResult("Request is null");
+                        return new BadRequestObjectResult("Financial Department doesn't exist");
                     }
 
                     _dbContext.FinancialDepartments.Remove(financialDepartment);
@@ -278,17 +260,17 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> DeleteValdationDept(int id)
+        public async Task<IActionResult> DeleteValidationDept(int id)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    ValidationDepartment validationDepartment = _dbContext.ValidationDepartments.Find(id);
+                    var validationDepartment = await _dbContext.ValidationDepartments.FindAsync(id);
 
                     if (validationDepartment is null)
                     {
-                        return new BadRequestObjectResult("Request is null");
+                        return new BadRequestObjectResult("Validation Department doesn't exist");
                     }
 
                     _dbContext.ValidationDepartments.Remove(validationDepartment);

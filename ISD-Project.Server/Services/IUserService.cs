@@ -12,19 +12,11 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> GetCustomer(int  id);
         Task<IActionResult> AddCustomer(UserDto request);
         Task<IActionResult> AddCustomerCareDept(UserDto request);
-
-        Task<IActionResult> FinancialDeptAdd(FinancialDto financialAddRequest);
-
-        Task<IActionResult> ValidationDeptAdd(ValidationDto validationAddRequest);
-
+        Task<IActionResult> FinancialDeptAdd(UserDto financialAddRequest);
+        Task<IActionResult> ValidationDeptAdd(UserDto validationAddRequest);
         Task<IActionResult> DeleteCustomer(int id);
-
         Task<IActionResult> DeleteCustomerCare(int id);
-
         Task<IActionResult> DeleteFinancialDept(int id);
-
-        Task<IActionResult> DeleteValdationDept(int id);
-
-
+        Task<IActionResult> DeleteValidationDept(int id);
     }
 }
