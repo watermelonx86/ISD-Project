@@ -19,18 +19,23 @@ const LoginForm = () => {
             .then(response => {
                 if (response.status === 200) {
 
-                    const { id, token, role } = response.data
-                    console.log(response.data);
-                    // Lưu token vào localStorage
-                    localStorage.setItem('id', id);
-                    localStorage.setItem('token', token);
-                    localStorage.setItem('role', role);
-                   
+                    const { userAccountId, token, role, isActivated } = response.data;
+                    if(isActivated === 1) {
+                        console.log(response.data);
+                        // Lưu token vào localStorage
+                        localStorage.setItem('userAccountId', userAccountId);
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('role', JSON.stringify(role));
 
-                    // Chuyển hướng đến trang chủ
-                    /*history.push('/');*/
-                    navigate('/');
-                    login();
+                        // Chuyển hướng đến trang chủ
+                        /*history.push('/');*/
+                        navigate('/');
+                        login();
+                    }
+                    else {
+                        //TODO: Xử lý tài khoản chưa được kích hoạt
+                        alert("Tài khoản chưa được kích hoạt!");
+                    }
                 } else {
                     console.error(response.data); // Thông báo lỗi từ server
                     // Thực hiện xử lý khi đăng nhập không thành công

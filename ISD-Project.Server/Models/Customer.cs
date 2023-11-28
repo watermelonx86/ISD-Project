@@ -4,8 +4,6 @@
     {
         public int IsApproved { get; set; } = (int)ProfileStatus.Pending;
         public virtual HealthInformation? HealthInformation { get; set; }
-       
-
     }
 
     public enum ProfileStatus
