@@ -52,5 +52,29 @@ namespace ISD_Project.Server.Controllers
         {
             return _userService.GetCustomer();
         }
+
+        [HttpDelete("delete_customer/{id}")]
+        public Task<IActionResult> DeleteCustomer(int id)
+        {
+            return _userService.DeleteCustomer(id);
+        }
+
+        [HttpDelete("delete_customercare/{id}")]
+        public Task<IActionResult> DeleteCustomerCare(int id)
+        {
+            return _userService.DeleteCustomerCare(id);
+        }
+
+        [HttpDelete("delete_financialdept/{id}")]
+        public Task<IActionResult> DeleteFinancialDept(int id)
+        {
+            return _userService.DeleteFinancialDept(id);
+        }
+
+        [HttpDelete("delete_validationdept/{id}")]
+        public Task<IActionResult> DeleteValdationDept(int id)
+        {
+            return _userService.DeleteValdationDept(id);
+        }
     }
 }

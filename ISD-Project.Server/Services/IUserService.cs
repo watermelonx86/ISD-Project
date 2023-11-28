@@ -16,6 +16,14 @@ namespace ISD_Project.Server.Services
 
         Task<IActionResult> ValidationDeptAdd(ValidationDto validationAddRequest);
 
-        Task<IActionResult> CustomerDel(CustomerDto customerDelRequest);
+        Task<IActionResult> DeleteCustomer(int id);
+
+        Task<IActionResult> DeleteCustomerCare(int id);
+
+        Task<IActionResult> DeleteFinancialDept(int id);
+
+        Task<IActionResult> DeleteValdationDept(int id);
+
+
     }
 }

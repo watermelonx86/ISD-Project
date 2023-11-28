@@ -223,35 +223,103 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> CustomerDel(CustomerDto request)
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    if (request is null)
+                    Customer customer = _dbContext.Customers.Find(id);
+
+                    if (customer is null)
                     {
                         return new BadRequestObjectResult("Request is null");
                     }
 
-                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
-                    {
-                        return new BadRequestObjectResult("Email already exists");
-                    }
-
-                    var validation = new ValidationDepartment
-                    {
-                        Name = request.Name,
-                        Gender = request.Gender,
-                        Address = request.Address,
-                        Email = request.Email,
-                        IdentityDocumentId = request.IdentityDocumentId,
-                        PhoneNumber = request.PhoneNumber
-                    };
-                    _dbContext.ValidationDepartments.Add(validation);
+                    _dbContext.Customers.Remove(customer);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return new OkObjectResult("Validation successfully created");
+                    return new OkObjectResult("Customer successfully removed");
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
+                }
+            }
+        }
+
+        public async Task<IActionResult> DeleteCustomerCare(int id)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    CustomerCareDepartment customerCareDepartment = _dbContext.CustomerCareDepartments.Find(id);
+
+                    if (customerCareDepartment is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+
+                    _dbContext.CustomerCareDepartments.Remove(customerCareDepartment);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Customer Care Department successfully removed");
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
+                }
+            }
+        }
+
+        public async Task<IActionResult> DeleteFinancialDept(int id)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    FinancialDepartment financialDepartment = _dbContext.FinancialDepartments.Find(id);
+
+                    if (financialDepartment is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+
+                    _dbContext.FinancialDepartments.Remove(financialDepartment);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Financial Department successfully removed");
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
+                }
+            }
+        }
+
+        public async Task<IActionResult> DeleteValdationDept(int id)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    ValidationDepartment validationDepartment = _dbContext.ValidationDepartments.Find(id);
+
+                    if (validationDepartment is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+
+                    _dbContext.ValidationDepartments.Remove(validationDepartment);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Validation Department successfully removed");
 
                 }
                 catch (Exception)
