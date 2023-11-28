@@ -1,7 +1,10 @@
-﻿namespace ISD_Project.Server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ISD_Project.Server.Models
 {
     public class HealthInformation
     {
+        [Key]
         public int Id { get; set; }
         public double Height { get; set; }
         public double Weight { get; set; } 
