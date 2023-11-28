@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ISD_Project.Server.Models.DTOs
 {
     public class UserDto
     {
+        public int Id { get; set; }
         [Required]
         [StringLength(12, MinimumLength = 12)]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Only numbers are allowed.")]

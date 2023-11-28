@@ -25,7 +25,7 @@ namespace ISD_Project.Server.Models
         [RegularExpression(@"^\+84[0-9]*$", ErrorMessage = "The phone number must start with the country code +84.")]
         [StringLength(13)]
         public string PhoneNumber { get; set; } = String.Empty;
-        public UserAccount? UserAccount { get; set; }
+        public virtual UserAccount? UserAccount { get; set; }
     }
     public enum GenderType
     {

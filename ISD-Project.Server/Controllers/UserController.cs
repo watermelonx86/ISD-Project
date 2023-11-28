@@ -17,64 +17,70 @@ namespace ISD_Project.Server.Controllers
             this._userService = userService;
         }
         //TODO Your code here
-        [HttpPost("add_customer")]
-        public Task<IActionResult> CustomerRegister(CustomerRegisterRequest request)
+        [HttpPost("add-customer")]
+        public Task<IActionResult> AddCustomer(UserDto request)
         {
-            return _userService.CustomerRegister(request);
+            return  _userService.AddCustomer(request);
         }
 
-        [HttpPost("add_customercaredept")]
-        public Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest request)
+        [HttpPost("add-customercaredept")]
+        public Task<IActionResult> AddCustomerCareDept(UserDto request)
         {
-            return _userService.CustomerCareDeptRegister(request);
+            return _userService.AddCustomerCareDept(request);
         }
 
-        [HttpPost("add_financialdept")]
-        public Task<IActionResult> FinancialDeptRegister(FinancialDto request)
+        [HttpPost("add-financialdept")]
+        public Task<IActionResult> FinancialDeptRegister(UserDto request)
         {
             return _userService.FinancialDeptAdd(request);
         }
 
-        [HttpPost("add_validationdept")]
-        public Task<IActionResult> ValdationDeptRegister(ValidationDto request)
+        [HttpPost("add-validationdept")]
+        public Task<IActionResult> ValdationDeptRegister(UserDto request)
         {
             return _userService.ValidationDeptAdd(request);
         }
 
-        [HttpGet("get_user")]
+        [HttpGet("get-user")]
         public Task<IActionResult> GetUser()
         {
             return _userService.GetUser();
         }
 
-        [HttpGet("get_customer")]
+        [HttpGet("get-customer")]
         public Task<IActionResult> GetCustomer()
         {
             return _userService.GetCustomer();
         }
 
-        [HttpDelete("delete_customer/{id}")]
+        [HttpDelete("delete-customer/{id}")]
         public Task<IActionResult> DeleteCustomer(int id)
         {
             return _userService.DeleteCustomer(id);
         }
 
-        [HttpDelete("delete_customercare/{id}")]
+        [HttpDelete("delete-customercare/{id}")]
         public Task<IActionResult> DeleteCustomerCare(int id)
         {
             return _userService.DeleteCustomerCare(id);
         }
 
-        [HttpDelete("delete_financialdept/{id}")]
+        [HttpDelete("delete-financialdept/{id}")]
         public Task<IActionResult> DeleteFinancialDept(int id)
         {
             return _userService.DeleteFinancialDept(id);
         }
 
-        [HttpDelete("delete_validationdept/{id}")]
-        public Task<IActionResult> DeleteValdationDept(int id)
+        [HttpDelete("delete-validationdept/{id}")]
+        public Task<IActionResult> DeleteValidationDept(int id)
         {
-            return _userService.DeleteValdationDept(id);
+            return _userService.DeleteValidationDept(id);
+        }
+
+        [HttpGet("get-customer/{id}")]
+        public Task<IActionResult> GetCustomer(int id)
+        {
+            return _userService.GetCustomer(id);
         }
     }
 }

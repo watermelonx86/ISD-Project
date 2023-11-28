@@ -9,21 +9,14 @@ namespace ISD_Project.Server.Services
         //TODO: Your code here
         Task<IActionResult> GetUser();
         Task<IActionResult> GetCustomer();
-        Task<IActionResult> CustomerRegister(CustomerRegisterRequest customerRegisterRequest);
-        Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest customerCareDeptRegisterRequest);
-
-        Task<IActionResult> FinancialDeptAdd(FinancialDto financialAddRequest);
-
-        Task<IActionResult> ValidationDeptAdd(ValidationDto validationAddRequest);
-
+        Task<IActionResult> GetCustomer(int  id);
+        Task<IActionResult> AddCustomer(UserDto request);
+        Task<IActionResult> AddCustomerCareDept(UserDto request);
+        Task<IActionResult> FinancialDeptAdd(UserDto financialAddRequest);
+        Task<IActionResult> ValidationDeptAdd(UserDto validationAddRequest);
         Task<IActionResult> DeleteCustomer(int id);
-
         Task<IActionResult> DeleteCustomerCare(int id);
-
         Task<IActionResult> DeleteFinancialDept(int id);
-
-        Task<IActionResult> DeleteValdationDept(int id);
-
-
+        Task<IActionResult> DeleteValidationDept(int id);
     }
 }

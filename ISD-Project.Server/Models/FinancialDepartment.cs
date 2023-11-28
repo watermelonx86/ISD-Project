@@ -2,6 +2,5 @@
 {
     public class FinancialDepartment : User
     {
-        public int FinancialDepartmentId { get; set; }
     }
 }

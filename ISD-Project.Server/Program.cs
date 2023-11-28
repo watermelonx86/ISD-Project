@@ -1,4 +1,5 @@
 using ISD_Project.Server.DataAccess;
+using ISD_Project.Server.Profiles;
 using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -26,16 +27,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add Services for Authentication and Authorization with JWT
+string tokenValue = builder.Configuration.GetSection("AppSettings:Token").Value ?? String.Empty;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue)),
             ValidateIssuer = false,
             ValidateAudience = false
         };
      });
+// Add Services AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 // inject db context
 builder.Services.AddDbContext<ApplicationDbContext>();

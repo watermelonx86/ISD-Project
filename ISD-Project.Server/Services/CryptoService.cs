@@ -15,7 +15,7 @@ namespace ISD_Project.Server.Services
         public CryptoService(ApplicationDbContext dbContext, IConfiguration configuration)
         {
             this._dbContext = dbContext;
-            _configuration = configuration;
+            this._configuration = configuration;
         }
         public async Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password)
         {
@@ -47,7 +47,8 @@ namespace ISD_Project.Server.Services
                 new Claim(ClaimTypes.Email, userAccount.Email)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+            string tokenValue = _configuration.GetSection("AppSettings:Token").Value ?? string.Empty;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var token = new JwtSecurityToken(
                     claims: claims,
