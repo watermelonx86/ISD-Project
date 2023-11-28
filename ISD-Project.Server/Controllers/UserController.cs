@@ -17,7 +17,7 @@ namespace ISD_Project.Server.Controllers
             this._userService = userService;
         }
         //TODO Your code here
-        [HttpPost("add_customer2")]
+        [HttpPost("add_customer")]
         public Task<IActionResult> CustomerRegister(CustomerRegisterRequest request)
         {
             return _userService.CustomerRegister(request);
@@ -27,6 +27,18 @@ namespace ISD_Project.Server.Controllers
         public Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest request)
         {
             return _userService.CustomerCareDeptRegister(request);
+        }
+
+        [HttpPost("add_financialdept")]
+        public Task<IActionResult> FinancialDeptRegister(FinancialDto request)
+        {
+            return _userService.FinancialDeptAdd(request);
+        }
+
+        [HttpPost("add_validationdept")]
+        public Task<IActionResult> ValdationDeptRegister(ValidationDto request)
+        {
+            return _userService.ValidationDeptAdd(request);
         }
 
         [HttpGet("get_user")]

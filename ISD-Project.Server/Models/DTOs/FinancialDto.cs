@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ISD_Project.Server.Models.DTOs
 {
-    public class CustomerDto
+    public class FinancialDto
     {
         [Required]
         [StringLength(12, MinimumLength = 12)]
@@ -17,9 +17,16 @@ namespace ISD_Project.Server.Models.DTOs
         [Required]
         public int Gender { get; set; } = (int)GenderType.Male;
         public string Address { get; set; } = String.Empty;
+
         [Required]
         [RegularExpression(@"^\+84[0-9]*$", ErrorMessage = "The phone number must start with the country code +84.")]
         [StringLength(13)]
         public string PhoneNumber { get; set; } = String.Empty;
     }
+
+
+
+
+
+
 }

@@ -12,5 +12,10 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> CustomerRegister(CustomerRegisterRequest customerRegisterRequest);
         Task<IActionResult> CustomerCareDeptRegister(CustomerCareDeptRegisterRequest customerCareDeptRegisterRequest);
 
+        Task<IActionResult> FinancialDeptAdd(FinancialDto financialAddRequest);
+
+        Task<IActionResult> ValidationDeptAdd(ValidationDto validationAddRequest);
+
+        Task<IActionResult> CustomerDel(CustomerDto customerDelRequest);
     }
 }

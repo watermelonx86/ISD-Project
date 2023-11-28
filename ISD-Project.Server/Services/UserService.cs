@@ -45,10 +45,10 @@ namespace ISD_Project.Server.Services
         public async Task<IActionResult> GetUser()
         {
             try
-            { 
+            {
                 var listUser = await _dbContext.Users.ToListAsync();
                 var listUserDto = new List<UserDto>();
-                foreach(var user in listUser)
+                foreach (var user in listUser)
                 {
                     var userDto = new UserDto
                     {
@@ -141,6 +141,123 @@ namespace ISD_Project.Server.Services
                     await transaction.RollbackAsync();
                     return new StatusCodeResult(500); // Internal Server Error
 
+                }
+            }
+        }
+
+        public async Task<IActionResult> FinancialDeptAdd(FinancialDto request)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    if (request is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+
+                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
+                    {
+                        return new BadRequestObjectResult("Email already exists");
+                    }
+
+                    var financial = new FinancialDepartment
+                    {
+                        Name = request.Name,
+                        Gender = request.Gender,
+                        Address = request.Address,
+                        Email = request.Email,
+                        IdentityDocumentId = request.IdentityDocumentId,
+                        PhoneNumber = request.PhoneNumber
+                    };
+                    _dbContext.FinancialDepartments.Add(financial);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Financial successfully created");
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
+                }
+            }
+        }
+
+        public async Task<IActionResult> ValidationDeptAdd(ValidationDto request)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    if (request is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+
+                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
+                    {
+                        return new BadRequestObjectResult("Email already exists");
+                    }
+
+                    var validation = new ValidationDepartment
+                    {
+                        Name = request.Name,
+                        Gender = request.Gender,
+                        Address = request.Address,
+                        Email = request.Email,
+                        IdentityDocumentId = request.IdentityDocumentId,
+                        PhoneNumber = request.PhoneNumber
+                    };
+                    _dbContext.ValidationDepartments.Add(validation);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Validation successfully created");
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
+                }
+            }
+        }
+
+        public async Task<IActionResult> CustomerDel(CustomerDto request)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    if (request is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+
+                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
+                    {
+                        return new BadRequestObjectResult("Email already exists");
+                    }
+
+                    var validation = new ValidationDepartment
+                    {
+                        Name = request.Name,
+                        Gender = request.Gender,
+                        Address = request.Address,
+                        Email = request.Email,
+                        IdentityDocumentId = request.IdentityDocumentId,
+                        PhoneNumber = request.PhoneNumber
+                    };
+                    _dbContext.ValidationDepartments.Add(validation);
+                    await _dbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return new OkObjectResult("Validation successfully created");
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return new StatusCodeResult(500); // Internal Server Error
                 }
             }
         }
