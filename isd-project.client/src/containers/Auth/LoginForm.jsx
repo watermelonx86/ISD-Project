@@ -1,18 +1,40 @@
 ﻿import { useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import { useLocation, NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../../services/auth.jsx';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const { isLoggedIn, login, logout } = useAuth();
 
     const handleLogin = () => {
-        axios.post('https://localhost:7267/api/User/login', {
+        axios.post('https://localhost:7267/api/UserAccount/login', {
             email: email,
             password: password
         })
             .then(response => {
-                console.log(response.data);
+                if (response.status === 200) {
+
+                    const { id, token, role } = response.data
+                    console.log(response.data);
+                    // Lưu token vào localStorage
+                    localStorage.setItem('id', id);
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('role', role);
+                   
+
+                    // Chuyển hướng đến trang chủ
+                    /*history.push('/');*/
+                    navigate('/');
+                    login();
+                } else {
+                    console.error(response.data); // Thông báo lỗi từ server
+                    // Thực hiện xử lý khi đăng nhập không thành công
+                }
             })
             .catch(error => {
                 if (error.response) {
@@ -98,19 +120,20 @@ const LoginForm = () => {
                                 </div>
                                 <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                             </div>
-                            <button type="submit"
-                                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                onClick={handleLogin}
-                            >
-                                Sign in
-                            </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                Don’t have an account yet?
-                                <NavLink to="/signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                                    Sign up
-                                </NavLink>
-                            </p>
+                
                         </form>
+                        <button type="submit"
+                            className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-primary-600 hover:bg-primary-700 focus:ring-primary-800"
+                            onClick={handleLogin}
+                        >
+                            Sign in
+                        </button>
+                        <p className="text-sm font-light text-gray-500 text-gray-400">
+                            Don’t have an account yet?
+                            <NavLink to="/signup" className="font-medium text-primary-600 hover:underline text-primary-500">
+                                Sign up
+                            </NavLink>
+                        </p>
                     </div>
                 </div>
             </div>

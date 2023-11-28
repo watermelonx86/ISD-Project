@@ -38,7 +38,7 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpGet("get_role")]
-        public Task<IActionResult> GetRole(int userId)
+        public Task<List<string>> GetRole(int userId)
         {
             return _userAccountService.GetUserRole(userId);
         }

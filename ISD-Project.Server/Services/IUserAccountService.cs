@@ -9,7 +9,7 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> Register(UserRegisterRequest request);
         Task<IActionResult> Login(UserLoginRequest request);
         Task<IActionResult> Verify(string token);
-        Task<IActionResult> GetUserRole(int userId);
+        Task<List<String>> GetUserRole(int userId);
         Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request);
         Task<IActionResult> ResetPassword(UserResetPasswordRequest request);
     }
