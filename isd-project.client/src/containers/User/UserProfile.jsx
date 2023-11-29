@@ -64,6 +64,22 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
+                                Date of Birth
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                10/3/1998
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Job
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                Student 
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
                                 Email address
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -91,6 +107,67 @@ const UserProfile = () => {
                 </div>
 
             </div>
+
+            {/* <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
+
+                <div className="px-4 py-5 sm:px-6 w-full inline-flex">
+                    <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
+                        Tinh trang suc khoe
+                    </h3>
+                    <div className="md:w-1/4" align="right">
+                        <button class="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
+                            Chỉnh sửa
+                        </button>
+                    </div>
+
+                </div>
+                <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+                    <dl className="sm:divide-y sm:divide-gray-200">
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Height
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                1m70    
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Weight
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                60kg
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Blood group
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                A
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Phone number
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                (123) 456-7890
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Address
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                123 Main St<br/>
+                                Anytown, USA 12345
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+            </div> */}
 
             <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
 
