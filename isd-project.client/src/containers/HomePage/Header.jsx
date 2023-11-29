@@ -9,6 +9,8 @@ import Avatar from '../../assets/avatar.png';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
+import './Header.css';
+
 const Header = () => {
 
    /* const location = useLocation();*/
@@ -79,14 +81,14 @@ const Header = () => {
                         } justify-between items-center w-full lg:flex lg:w-auto lg:order-1`}>
                         <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                             <li>
-                                <a href="#" className="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 text-white" aria-current="page">
+                                <NavLink to="/" className="block py-2 pr-4 pl-3 text-gray-700 rounded bg-primary-700 lg:bg-transparent lg:p-0" aria-current="page">
                                     Trang chủ
-                                </a>
+                                </NavLink>
                             </li>
                             <li>
-                                <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-600 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-gray-500 hover:bg-gray-700 lg:hover:bg-transparent border-gray-700">
+                                <NavLink to="/san-pham-bao-hiem" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-600 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-gray-500 hover:bg-gray-700 lg:hover:bg-transparent border-gray-700">
                                     Sản phẩm bảo hiểm
-                                </a>
+                                </NavLink>
                             </li>
                             <li>
                                 <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-600 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-gray-500 hover:bg-gray-700 lg:hover:bg-transparent border-gray-700">

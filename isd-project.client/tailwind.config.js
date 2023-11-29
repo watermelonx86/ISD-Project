@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+﻿/** @type {import('tailwindcss').Config} */
 
 export default {
     content: ["./index.html",
@@ -47,16 +47,18 @@ export default {
                 "2xl": "1536px",
             },
             colors: {
-                headingColor: "#2e2e2e",
-                textColor: "#515151",
-                cartNumBg: "#e80013",
+                headingColor: "#2e2e2e", //đen
+                textColor: "#515151", //đen-xám
+                cartNumBg: "#e80013", //đỏ
+                //xanh nhạt - đậm (blue)
                 primary: { "50": "#eff6ff", "100": "#dbeafe", "200": "#bfdbfe", "300": "#93c5fd", "400": "#60a5fa", "500": "#3b82f6", "600": "#2563eb", "700": "#1d4ed8", "800": "#1e40af", "900": "#1e3a8a", "950": "#172554" },
-                cardOverlay: "rgba(256,256,256,0.4)",
-                lighttextGray: "#9ca0ab",
+                cardOverlay: "rgba(256,256,256,0.4)", //gần như trong suốt
+                lighttextGray: "#9ca0ab", //xám
                 card: "rgba(256,256,256,0.8)",
-                cartBg: "#282a2c",
-                cartItem: "#2e3033",
-                cartTotal: "#343739",
+                cartBg: "#282a2c", //đen
+                cartItem: "#2e3033", //đen
+                cartTotal: "#343739", //đen
+                footerColor: "#627F7E",
             },
         },
         fontFamily: {
