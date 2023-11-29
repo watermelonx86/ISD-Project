@@ -19,11 +19,11 @@ const LoginForm = () => {
             .then(response => {
                 if (response.status === 200) {
 
-                    const { userAccountId, token, role, isActivated } = response.data;
+                    const { userId, token, role, isActivated } = response.data;
                     if(isActivated === 1) {
                         console.log(response.data);
                         // Lưu token vào localStorage
-                        localStorage.setItem('userAccountId', userAccountId);
+                        localStorage.setItem('userId', userId);
                         localStorage.setItem('token', token);
                         localStorage.setItem('role', JSON.stringify(role));
 
