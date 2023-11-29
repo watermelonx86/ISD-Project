@@ -30,7 +30,8 @@ const UserProfile = () => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState('');
+   
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -47,7 +48,7 @@ const UserProfile = () => {
         };
         fetchData();
     }, []);
-
+    
     return (
         <section className="bg-gray-100bg-opacity-50 h-auto">
             <Header />
