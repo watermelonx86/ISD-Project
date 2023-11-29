@@ -26,7 +26,7 @@ const UserProfile = () => {
     }, []);
 
     //Nap du lieu tu backend
-    const id = localStorage.getItem('userAccountId');
+    const id = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     
