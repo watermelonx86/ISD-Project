@@ -5,7 +5,7 @@ import img from '../../assets/baohiem.png';
 const Footer = () => {
     return (
         <>
-            <footer className="relative z-10 bg-gray-100 border-gray-200 pb-10 pt-20">
+            <footer className="relative z-10 bg-gray-200 border-gray-200 pb-10 pt-20">
                 <div className="mx-8">
                     <div className="-mx-4 flex flex-wrap justify-between">
                         <div className="w-full px-4 sm:w-2/3 lg:w-3/12">

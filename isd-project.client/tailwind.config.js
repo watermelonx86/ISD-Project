@@ -47,6 +47,8 @@ export default {
                 "2xl": "1536px",
             },
             colors: {
+                textPrice: "rgb(237 27 45)",
+                buttonProduct: "#ed1b2e",
                 headingColor: "#2e2e2e", //đen
                 textColor: "#515151", //đen-xám
                 cartNumBg: "#e80013", //đỏ
