@@ -1,5 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+﻿import React, { useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
@@ -8,7 +8,18 @@ import Circle from '../../assets/circle.png';
 
 const ProductDetail = () => {
 
+    const location = useLocation();
+    const item = location.pathname.split('/').pop();
+    const navigate = useNavigate();
+
     const array = Array.from({ length: 5 }, (_, index) => index + 1); //test
+
+    const handleForm = () => {
+        // Truy cập thông tin sản phẩm (item) tại đây và thực hiện công việc cần thiết
+        console.log('Item in ProductDetail:', item);
+
+        navigate(`/san-pham-bao-hiem/${item}/dang-ky-bao-hiem`);
+    };
 
     return (
         <React.Fragment>
@@ -95,6 +106,7 @@ const ProductDetail = () => {
             <div className= "flex justify-center my-8">
                 <button type="button"
                     className="focus:outline-none text-white bg-buttonProduct hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-3xl text-sm px-20 py-3 mb-2"
+                    onClick={ handleForm }
                 >
                     Đăng ký bảo hiểm này
                 </button>

@@ -24,7 +24,8 @@ const Product = () => {
         setMenuTab(type)
     }
 
-    const handleDetail = (item) => { //item thay bằng mã sản phẩm bảo hiểm
+    //item thay bằng mã sản phẩm bảo hiểm
+    const handleDetail = (item) => { 
         console.log(item);
         navigate(`/san-pham-bao-hiem/${item}`);
     }
@@ -69,10 +70,7 @@ const Product = () => {
                                 >
                                     Tìm hiểu thêm
                                 </button>
-                                {/*<button className="bg-primary text-white px-8 py-2 focus:outline-none poppins rounded-full mt-24 transform transition duration-300 hover:scale-105"
-                                onClick={handleRoute}>
-                                Order Now
-                            </button>*/}
+                                
                             </div>
                     </div>
                     ))}
