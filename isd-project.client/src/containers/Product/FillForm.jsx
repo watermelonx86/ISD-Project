@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import Header from "../HomePage/Header";
@@ -7,6 +7,100 @@ import Footer from "../HomePage/Footer";
 const FillForm = () => {
     const location = useLocation();
     const item = location.pathname.split('/')[2];
+
+    //biến thông tin cá nhân
+    const [cccd, setCccd] = useState('');
+    const [day_start, setDayStart] = useState('');
+    const [day_end, setDayEnd] = useState('');
+    const [fullname, setFullName] = useState('');
+    const [birthday, setBirthDay] = useState('');
+    const [gender, setGender] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [country, setCountry] = useState('');
+    const [job, setJob] = useState('');
+
+    useEffect(() => {
+        setGender('Nam');
+    }, []);
+
+
+    //biến thông tin địa chỉ
+    const [city, setCity] = useState('');
+    const [district, setDistrict] = useState('');
+    const [ward, setWard] = useState('');
+    const [street, setStreet] = useState('');
+
+
+    //biến khai báo sức khỏe
+    const [height, setHeight] = useState('');
+    const [weight, setWeight] = useState('');
+    const [smoking, setSmoking] = useState('');
+    const [smoking_frequency, setSmokingFrequency] = useState('');
+    const [alcohol, setAlcohol] = useState('');
+    const [alcohol_frequency, setAlcoholFrequency] = useState('');
+    const [sport, setSport] = useState('');
+    const [sport_detail, setSportDetail] = useState('');
+    const [cancer, setCancer] = useState('');
+    const [dengue, setDengue] = useState('');
+    const [drug, setDrug] = useState('');
+    const [congenital_disease, setCongenitalDisease] = useState('');
+    const [congenital_disease_detail, setCongenitalDiseaseDetail] = useState('');
+    const [weight_loss, setWeightLoss] = useState('');
+    const [weight_loss_detail, setWeightLossDetail] = useState('');
+    
+
+
+    //object thông tin cá nhân
+    const information = {
+        "Bảo hiểm": item,
+        "CCCD": cccd,
+        "Ngày cấp": day_start,
+        "Có giá trị đến": day_end,
+        "Họ tên": fullname,
+        "Ngày sinh": birthday,
+        "Giới tính": gender,
+        "Số điện thoại": phoneNumber,
+        "Email": email,
+        "Quốc tịch": country,
+        "Nghề nghiệp": job,
+    };
+
+
+    //object thông tin địa chỉ
+    const address = {
+        "Thành phố / Tỉnh": city,
+        "Quận / Huyện": district,
+        "Phường / Xã": ward,
+        "Đường / Ấp": street,
+    };
+
+
+    //object khai báo sức khỏe
+    const healthDeclare = {
+        "Chiều cao": height,
+        "Cân nặng": weight,
+        "Hút thuốc": smoking,
+        "Tần suất hút thuốc": smoking_frequency,
+        "Rượu bia": alcohol,
+        "Tần suất rượu bia": alcohol_frequency,
+        "Ma túy": drug,
+        "Thể thao nguy hiểm": sport,
+        "Chi tiết môn thể thao": sport_detail,
+        "Ung thư": cancer,
+        "Sốt xuất huyết": dengue,
+        "Bệnh bẩm sinh": congenital_disease,
+        "Chi tiết bệnh bẩm sinh": congenital_disease_detail,
+        "Sụt cân": weight_loss,
+        "Chi tiết sụt cân": weight_loss_detail,
+    };
+
+    const handleSendForm = () => {
+        console.log(
+            "Thông tin: ", information,
+            "Địa chỉ: ", address,
+            "Sức khỏe: ", healthDeclare);
+    }
 
 
     return (
@@ -45,8 +139,10 @@ const FillForm = () => {
                             <div className="w-[48%]">
                                 <div className="inline-flex flex-col relative w-full">
                                     <input type="text" name="CCCD" id="CCCD"
+                                        value={cccd}
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" "
+                                        onChange={(e) => setCccd(e.target.value)}
                                         required />
                                     <label htmlFor="CCCD"
                                         className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -59,9 +155,11 @@ const FillForm = () => {
                         <div className="w-[48%] flex flex-row justify-between z-0 pt-6 pl-8 mb-5 group">
                             <div className="w-[48%] mr-2">
                                 <div className="inline-flex flex-col relative w-full">
-                                    <input type="text" name="dayStart" id="dayStart"
+                                    <input type="date" name="dayStart" id="dayStart"
+                                        value={day_start}
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" "
+                                        onChange={(e) => setDayStart(e.target.value)}
                                         required />
                                     <label htmlFor="dayStart"
                                         className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -72,9 +170,11 @@ const FillForm = () => {
                             </div>
                             <div className="w-[48%]">
                                 <div className="inline-flex flex-col relative w-full">
-                                    <input type="text" name="dayEnd" id="dayEnd"
+                                    <input type="date" name="dayEnd" id="dayEnd"
+                                        value={day_end}
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" "
+                                        onChange={(e) => setDayEnd(e.target.value)}
                                         required />
                                     <label htmlFor="dayEnd"
                                         className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -86,7 +186,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="name" id="name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="name" id="name"
+                                    value={fullname}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    required />
                                 <label htmlFor="name"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Họ tên
@@ -97,9 +202,11 @@ const FillForm = () => {
                         <div className="w-[48%] flex flex-row justify-between z-0 pt-6 pl-8 mb-5 group">
                             <div className="w-[48%] mr-2">
                                 <div className="inline-flex flex-col relative w-full">
-                                    <input type="text" name="birthDay" id="birthDay"
+                                    <input type="date" name="birthDay" id="birthDay"
+                                        value={birthday}
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" "
+                                        onChange={(e) => setBirthDay(e.target.value)}
                                         required />
                                     <label htmlFor="birthDay"
                                         className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -115,7 +222,12 @@ const FillForm = () => {
                                         Giới tính
                                         <span className="text-require font-bold mt-[5px]"> *</span>
                                     </label>
-                                    <select id="gender" className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                                    <select id="gender"
+                                        className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                                        value={gender}
+                                        onChange={(e) => setGender(e.target.value)}
+                                        
+                                    >
                                         <option value="Nam">Nam</option>
                                         <option value="Nữ">Nữ</option>
                                     </select>
@@ -124,7 +236,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="phone" id="phone" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="phone" id="phone"
+                                    value={phoneNumber}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    required />
                                 <label htmlFor="phone"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Số điện thoại
@@ -134,7 +251,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="email" name="email" id="email" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="email" name="email" id="email"
+                                    value={email}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required />
                                 <label htmlFor="email"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Email
@@ -144,7 +266,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="email" name="country" id="country" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="email" name="country" id="country"
+                                    value={country}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setCountry(e.target.value)}
+                                    required />
                                 <label htmlFor="country"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Quốc tịch
@@ -154,7 +281,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="email" name="job" id="job" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="email" name="job" id="job"
+                                    value={job}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setJob(e.target.value)}
+                                    required />
                                 <label htmlFor="job"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Nghề nghiệp
@@ -169,7 +301,12 @@ const FillForm = () => {
                     <div className="flex flex-wrap justify-between border-box">
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="city" id="city" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="city" id="city"
+                                    value={city}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setCity(e.target.value)}
+                                    required />
                                 <label htmlFor="city"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Thành phố / Tỉnh
@@ -179,7 +316,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="district" id="district" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="district" id="district"
+                                    value={district}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setDistrict(e.target.value)}
+                                    required />
                                 <label htmlFor="district"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Quận / Huyện
@@ -189,7 +331,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="ward" id="ward" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="ward" id="ward"
+                                    value={ward}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setWard(e.target.value)}
+                                    required />
                                 <label htmlFor="ward"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Phường / Xã
@@ -199,7 +346,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="street" id="street" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="street" id="street"
+                                    value={street}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setStreet(e.target.value)}
+                                    required />
                                 <label htmlFor="street"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Đường / Ấp
@@ -214,7 +366,12 @@ const FillForm = () => {
                     <div className="flex flex-wrap justify-between border-box">
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="height" id="height" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="height" id="height"
+                                    value={height}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setHeight(e.target.value)}
+                                    required />
                                 <label htmlFor="height"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Chiều cao (cm)
@@ -224,7 +381,12 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="weight" id="weight" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="weight" id="weight"
+                                    value={weight}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setWeight(e.target.value)}
+                                    required />
                                 <label htmlFor="weight"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Cân nặng (kg)
@@ -243,7 +405,11 @@ const FillForm = () => {
                                 name="smoke"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={smoking === 'Yes'}
+                                onChange={(e) => setSmoking(e.target.value)}
+                                required
+                            />
+
                             <label htmlFor="smoke-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -253,7 +419,10 @@ const FillForm = () => {
                                 name="smoke"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={smoking === 'No'}
+                                onChange={(e) => setSmoking(e.target.value)}
+                                required
+                            />
                             <label htmlFor="smoke-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -263,7 +432,12 @@ const FillForm = () => {
                         <p className="pt-6 pl-8 text-[#1C1D1F]">Nếu có, vui lòng cho biết số điếu hút bình quân trong 1 ngày?</p>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="smoking-frequency" id="smoking-frequency" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="smoking-frequency" id="smoking-frequency"
+                                    value={smoking_frequency}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setSmokingFrequency(e.target.value)}
+                                    required />
                                 <label htmlFor="smoking-frequency"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Số điếu / Ngày
@@ -280,7 +454,9 @@ const FillForm = () => {
                                 name="alcohol"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={alcohol === 'Yes'}
+                                onChange={(e) => setAlcohol(e.target.value)}
+                                required />
                             <label htmlFor="alcohol-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -290,7 +466,9 @@ const FillForm = () => {
                                 name="alcohol"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={alcohol === 'No'}
+                                onChange={(e) => setAlcohol(e.target.value)}
+                                required />
                             <label htmlFor="alcohol-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -300,7 +478,12 @@ const FillForm = () => {
                         <p className="pt-6 pl-8 text-[#1C1D1F]">Trung bình số ngày uống rượu/bia trong 1 tuần?</p>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="alcohol-frequency" id="alcohol-frequency" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="alcohol-frequency" id="alcohol-frequency"
+                                    value={alcohol_frequency}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setAlcoholFrequency(e.target.value)}
+                                    required />
                                 <label htmlFor="alcohol-frequency"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Ngày / Tuần
@@ -319,7 +502,9 @@ const FillForm = () => {
                                 name="drug"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={drug === 'Yes'}
+                                onChange={(e) => setDrug(e.target.value)}
+                                required />
                             <label htmlFor="drug-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -329,7 +514,9 @@ const FillForm = () => {
                                 name="drug"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={drug === 'No'}
+                                onChange={(e) => setDrug(e.target.value)}
+                                required />
                             <label htmlFor="drug-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -347,7 +534,9 @@ const FillForm = () => {
                                 name="sport"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={sport === 'Yes'}
+                                onChange={(e) => setSport(e.target.value)}
+                                required />
                             <label htmlFor="sport-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -357,7 +546,9 @@ const FillForm = () => {
                                 name="sport"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={sport === 'No'}
+                                onChange={(e) => setSport(e.target.value)}
+                                required />
                             <label htmlFor="sport-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -367,7 +558,12 @@ const FillForm = () => {
                         <p className="pt-6 pl-8 text-[#1C1D1F]">Nếu CÓ, vui lòng kê khai chi tiết.</p>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="sport-detail" id="sport-detail" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="sport-detail" id="sport-detail"
+                                    value={sport_detail}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setSportDetail(e.target.value)}
+                                    required />
                                 <label htmlFor="sport-detail"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Chi tiết
@@ -387,7 +583,9 @@ const FillForm = () => {
                                 name="cancer"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={cancer === 'Yes'}
+                                onChange={(e) => setCancer(e.target.value)}
+                                required />
                             <label htmlFor="cancer-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -397,7 +595,9 @@ const FillForm = () => {
                                 name="cancer"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={cancer === 'No'}
+                                onChange={(e) => setCancer(e.target.value)}
+                                required />
                             <label htmlFor="cancer-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -414,7 +614,9 @@ const FillForm = () => {
                                 name="dengue"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={dengue === 'Yes'}
+                                onChange={(e) => setDengue(e.target.value)}
+                                required />
                             <label htmlFor="dengue-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -424,7 +626,9 @@ const FillForm = () => {
                                 name="dengue"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={dengue === 'No'}
+                                onChange={(e) => setDengue(e.target.value)}
+                                required />
                             <label htmlFor="dengue-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -442,7 +646,9 @@ const FillForm = () => {
                                 name="congenital-disease"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={congenital_disease === 'Yes'}
+                                onChange={(e) => setCongenitalDisease(e.target.value)}
+                                required />
                             <label htmlFor="congenital-disease-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -452,7 +658,9 @@ const FillForm = () => {
                                 name="congenital-disease"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={congenital_disease === 'No'}
+                                onChange={(e) => setCongenitalDisease(e.target.value)}
+                                required />
                             <label htmlFor="congenital-disease-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -462,7 +670,12 @@ const FillForm = () => {
                         <p className="pt-6 pl-8 text-[#1C1D1F]">Nếu CÓ, vui lòng kê khai chi tiết.</p>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="congenital-disease-detail" id="congenital-disease-detail" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="congenital-disease-detail" id="congenital-disease-detail"
+                                    value={congenital_disease_detail}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setCongenitalDiseaseDetail(e.target.value)}
+                                    required />
                                 <label htmlFor="congenital-disease-detail"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Chi tiết
@@ -482,7 +695,9 @@ const FillForm = () => {
                                 name="weight-loss"
                                 value="Yes"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={weight_loss === 'Yes'}
+                                onChange={(e) => setWeightLoss(e.target.value)}
+                                required />
                             <label htmlFor="weight-loss-option-1" className="block ms-2 text-sm font-medium text-gray-900">
                                 Có
                             </label>
@@ -492,7 +707,9 @@ const FillForm = () => {
                                 name="weight-loss"
                                 value="No"
                                 className="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300"
-                                defaultChecked />
+                                checked={weight_loss === 'No'}
+                                onChange={(e) => setWeightLoss(e.target.value)}
+                                required />
                             <label htmlFor="weight-loss-option-2" className="block ms-2 text-sm font-medium text-gray-900">
                                 Không
                             </label>
@@ -502,7 +719,12 @@ const FillForm = () => {
                         <p className="pt-6 pl-8 text-[#1C1D1F]">Nếu CÓ, vui lòng kê khai chi tiết.</p>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="weight-loss-detail" id="weight-loss-detail" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <input type="text" name="weight-loss-detail" id="weight-loss-detail"
+                                    value={weight_loss_detail}
+                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                    placeholder=" "
+                                    onChange={(e) => setWeightLossDetail(e.target.value)}
+                                    required />
                                 <label htmlFor="weight-loss-detail"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Chi tiết
@@ -512,8 +734,9 @@ const FillForm = () => {
                     </fieldset>
 
                     <div className="flex justify-center my-8">
-                        <button type="submit"
+                        <button type="button"
                             className="focus:outline-none text-white bg-buttonProduct hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-3xl text-sm px-20 py-3 mb-2"
+                            onClick={handleSendForm}
                         >
                             Gửi phiếu thông tin
                         </button>
