@@ -11,15 +11,17 @@ namespace ISD_Project.Server.Services
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
+
         public UserService(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
+
         public async Task<IActionResult> GetUser()
         {
             try
-            { 
+            {
                 var listUser = await _dbContext.Users.ToListAsync();
                 var listUserDto = _mapper.Map<List<UserDto>>(listUser);
                 return new OkObjectResult(listUserDto);
@@ -86,15 +88,16 @@ namespace ISD_Project.Server.Services
             try
             {
                 var customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.Id == id);
-                if(customer is null)
+                if (customer is null)
                 {
                     return new NotFoundObjectResult("Customer not found");
-                } else
+                }
+                else
                 {
                     var customerDto = _mapper.Map<UserDto>(customer);
                     return new OkObjectResult(customerDto);
                 }
-                
+
             }
             catch (Exception)
             {
@@ -142,11 +145,11 @@ namespace ISD_Project.Server.Services
 
                     customer.HealthInformation = new HealthInformation(); // After created customer, create health information for customer
                     customer.HealthInformation.CustomerId = customer.Id;
-                    customer.HealthInformation.LastUpdate = DateTime.UtcNow; 
+                    customer.HealthInformation.LastUpdate = DateTime.UtcNow;
                     _dbContext.Customers.Update(customer);
                     await _dbContext.SaveChangesAsync();
 
-                 
+
                     await transaction.CommitAsync();
                     return new OkObjectResult("Customer successfully created");
 
@@ -334,6 +337,6 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        
+
     }
 }

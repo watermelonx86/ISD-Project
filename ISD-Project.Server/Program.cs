@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // CORS: https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
 {
     options.AddPolicy(MyAllowSpecificOrigins,
         policy =>
@@ -30,7 +30,8 @@ builder.Services.AddSwaggerGen();
 // Add Services for Authentication and Authorization with JWT
 string tokenValue = builder.Configuration.GetSection("AppSettings:Token").Value ?? String.Empty;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
+    .AddJwtBearer(options =>
+    {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -38,7 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false
         };
-     });
+    });
 // Add Services AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -46,11 +47,12 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 // inject db context
 builder.Services.AddDbContext<ApplicationDbContext>();
 // inject services
-builder.Services.AddScoped<ICryptoService, CryptoService>(); 
+builder.Services.AddScoped<ICryptoService, CryptoService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHealthInformationService, HealthInformationService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
+builder.Services.AddScoped<IInsuranceService, InsuranceService>();
 
 var app = builder.Build();
 
@@ -71,7 +73,7 @@ app.UseCors(MyAllowSpecificOrigins); // use CORS
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers(); 
+app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 

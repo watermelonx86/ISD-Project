@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231128143505_Release 0.1.1")]
+    [Migration("20231202073659_Release 0.1.1")]
     partial class Release011
     {
         /// <inheritdoc />
@@ -69,6 +69,37 @@ namespace ISD_Project.Server.Migrations
                     b.ToTable("HealthInformation");
                 });
 
+            modelBuilder.Entity("ISD_Project.Server.Models.Insurance", b =>
+                {
+                    b.Property<int>("InsuranceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InsuranceId"));
+
+                    b.Property<DateTime>("ExpireDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InsuranceName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<float>("PriceAmount")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("InsuranceId");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Insurances");
+                });
+
             modelBuilder.Entity("ISD_Project.Server.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -110,6 +141,11 @@ namespace ISD_Project.Server.Migrations
                         {
                             Id = 5,
                             Name = "CustomerCareDepartment"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Insurance"
                         });
                 });
 
@@ -277,6 +313,17 @@ namespace ISD_Project.Server.Migrations
                         .HasForeignKey("ISD_Project.Server.Models.HealthInformation", "CustomerId");
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("ISD_Project.Server.Models.Insurance", b =>
+                {
+                    b.HasOne("ISD_Project.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ISD_Project.Server.Models.UserAccount", b =>
