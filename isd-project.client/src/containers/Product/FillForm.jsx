@@ -266,7 +266,7 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="email" name="country" id="country"
+                                <input type="text" name="country" id="country"
                                     value={country}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
@@ -281,7 +281,7 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="email" name="job" id="job"
+                                <input type="text" name="job" id="job"
                                     value={job}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
@@ -437,7 +437,7 @@ const FillForm = () => {
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
                                     onChange={(e) => setSmokingFrequency(e.target.value)}
-                                    required />
+                                    />
                                 <label htmlFor="smoking-frequency"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Số điếu / Ngày
@@ -483,7 +483,7 @@ const FillForm = () => {
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
                                     onChange={(e) => setAlcoholFrequency(e.target.value)}
-                                    required />
+                                    />
                                 <label htmlFor="alcohol-frequency"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Ngày / Tuần
@@ -563,7 +563,7 @@ const FillForm = () => {
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
                                     onChange={(e) => setSportDetail(e.target.value)}
-                                    required />
+                                    />
                                 <label htmlFor="sport-detail"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Chi tiết
@@ -675,7 +675,7 @@ const FillForm = () => {
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
                                     onChange={(e) => setCongenitalDiseaseDetail(e.target.value)}
-                                    required />
+                                    />
                                 <label htmlFor="congenital-disease-detail"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Chi tiết
@@ -724,7 +724,7 @@ const FillForm = () => {
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
                                     onChange={(e) => setWeightLossDetail(e.target.value)}
-                                    required />
+                                    />
                                 <label htmlFor="weight-loss-detail"
                                     className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                     Chi tiết
