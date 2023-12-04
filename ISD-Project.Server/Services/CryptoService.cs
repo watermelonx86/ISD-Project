@@ -1,42 +1,75 @@
 ﻿using ISD_Project.Server.DataAccess;
+using ISD_Project.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 namespace ISD_Project.Server.Services
 {
     public class CryptoService : ICryptoService
     {
         private readonly ApplicationDbContext _dbContext;
-        public CryptoService(ApplicationDbContext dbContext)
+        protected readonly IConfiguration _configuration;
+        public CryptoService(ApplicationDbContext dbContext, IConfiguration configuration)
         {
             this._dbContext = dbContext;
+            this._configuration = configuration;
         }
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public async Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password)
         {
-            using (var hmac = new HMACSHA256())
+            return await Task.Run(() =>
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            }
+                using (var hmac = new HMACSHA256())
+                {
+                    return (
+                        passwordHash: hmac.ComputeHash(Encoding.UTF8.GetBytes(password)),
+                        passwordSalt: hmac.Key
+                    );
+                }
+            });
         }
-        public string CreateRandomToken()
+        public async Task<string> CreateRandomToken()
         {
             string token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-            if (_dbContext.UserAccounts.Any(u => u.VerificationToken == token))
+            if (await _dbContext.UserAccounts.AnyAsync(u => u.VerificationToken == token))
             {
-                CreateRandomToken();
+                await CreateRandomToken();
             }
             return token;
         }
-        public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+
+        public async Task<string> CreateToken(UserAccount userAccount)
         {
-            using (var hmac = new HMACSHA256(passwordSalt))
+            List<Claim> claims = new List<Claim>
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                //Phai su dung SequenceEqual vi day la byte[] array
-                return computedHash.SequenceEqual(passwordHash);
-            }
+                new Claim(ClaimTypes.Email, userAccount.Email)
+            };
+
+            string tokenValue = _configuration.GetSection("AppSettings:Token").Value ?? string.Empty;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var token = new JwtSecurityToken(
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(1),
+                    signingCredentials: cred
+            );
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+            return await Task.FromResult(jwt);
+        }
+
+        public async Task<bool> VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            return await Task.Run(() =>
+            {
+                using (var hmac = new HMACSHA256(passwordSalt))
+                {
+                    var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                    //Phai su dung SequenceEqual vi day la byte[] array
+                    return computedHash.SequenceEqual(passwordHash);
+                }
+            });
         }
     }
 }

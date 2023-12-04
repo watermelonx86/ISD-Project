@@ -2,6 +2,5 @@
 {
     public class ValidationDepartment : User
     {
-        public int ValidationDepartmentId { get; set; }
     }
 }

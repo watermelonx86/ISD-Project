@@ -1,6 +1,6 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation, NavLink } from 'react-router-dom';
+import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 /*import { apiRegister } from "../services/auth";*/
 
 
@@ -10,16 +10,26 @@ import { useLocation, NavLink } from 'react-router-dom';
 const RegisterForm = () => {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
-    const [confirmPassword,setConfirmPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const navigate = useNavigate();
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        if (success) {
+            // Thực hiện các hành động sau khi success thay đổi
+            console.log('Registration successful:', success);
+        }
+    }, [success]);
 
 
     const handleRegister = () => {
-        axios.post('https://localhost:7267/api/User/register', {
+        axios.post('https://localhost:7267/api/UserAccount/register', {
             email : email,
             password: password,
             confirmPassword: confirmPassword
         }).then(response => {
-            console.log(response.data);
+            setSuccess(true);
+            console.log(response.data, success);
         }).catch(error => {
             if (error.response) {
                 console.error('Request failed with status code:', error.response.status);
@@ -30,6 +40,14 @@ const RegisterForm = () => {
                 console.error('Error:', error.message);
             }
         })
+    }
+
+    const closeModal = () => {
+        setSuccess(false);
+    }
+
+    const navigate_Login = () => {
+        navigate('/login');
     }
 
     /*return (
@@ -140,6 +158,34 @@ const RegisterForm = () => {
                         </p>
                     </div>
                 </div>
+                {success && (
+                    <div id="successModal" tabIndex="-1" aria-hidden="true"
+                        className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+                        <div className="relative p-4 w-full max-w-md h-full md:h-auto">
+                            <div className="relative p-4 text-center bg-white border-4 border-slate-400 rounded-lg shadow sm:p-5">
+                                <button type="button"
+                                    className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                                    data-modal-toggle="successModal"
+                                    onClick={closeModal}
+                                >
+                                    <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                    <span className="sr-only">Close modal</span>
+                                </button>
+                                <div className="w-12 h-12 rounded-full bg-green-200 p-2 flex items-center justify-center mx-auto mb-3.5">
+                                    <svg aria-hidden="true" className="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                                    <span className="sr-only">Success</span>
+                                </div>
+                                <p className="mb-4 text-lg font-semibold text-gray-900">Đăng ký thành công!</p>
+                                <button data-modal-toggle="successModal"
+                                    type="button"
+                                    className="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-900"
+                                    onClick={navigate_Login}
+                                >
+                                    Đăng nhập ngay
+                                </button>
+                            </div>
+                        </div>
+                    </div>)}
             </div>
         </section>
     )

@@ -12,23 +12,30 @@ const LoginForm = () => {
     const { isLoggedIn, login, logout } = useAuth();
 
     const handleLogin = () => {
-        axios.post('https://localhost:7267/api/User/login', {
+        axios.post('https://localhost:7267/api/UserAccount/login', {
             email: email,
             password: password
         })
             .then(response => {
                 if (response.status === 200) {
-                    // Lưu token vào localStorage
-                    localStorage.setItem('token', response.data.token);
 
-                    // Lưu thông tin người dùng vào localStorage
-                    localStorage.setItem('user', JSON.stringify(response.data.user));
+                    const { userId, token, role, isActivated } = response.data;
+                    if(isActivated === 1) {
+                        console.log(response.data);
+                        // Lưu token vào localStorage
+                        localStorage.setItem('userId', userId);
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('role', JSON.stringify(role));
 
-                    // Chuyển hướng đến trang chủ
-                    /*history.push('/');*/
-                    navigate('/');
-                    login();
-                    console.log(response, isLoggedIn);
+                        // Chuyển hướng đến trang chủ
+                        /*history.push('/');*/
+                        navigate('/');
+                        login();
+                    }
+                    else {
+                        //TODO: Xử lý tài khoản chưa được kích hoạt
+                        alert("Tài khoản chưa được kích hoạt!");
+                    }
                 } else {
                     console.error(response.data); // Thông báo lỗi từ server
                     // Thực hiện xử lý khi đăng nhập không thành công

@@ -1,63 +1,110 @@
-﻿using ISD_Project.Server.DataAccess;
-using ISD_Project.Server.Models;
-using ISD_Project.Server.Models.DTOs;
+﻿using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace ISD_Project.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    //TODO: Avoid providing too much information in error messages Register, Login, Verify
-    //DONE: Fix violates principles single responsibility in CreatePasswordHash, CreateRandomToken, VerifyPasswordHash
-    //TODO: Use authentication
+    //[Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IUserAccountService _userAccountService;
-        public UserController(IUserAccountService userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            this._userAccountService = userService;
+            this._userService = userService;
+        }
+        //TODO Your code here
+        [HttpPost("add-customer")]
+        public Task<IActionResult> AddCustomer(CustomerDto request)
+        {
+            return  _userService.AddCustomer(request);
         }
 
-        [HttpPost("register")]
-        public IActionResult Register([FromBody] UserRegisterRequest request)
+        [HttpPost("add-customercaredept")]
+        public Task<IActionResult> AddCustomerCareDept(UserDto request)
         {
-            return _userAccountService.Register(request);
+            return _userService.AddCustomerCareDept(request);
         }
 
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] UserLoginRequest request)
+        [HttpPost("add-financialdept")]
+        public Task<IActionResult> FinancialDeptRegister(UserDto request)
         {
-            return _userAccountService.Login(request);
+            return _userService.FinancialDeptAdd(request);
         }
 
-        [HttpGet("get_role")]
-        public IActionResult GetRole(int userId)
+        [HttpPost("add-validationdept")]
+        public Task<IActionResult> ValdationDeptRegister(UserDto request)
         {
-            return _userAccountService.GetUserRole(userId);
+            return _userService.ValidationDeptAdd(request);
         }
 
-        [HttpPost("verify")]
-        public IActionResult Verify([FromBody] string token)
+        [HttpGet("get-user")]
+        public Task<IActionResult> GetUser()
         {
-            return _userAccountService.Verify(token);
+            return _userService.GetUser();
         }
 
-        [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword([FromBody] UserForgotPasswordRequest request)
+        [HttpGet("get-customer")]
+        public Task<IActionResult> GetCustomer()
         {
-            return _userAccountService.ForgotPassword(request);
+            return _userService.GetCustomer();
         }
 
-        [HttpPost("reset-password")]
-        public IActionResult ResetPassword([FromBody] UserResetPasswordRequest request)
+        [HttpGet("get-customer-pending-approval")]
+        public Task<IActionResult> GetCustomerPendingApproval()
         {
-            return _userAccountService.ResetPassword(request);
+            return _userService.GetCustomerPendingApproval();
+        }
+
+        [HttpGet("get-customer-approved")]
+        public Task<IActionResult> GetCustomerApproved()
+        {
+            return _userService.GetCustomerApproved();
+        }
+
+        [HttpGet("get-customer-rejected")]
+        public Task<IActionResult> GetCustomerRejected()
+        {
+            return _userService.GetCustomerRejected();
+        }
+
+        [HttpDelete("delete-customer/{id}")]
+        public Task<IActionResult> DeleteCustomer(int id)
+        {
+            return _userService.DeleteCustomer(id);
+        }
+
+        [HttpDelete("delete-customercare/{id}")]
+        public Task<IActionResult> DeleteCustomerCare(int id)
+        {
+            return _userService.DeleteCustomerCare(id);
+        }
+
+        [HttpDelete("delete-financialdept/{id}")]
+        public Task<IActionResult> DeleteFinancialDept(int id)
+        {
+            return _userService.DeleteFinancialDept(id);
+        }
+
+        [HttpDelete("delete-validationdept/{id}")]
+        public Task<IActionResult> DeleteValidationDept(int id)
+        {
+            return _userService.DeleteValidationDept(id);
+        }
+
+        [HttpGet("get-customer/{id}")]
+        public Task<IActionResult> GetCustomer(int id)
+        {
+            return _userService.GetCustomer(id);
+        }
+
+        [HttpGet("get-health-info-customer/{id}")]
+        public Task<IActionResult> GetHealthInformationOfCustomer(int id)
+        {
+            return _userService.GetHealthInformationOfCustomer(id);
         }
     }
 }

@@ -5,6 +5,7 @@ import HomePage from './containers/HomePage/HomePage';
 import LoginForm from './containers/Auth/LoginForm';
 import RegisterForm from './containers/Auth/RegisterForm';
 import UserProfile from './containers/User/UserProfile';
+import UserProfileEdit from './containers/User/UserProfileEdit';
 import Product from './containers/Product/Product';
 import ProductDetail from './containers/Product/ProductDetail';
 import FillForm from './containers/Product/FillForm';
@@ -25,6 +26,7 @@ function App() {
                 <Route path='/san-pham-bao-hiem' element={<Product />} />
                 <Route path='/san-pham-bao-hiem/:id' element={<ProductDetail />} />
                 <Route path='/san-pham-bao-hiem/:id/dang-ky-bao-hiem' element={<FillForm />} />
+                <Route path='/edit' element={<UserProfileEdit />} />
             </Routes>
         </Router>
     );

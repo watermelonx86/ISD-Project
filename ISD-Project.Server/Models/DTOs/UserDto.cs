@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
-namespace ISD_Project.Server.Models
+namespace ISD_Project.Server.Models.DTOs
 {
-    public class User
+    public class UserDto
     {
-        [Key]
         public int Id { get; set; }
         [Required]
         [StringLength(12, MinimumLength = 12)]
@@ -21,16 +20,10 @@ namespace ISD_Project.Server.Models
         [Required]
         public int Gender { get; set; } = (int)GenderType.Male;
         public string Address { get; set; } = String.Empty;
+
         [Required]
         [RegularExpression(@"^\+84[0-9]*$", ErrorMessage = "The phone number must start with the country code +84.")]
         [StringLength(13)]
         public string PhoneNumber { get; set; } = String.Empty;
-        public virtual UserAccount? UserAccount { get; set; }
-    }
-    public enum GenderType
-    {
-        Male = 0,
-        Female = 1,
     }
 }
-
