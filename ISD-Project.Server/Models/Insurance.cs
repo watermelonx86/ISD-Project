@@ -6,12 +6,12 @@ namespace ISD_Project.Server.Models
     {
         [Key]
         public int InsuranceId { get; set; }
-        public string InsuranceName { get; set; }
+        public string InsuranceName { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime ExpireDate { get; set; }
         public float PriceAmount { get; set; }
         public int UserID { get; set; }
-        public User User { get; set; }
+        public User User { get; set; } = null!;
 
     }
 }

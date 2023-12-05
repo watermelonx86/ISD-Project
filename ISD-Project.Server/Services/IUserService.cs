@@ -5,8 +5,6 @@ namespace ISD_Project.Server.Services
 {
     public interface IUserService
     {
-        //TODO: Using asynchronous methods
-        //TODO: Your code here
         Task<IActionResult> GetUser();
         Task<IActionResult> GetCustomer();
         Task<IActionResult> GetCustomerPendingApproval();
