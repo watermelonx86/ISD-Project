@@ -58,7 +58,7 @@ const UserProfile = () => {
                     <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
                         Thông tin người dùng
                     </h3>
-                    <div className="md:w-1/4" align="right">
+                    <div className="md:w-1/4 text-right">
                         <button className="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
                             Chỉnh sửa
                         </button>

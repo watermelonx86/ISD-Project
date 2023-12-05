@@ -26,84 +26,15 @@ namespace ISD_Project.Server.Services
                 var listUserDto = _mapper.Map<List<UserDto>>(listUser);
                 return new OkObjectResult(listUserDto);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new StatusCodeResult(500);
-            }
-        }
-        public async Task<IActionResult> GetCustomer()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(500);
-            }
-        }
-        public async Task<IActionResult> GetCustomerPendingApproval()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Pending).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(500);
-            }
-        }
-        public async Task<IActionResult> GetCustomerApproved()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Approved).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(500);
-            }
-        }
-        public async Task<IActionResult> GetCustomerRejected()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Rejected).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(500);
-            }
-        }
-        public async Task<IActionResult> GetCustomer(int id)
-        {
-            try
-            {
-                var customer = await _dbContext.Customers.FirstOrDefaultAsync(c => c.Id == id);
-                if (customer is null)
+                return new ObjectResult(ex.Message)
                 {
-                    return new NotFoundObjectResult("Customer not found");
-                }
-                else
-                {
-                    var customerDto = _mapper.Map<UserDto>(customer);
-                    return new OkObjectResult(customerDto);
-                }
+                    StatusCode = 500 // Internal Server Error
+                };
+            }
+        }
 
-            }
-            catch (Exception)
-            {
-                return new StatusCodeResult(500);
-            }
-        }
         public async Task<IActionResult> GetHealthInformationOfCustomer(int id)
         {
             try
@@ -119,48 +50,15 @@ namespace ISD_Project.Server.Services
                     return new OkObjectResult(healthinfoDto);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new StatusCodeResult(500);
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500 // Internal Server Error
+                };
             }
         }
-        public async Task<IActionResult> AddCustomer(CustomerDto request)
-        {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    if (request is null)
-                    {
-                        return new BadRequestObjectResult("Request is null");
-                    }
-                    if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
-                    {
-                        return new BadRequestObjectResult("Email already exists");
-                    }
-                    var customer = _mapper.Map<Customer>(request);
 
-                    _dbContext.Customers.Add(customer);
-                    await _dbContext.SaveChangesAsync();
-
-                    customer.HealthInformation = new HealthInformation(); // After created customer, create health information for customer
-                    customer.HealthInformation.CustomerId = customer.Id;
-                    customer.HealthInformation.LastUpdate = DateTime.UtcNow;
-                    _dbContext.Customers.Update(customer);
-                    await _dbContext.SaveChangesAsync();
-
-
-                    await transaction.CommitAsync();
-                    return new OkObjectResult("Customer successfully created");
-
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
-                }
-            }
-        }
         public async Task<IActionResult> AddCustomerCareDept(UserDto request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
@@ -179,13 +77,18 @@ namespace ISD_Project.Server.Services
                     _dbContext.CustomerCareDepartments.Add(customerCareDept);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return new OkObjectResult("Customer Care Department successfully created");
+                    var response = new { message = "Customer Care Department successfully created", userId = customerCareDept.Id };
+                    return new OkObjectResult(response);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
+
             }
         }
         public async Task<IActionResult> FinancialDeptAdd(UserDto request)
@@ -206,12 +109,17 @@ namespace ISD_Project.Server.Services
                     _dbContext.FinancialDepartments.Add(financialDept);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return new OkObjectResult("Financial Department successfully created");
+                    var response = new { message = "Financial Department successfully created", userId = financialDept.Id };
+
+                    return new OkObjectResult(response);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
             }
         }
@@ -233,39 +141,20 @@ namespace ISD_Project.Server.Services
                     _dbContext.ValidationDepartments.Add(validationDept);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    var response = new { message = "Financial Department successfully created", userId = validationDept.Id };
                     return new OkObjectResult("Validation Department successfully created");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
-                }
-            }
-        }
-        public async Task<IActionResult> DeleteCustomer(int id)
-        {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    var customer = await _dbContext.Customers.FindAsync(id);
-
-                    if (customer is null)
+                    return new ObjectResult(ex.Message)
                     {
-                        return new BadRequestObjectResult("Customer doesn't exist");
-                    }
-                    _dbContext.Customers.Remove(customer);
-                    await _dbContext.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                    return new OkObjectResult("Customer successfully removed");
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
             }
         }
+
         public async Task<IActionResult> DeleteCustomerCare(int id)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
@@ -282,10 +171,13 @@ namespace ISD_Project.Server.Services
                     await transaction.CommitAsync();
                     return new OkObjectResult("Customer Care Department successfully removed");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
             }
         }
@@ -305,10 +197,13 @@ namespace ISD_Project.Server.Services
                     await transaction.CommitAsync();
                     return new OkObjectResult("Financial Department successfully removed");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
             }
         }
@@ -329,10 +224,13 @@ namespace ISD_Project.Server.Services
                     await transaction.CommitAsync();
                     return new OkObjectResult("Validation Department successfully removed");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new StatusCodeResult(500); // Internal Server Error
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
             }
         }

@@ -1,5 +1,6 @@
 using ISD_Project.Server;
 using ISD_Project.Server.DataAccess;
+using ISD_Project.Server.Models;
 using ISD_Project.Server.Profiles;
 using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -50,6 +51,7 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 // inject services
 builder.Services.AddScoped<ICryptoService, CryptoService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHealthInformationService, HealthInformationService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
