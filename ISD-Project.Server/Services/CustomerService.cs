@@ -93,7 +93,11 @@ namespace ISD_Project.Server.Services
             try
             {
                 var listCustomer = await _dbContext.Customers.ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
+                if (listCustomer is null || listCustomer.Count == 0)
+                {
+                    return new NotFoundObjectResult("Customers not found");
+                }
+                List<CustomerDto>? listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
                 return new OkObjectResult(listCustomer);
             }
             catch (Exception ex)

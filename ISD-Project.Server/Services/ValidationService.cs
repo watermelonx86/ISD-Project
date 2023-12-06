@@ -57,10 +57,10 @@ namespace ISD_Project.Server.Services
                 {
                     var userRegisterRequest = new UserRegisterRequest(customer.Email, "Demo123", "Demo123");
                     await _userAccount.Register(userRegisterRequest);
-                    //Update user id in user account table
                     customer.UserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
                     if (customer.UserAccount is not null)
                     {
+                        //Update user id in user account table
                         customer.UserAccount.UserId = customer.Id;
                         _dbContext.Update(customer);
                         await _dbContext.SaveChangesAsync();
