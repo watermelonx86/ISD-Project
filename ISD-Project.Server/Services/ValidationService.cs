@@ -72,7 +72,9 @@ namespace ISD_Project.Server.Services
                 {
                     var response = new { userAccountId = customer.UserAccount.Id, message = $"Customer information updated successfully: {request.ProfileStatus}" };
                     return new OkObjectResult(response);
-                } else {
+                }
+                else
+                {
                     return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
                 }
 
