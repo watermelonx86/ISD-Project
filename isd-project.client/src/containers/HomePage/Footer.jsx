@@ -33,8 +33,8 @@ const Header = () => {
             <footer class="w-full text-white bg-black body-font ">
                 <div class="container flex flex-col flex-wrap px-5 py-20 mx-auto md:items-center lg:items-start md:flex-row md:flex-no-wrap">
                     <div class="flex-shrink-0 w-64 mx-auto text-center md:mx-0 md:text-left">
-                        <NavLink to="/">
-                            <h1 className="text-lg">
+                        <NavLink className="inline-block"to="/">
+                            <h1 className="text-lg font-bold">
                                 PGR2
                             </h1>
                         </NavLink>

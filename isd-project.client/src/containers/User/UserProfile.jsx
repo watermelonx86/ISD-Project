@@ -182,7 +182,7 @@ const UserProfile = () => {
                     </div> */}
                 </div>
                 
-                <table className="w-full">
+                <table className="w-full select-none">
                     <thead>
                         <tr className="bg-gray-400 border-2">
                             <th className="p-2">Tên gói bảo hiểm</th>
