@@ -6,6 +6,9 @@ namespace ISD_Project.Server.Models.DTOs
 {
     public class UserDto
     {
+        public UserDto() {
+            
+        }
         public int Id { get; set; }
         [Required]
         [StringLength(12, MinimumLength = 12)]

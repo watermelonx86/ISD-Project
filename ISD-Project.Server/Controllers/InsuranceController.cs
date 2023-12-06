@@ -18,10 +18,5 @@ namespace ISD_Project.Server.Controllers
         {
             return _insuranceService.GetInsurance();
         }
-
-        //  public Task<List<string>> GetInsurance()
-        // {
-        //     return _insuranceService.GetInsurance();
-        // }
     }
 }

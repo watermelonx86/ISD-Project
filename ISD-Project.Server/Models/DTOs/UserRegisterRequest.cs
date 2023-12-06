@@ -5,6 +5,18 @@ namespace ISD_Project.Server.Models.DTOs
 {
     public class UserRegisterRequest
     {
+        public UserRegisterRequest() 
+        {
+            Email = string.Empty;
+            Password = string.Empty; 
+            ConfirmPassword = string.Empty;
+        }
+        public UserRegisterRequest(string email, string password, string confirmPassword) 
+        {
+            Email = email;
+            Password = password; 
+            ConfirmPassword = confirmPassword;
+        } 
         //Validates that the email is in the correct format
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;

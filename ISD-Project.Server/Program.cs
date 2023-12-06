@@ -1,4 +1,6 @@
+using ISD_Project.Server;
 using ISD_Project.Server.DataAccess;
+using ISD_Project.Server.Models;
 using ISD_Project.Server.Profiles;
 using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,7 +16,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("https://localhost:5173")
+            policy.WithOrigins("https://localhost:5173", "http://localhost:5174")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -49,11 +51,14 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 // inject services
 builder.Services.AddScoped<ICryptoService, CryptoService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHealthInformationService, HealthInformationService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IInsuranceService, InsuranceService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
+//
 var app = builder.Build();
 
 app.UseDefaultFiles();
