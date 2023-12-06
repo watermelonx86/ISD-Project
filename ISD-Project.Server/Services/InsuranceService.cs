@@ -24,9 +24,12 @@ namespace ISD_Project.Server.Services
                 var listInsuranceDto = _mapper.Map<List<Insurance>, List<InsuranceDto>>(listInsurance);
                 return new OkObjectResult(listInsuranceDto);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new StatusCodeResult(500);
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500 // Internal Server Error
+                };
             }
         }
     }

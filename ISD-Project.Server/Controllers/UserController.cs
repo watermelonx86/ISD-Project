@@ -15,7 +15,12 @@ namespace ISD_Project.Server.Controllers
         {
             this._userService = userService;
         }
-       
+
+        [HttpGet("get-user")]
+        public Task<IActionResult> GetUser()
+        {
+            return _userService.GetUser();
+        }
 
         [HttpPost("add-customercaredept")]
         public Task<IActionResult> AddCustomerCareDept(UserDto request)
@@ -52,6 +57,6 @@ namespace ISD_Project.Server.Controllers
         {
             return _userService.DeleteValidationDept(id);
         }
-        
+
     }
 }

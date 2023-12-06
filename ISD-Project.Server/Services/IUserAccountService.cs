@@ -9,6 +9,8 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> Login(UserLoginRequest request);
         Task<IActionResult> Verify(string token);
         Task<List<string>> GetUserRole(int userId);
+        Task<IActionResult> GetUserAccount();
+        Task<IActionResult> GetUserAccount(int id);
         Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request);
         Task<IActionResult> ResetPassword(UserResetPasswordRequest request);
     }

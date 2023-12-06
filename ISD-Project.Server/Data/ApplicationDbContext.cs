@@ -69,5 +69,6 @@ namespace ISD_Project.Server.DataAccess
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Insurance> Insurances { get; set; }
+        public DbSet<InsuranceType> InsuranceTypes { get; set; }
     }
 }
