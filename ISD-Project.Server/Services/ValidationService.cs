@@ -70,9 +70,11 @@ namespace ISD_Project.Server.Services
                 }
                 if (request.ProfileStatus == ProfileStatus.Approved)
                 {
-                    var response = new { userAccountId = customer.UserAccount.Id, message = $"Customer information updated successfully: {request.ProfileStatus}" };
+                    var response = new { userAccountId = customer.UserAccount?.Id, message = $"Customer information updated successfully: {request.ProfileStatus}" };
                     return new OkObjectResult(response);
-                } else {
+                }
+                else
+                {
                     return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
                 }
 
