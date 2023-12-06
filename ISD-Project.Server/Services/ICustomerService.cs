@@ -10,6 +10,8 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> GetCustomerApproved();
         Task<IActionResult> GetCustomerRejected();
         Task<IActionResult> GetCustomer(int id);
+        Task<IActionResult> GetHealthInformationOfCustomer(int id);
+
         Task<IActionResult> AddCustomer(CustomerDto request);
         Task<IActionResult> DeleteCustomer(int id);
     }

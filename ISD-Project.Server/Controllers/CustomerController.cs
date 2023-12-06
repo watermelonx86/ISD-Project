@@ -32,6 +32,18 @@ namespace ISD_Project.Server.Controllers
             return _customerService.GetCustomer();
         }
 
+        [HttpGet("get-customer/{id}")]
+        public Task<IActionResult> GetCustomer(int id)
+        {
+            return _customerService.GetCustomer(id);
+        }
+
+        [HttpGet("get-health-info-customer/{id}")]
+        public Task<IActionResult> GetHealthInformationOfCustomer(int id)
+        {
+            return _customerService.GetHealthInformationOfCustomer(id);
+        }
+
         [HttpGet("get-customer-pending-approval")]
         public Task<IActionResult> GetCustomerPendingApproval()
         {

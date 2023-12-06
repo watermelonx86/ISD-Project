@@ -52,10 +52,6 @@ namespace ISD_Project.Server.Controllers
         {
             return _userService.DeleteValidationDept(id);
         }
-        [HttpGet("get-health-info-customer/{id}")]
-        public Task<IActionResult> GetHealthInformationOfCustomer(int id)
-        {
-            return _userService.GetHealthInformationOfCustomer(id);
-        }
+        
     }
 }

@@ -68,7 +68,14 @@ namespace ISD_Project.Server.Services
                     //TODO: Edit email body message
                     await _emailService.SendEmail(customer.Email, "Account created", "Your account has been created successfully.");
                 }
-                return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
+                if (request.ProfileStatus == ProfileStatus.Approved)
+                {
+                    var response = new { userAccountId = customer.UserAccount.Id, message = $"Customer information updated successfully: {request.ProfileStatus}" };
+                    return new OkObjectResult(response);
+                } else {
+                    return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
+                }
+
             }
             catch (Exception)
             {

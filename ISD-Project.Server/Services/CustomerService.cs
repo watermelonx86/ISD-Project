@@ -130,6 +130,29 @@ namespace ISD_Project.Server.Services
             }
         }
 
+        public async Task<IActionResult> GetHealthInformationOfCustomer(int id)
+        {
+            try
+            {
+                var healthinfo = await _dbContext.HealthInformation.FirstOrDefaultAsync(c => c.CustomerId == id);
+                if (healthinfo is null)
+                {
+                    return new NotFoundObjectResult("Health Information not found");
+                }
+                else
+                {
+                    var healthinfoDto = _mapper.Map<HealthInformationDto>(healthinfo);
+                    return new OkObjectResult(healthinfoDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500 // Internal Server Error
+                };
+            }
+        }
         public async Task<IActionResult> GetCustomerApproved()
         {
             try

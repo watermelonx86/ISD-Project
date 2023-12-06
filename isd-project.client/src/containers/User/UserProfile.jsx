@@ -26,16 +26,17 @@ const UserProfile = () => {
     }, []);
 
     //Nap du lieu tu backend
-    const id = localStorage.getItem('userId');
+    const userAccountId = localStorage.getItem('userAccountId');
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
+    const userId = localStorage.getItem('userId');
     
     const [userData, setUserData] = useState('');
    
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7267/api/User/get-customer/${id}`);
+                const response = await axios.get(`https://localhost:7267/api/Customer/get-customer/${userId}`);
                 if (response.status === 200) {
                     setUserData(response.data);
                     console.log(response.data);
