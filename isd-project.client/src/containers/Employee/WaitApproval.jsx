@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
 
-const Censor = () => {
+const WaitApproval = () => {
 
     const application_List = Array.from({ length: 4 }, (_, index) => index + 1);
     const [openRefuse, setOpenRefuse] = useState(false);
@@ -736,4 +736,4 @@ const Censor = () => {
 
 }
 
-export default Censor
+export default WaitApproval
