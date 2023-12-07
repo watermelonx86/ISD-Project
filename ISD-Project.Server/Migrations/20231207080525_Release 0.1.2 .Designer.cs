@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231207043823_Release 0.1.2 ")]
+    [Migration("20231207080525_Release 0.1.2 ")]
     partial class Release012
     {
         /// <inheritdoc />
@@ -94,13 +94,6 @@ namespace ISD_Project.Server.Migrations
 
                     b.Property<DateTime>("LastUpdate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("OtherDisabilities")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("OtherDisabilitiesDetails")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<bool>("Smoking")
                         .HasColumnType("boolean");

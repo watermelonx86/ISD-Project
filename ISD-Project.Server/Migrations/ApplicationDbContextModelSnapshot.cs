@@ -92,13 +92,6 @@ namespace ISD_Project.Server.Migrations
                     b.Property<DateTime>("LastUpdate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("OtherDisabilities")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("OtherDisabilitiesDetails")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("Smoking")
                         .HasColumnType("boolean");
 

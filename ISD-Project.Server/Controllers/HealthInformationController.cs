@@ -1,4 +1,5 @@
-﻿using ISD_Project.Server.Services;
+﻿using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,12 @@ namespace ISD_Project.Server.Controllers
         public HealthInformationController(IHealthInformationService healthInformationService)
         {
             this._healthInformation = healthInformationService;
+        }
+
+        [HttpPost("add-health-information")]
+        public async Task<IActionResult> AddHealthInformation(HealthInformationDto request)
+        {
+            return await _healthInformation.AddHealthInformation(request);
         }
 
     }
