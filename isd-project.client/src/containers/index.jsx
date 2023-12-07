@@ -5,3 +5,4 @@ export { default as UserProfile } from './User/UserProfile';
 export { default as Product } from './Product/Product';
 export { default as ProductDetail } from './Product/ProductDetail';
 export { default as FillForm } from './Product/FillForm';
+export { default as Censor } from './Employee/Censor';

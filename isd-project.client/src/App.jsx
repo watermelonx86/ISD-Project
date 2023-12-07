@@ -9,6 +9,7 @@ import UserProfileEdit from './containers/User/UserProfileEdit';
 import Product from './containers/Product/Product';
 import ProductDetail from './containers/Product/ProductDetail';
 import FillForm from './containers/Product/FillForm';
+import Censor from './containers/Employee/Censor';
 
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
@@ -27,6 +28,7 @@ function App() {
                 <Route path='/san-pham-bao-hiem/:id' element={<ProductDetail />} />
                 <Route path='/san-pham-bao-hiem/:id/dang-ky-bao-hiem' element={<FillForm />} />
                 <Route path='/edit' element={<UserProfileEdit />} />
+                <Route path='/duyet-don-dang-ky' element={<Censor />} />
             </Routes>
         </Router>
     );

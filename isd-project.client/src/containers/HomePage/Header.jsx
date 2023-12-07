@@ -21,7 +21,10 @@ const Header = () => {
 
     const navigate = useNavigate();
 
+    const role = localStorage.getItem('role');
+
     const toggleMobileMenu = () => {
+        console.log(role);
         setMobileMenuOpen(!isMobileMenuOpen);
     };
 
@@ -100,6 +103,13 @@ const Header = () => {
                                     Liên hệ
                                 </a>
                             </li>
+                            {/*{role === "Customer" && (*/}
+                                <li>
+                                    <NavLink to="/duyet-don-dang-ky" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-600 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-gray-500 hover:bg-gray-700 lg:hover:bg-transparent border-gray-700">
+                                        Duyệt đơn đăng ký
+                                    </NavLink>
+                                </li> 
+                            {/*)}*/}
                             {/*<li>
                                 <a href="#" className="block py-2 pr-4 pl-3 text-gray-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-white hover:bg-gray-700 hover:text-white lg:hover:bg-transparent border-gray-700">
                                     Team
