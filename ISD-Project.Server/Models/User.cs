@@ -12,6 +12,9 @@ namespace ISD_Project.Server.Models
         [StringLength(12, MinimumLength = 12)]
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "Only numbers are allowed.")]
         public string IdentityDocumentId { get; set; } = String.Empty;
+        public DateOnly DateIssued { get; set; }
+        public DateOnly ValidUntil { get; set; }
+    
 
         [Required, EmailAddress]
         public string Email { get; set; } = String.Empty;

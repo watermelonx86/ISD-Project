@@ -95,11 +95,52 @@ const FillForm = () => {
         "Chi tiết sụt cân": weight_loss_detail,
     };
 
-    const handleSendForm = () => {
-        console.log(
-            "Thông tin: ", information,
-            "Địa chỉ: ", address,
-            "Sức khỏe: ", healthDeclare);
+    // Hàm chuyển đổi dữ liệu để match với backend
+    const convertGenderToInt = (genderString) => {
+        if(genderString === 'Nam') return 1;
+        else if (genderString === 'Nữ') return 2;
+    }
+
+    const convertPhoneNumber = (phoneNumber) => {
+        return phoneNumber.replace('0','+84');
+    }
+    // Hàm gửi form
+    const handleSendForm = async() => {
+        try {
+            const genderInt = convertGenderToInt(gender);
+            const formattedPhoneNumber = convertPhoneNumber(phoneNumber);
+            const api = "https://localhost:7267/api/Customer/add-customer";
+            const customerInfo = {
+                identityDocumentId: cccd,
+                email: email,
+                name : fullname,
+                gender : genderInt,
+                address : street + ", " + ward + ", " + district + ", " + city,
+                phoneNumber : formattedPhoneNumber,
+            }
+            // Gửi POST API request
+             const response = await fetch(api, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(customerInfo),
+            });
+
+            const responseData = await response.json();
+            if (response.ok) {
+                console.log('Request successful:', responseData);
+              } else {
+                console.error('Request failed:', responseData);
+              }
+
+        } catch (error) {
+            console.log(error);
+        }
+        // console.log(
+        //     "Thông tin: ", information,
+        //     "Địa chỉ: ", address,
+        //     "Sức khỏe: ", healthDeclare);
     }
 
 

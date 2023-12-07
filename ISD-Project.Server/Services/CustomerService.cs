@@ -18,7 +18,7 @@ namespace ISD_Project.Server.Services
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> AddCustomer(CustomerDto request)
+        public async Task<IActionResult> AddCustomer(CustomerRegisterRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -36,15 +36,8 @@ namespace ISD_Project.Server.Services
 
                     _dbContext.Customers.Add(customer);
                     await _dbContext.SaveChangesAsync();
-
-                    customer.HealthInformation = new HealthInformation(); // After created customer, create health information for customer
-                    customer.HealthInformation.CustomerId = customer.Id;
-                    customer.HealthInformation.LastUpdate = DateTime.UtcNow;
-                    _dbContext.Customers.Update(customer);
-                    await _dbContext.SaveChangesAsync();
-
                     await transaction.CommitAsync();
-
+                    
                     var response = new { userId = customer.Id, message = "Customer successfully created" };
                     return new OkObjectResult(response);
                 }

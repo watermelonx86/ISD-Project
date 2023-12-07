@@ -21,7 +21,7 @@ namespace ISD_Project.Server.Services
             this._cryptoService = cryptoService;
             this._mapper = mapper;
         }
-        public async Task<IActionResult> Register(UserRegisterRequest request)
+        public async Task<IActionResult> Register(UserAccountRegisterRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -79,7 +79,7 @@ namespace ISD_Project.Server.Services
                 }
             }
         }
-        public async Task<IActionResult> Login(UserLoginRequest request)
+        public async Task<IActionResult> Login(UserAccountLoginRequest request)
         {
             var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
@@ -102,7 +102,7 @@ namespace ISD_Project.Server.Services
                 return new BadRequestObjectResult("User does not verified");
             }
 
-            var userDto = new UserLoginResponse
+            var userDto = new UserAccountLoginResponse
             {
                 UserAccountId = user.Id,
                 Token = user.VerificationToken,
@@ -158,7 +158,8 @@ namespace ISD_Project.Server.Services
             try
             {
                 var userAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Id == id);
-                if(userAccount is null ) {
+                if (userAccount is null)
+                {
                     return new BadRequestObjectResult("User Account does not exist");
                 }
                 var userAccountDto = _mapper.Map<UserAccountDto>(userAccount);

@@ -26,13 +26,13 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("register")]
-        public Task<IActionResult> Register([FromBody] UserRegisterRequest request)
+        public Task<IActionResult> Register([FromBody] UserAccountRegisterRequest request)
         {
             return _userAccountService.Register(request);
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        public Task<IActionResult> Login([FromBody] UserAccountLoginRequest request)
         {
             return _userAccountService.Login(request);
         }
