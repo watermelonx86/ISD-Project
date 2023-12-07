@@ -20,7 +20,7 @@ const HomePage = () => {
                     Cac goi bao hiem
                 </h1>
                 <div class="w-3/4 grid grid-cols-3 gap-20 mx-auto ">
-                    <div className="bg-white h-510 rounded p-5 shadow-xl shadow-slate-300 hover:shadow-slate-400 duration-300 cursor-pointer ">
+                    <div className="bg-white h-510 rounded p-5 shadow-xl shadow-slate-300 hover:shadow-slate-400 duration-300 cursor-pointer min-w-[350px]">
                         <img src={bhsksp} className="w-full h-2/4 rounded"/>
                         <p className="pt-3">
                             11/12/2023
@@ -33,7 +33,7 @@ const HomePage = () => {
                         </p>
                     </div>
 
-                    <div className="bg-white h-510 rounded p-5 shadow-xl shadow-slate-300 hover:shadow-slate-400 duration-300 cursor-pointer">
+                    <div className="bg-white h-510 rounded p-5 shadow-xl shadow-slate-300 hover:shadow-slate-400 duration-300 cursor-pointer min-w-[350px]">
                         <img src={bhsksp} className="w-full h-2/4 rounded"/>
                         <p className="pt-3">
                             11/12/2023
@@ -46,7 +46,7 @@ const HomePage = () => {
                         </p>
                     </div>
 
-                    <div className="bg-white h-510 rounded p-5 shadow-xl shadow-slate-300 hover:shadow-slate-400 duration-300 cursor-pointer">
+                    <div className="bg-white h-510 rounded p-5 shadow-xl shadow-slate-300 hover:shadow-slate-400 duration-300 cursor-pointer min-w-[350px]">
                         <img src={bhsksp} className="w-full h-2/4 rounded"/>
                         <p className="pt-3">
                             11/12/2023
