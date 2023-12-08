@@ -27,6 +27,7 @@ namespace ISD_Project.Server.Services
             {
                 try
                 {
+                    // Validate request
                     if (request is null)
                     {
                         return new BadRequestObjectResult("Request is null");
@@ -39,43 +40,75 @@ namespace ISD_Project.Server.Services
 
                     var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHash(request.Password);
 
-
-                    var user = new UserAccount
+                    var userAccount = new UserAccount
                     {
                         Email = request.Email,
                         PasswordHash = passwordHash,
                         PasswordSalt = passwordSalt,
-                        //VerificationToken = await _cryptoService.CreateRandomToken()
                     };
-
-                    var token = await _cryptoService.CreateToken(user);
+                    // If not customer then activate userAccount by default
+                    userAccount.IsActivated = request.Role == RoleType.Customer ? (int)AccountStatus.Inactive : (int)AccountStatus.Active;
+                    var token = await _cryptoService.CreateToken(userAccount);
                     if (token != null)
                     {
-                        user.VerificationToken = token;
+                        userAccount.VerificationToken = token;
                     }
                     else
                     {
                         return new BadRequestObjectResult("Token is null");
                     }
-                    await _dbContext.UserAccounts.AddAsync(user);
+                    var userAccountResult = await _dbContext.UserAccounts.AddAsync(userAccount);
                     await _dbContext.SaveChangesAsync();
+
+                    //If not customer then create a new User by default
+                    //BUG here
+                    if (request.Role != RoleType.Customer)
+                    {
+                        var role = request.Role;
+                        switch (role)
+                        {
+                            case RoleType.Admin:
+                                var admin = new Admin();
+                                await _dbContext.Admins.AddAsync(admin);
+                                break;
+                            case RoleType.FinancialDepartment:
+                                var financialDepartment = new FinancialDepartment();
+                                await _dbContext.FinancialDepartments.AddAsync(financialDepartment);
+                                break;
+                            case RoleType.ValidationDepartment:
+                                var validationDepartment = new ValidationDepartment();
+                                await _dbContext.ValidationDepartments.AddAsync(validationDepartment);
+                                break;
+                            case RoleType.CustomerCareDepartment:
+                                var customerCareDepartment = new CustomerCareDepartment();
+                                await _dbContext.CustomerCareDepartments.AddAsync(customerCareDepartment);
+                                break;
+                            default:
+                                throw new Exception("Role is not valid");
+                        }
+                        await _dbContext.SaveChangesAsync();
+                    }
 
                     var userRole = new UserRole
                     {
-                        UserId = user.Id,
-                        RoleId = (int)RoleType.Customer
+                        UserId = userAccount.Id,
+                        RoleId = (int)request.Role
                     };
 
                     await _dbContext.UserRoles.AddAsync(userRole);
                     await _dbContext.SaveChangesAsync();
 
                     await transaction.CommitAsync(); // Commit transaction if all commands succeed
-                    return new OkObjectResult("User successfully created");
+                    var response = new { userAccountId = userAccountResult.Entity.Id, RoleType = request.Role.ToString(), message = "UserAccount successfully created" };
+                    return new OkObjectResult(response);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync(); // Rollback transaction if exception occurs
-                    return new StatusCodeResult(500); // Internal Server Error
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
             }
         }

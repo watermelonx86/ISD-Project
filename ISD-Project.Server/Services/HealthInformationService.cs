@@ -43,7 +43,22 @@ namespace ISD_Project.Server.Services
                     {
                         return new BadRequestObjectResult("Customer already has health information");
                     }
-
+                    //Validate input data
+                    if(!request.Smoking) {
+                        request.CigarettesPerDay = 0;
+                    }
+                    if(!request.AlcoholConsumption) {
+                        request.DaysPerWeekAlcohol = 0;
+                    }
+                    if(!request.EngagesInDangerousSports) {
+                        request.DangerousSportsDetails = String.Empty;
+                    }
+                    if(!request.ExperiencedDiseasesInLast5Years) {
+                        request.ExperiencedDiseasesDetails = String.Empty;
+                    }
+                    if(!request.UnexplainedWeightLoss) {
+                        request.UnexplainedWeightLossDetails = String.Empty;
+                    }
                     var healthInformation = _mapper.Map<HealthInformation>(request);
                     healthInformation.LastUpdate = DateTime.UtcNow;
 

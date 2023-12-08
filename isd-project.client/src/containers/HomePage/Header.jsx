@@ -122,7 +122,7 @@ const Header = () => {
                                     Liên hệ
                                 </a>
                             </li>
-                            {/*{role === "ValidationDepartment" && (*/}
+                            {role === "ValidationDepartment" && (
                             <li className="hs-dropdown" ref={dropdownRef}>
                                 <div id="hs-dropdown-default" type="button"
                                      className={`hs-dropdown-toggle block py-2 pr-4 pl-3 text-gray-700 border-b cursor-pointer 
@@ -146,7 +146,7 @@ const Header = () => {
                                     </div>
                                 </div>
                             </li> 
-                            {/*)}*/}
+                            )}
                         </ul>
                     </div>
                 </div>

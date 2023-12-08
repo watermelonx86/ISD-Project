@@ -9,12 +9,5 @@ namespace ISD_Project.Server.Models
         public string Name { get; set; } = String.Empty;
         public ICollection<UserRole>? UserRoles { get; set; }
     }
-    public enum RoleType
-    {
-        Customer = 1,
-        Admin = 2,
-        FinancialDepartment = 3,
-        ValidationDepartment = 4,
-        CustomerCareDepartment = 5
-    }
+    
 }

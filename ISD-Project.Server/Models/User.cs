@@ -1,11 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ISD_Project.Server.Models
 {
     public class User
     {
+        public User()
+        {
+            this.Name = "Nguyễn Văn A";
+            this.DateIssued = new DateOnly();
+            this.ValidUntil = new DateOnly();
+        }
+        public User(string email)
+        {
+            this.Name = "Nguyễn Văn A";
+            this.Email = email;
+            this.DateIssued = new DateOnly();
+            this.ValidUntil = new DateOnly();
+        }
         [Key]
         public int Id { get; set; }
         [Required]
@@ -14,7 +25,7 @@ namespace ISD_Project.Server.Models
         public string IdentityDocumentId { get; set; } = String.Empty;
         public DateOnly DateIssued { get; set; }
         public DateOnly ValidUntil { get; set; }
-    
+
 
         [Required, EmailAddress]
         public string Email { get; set; } = String.Empty;
@@ -31,10 +42,6 @@ namespace ISD_Project.Server.Models
         public int? UserAccountId { get; set; }
         public UserAccount? UserAccount { get; set; }
     }
-    public enum GenderType
-    {
-        Male = 0,
-        Female = 1,
-    }
+
 }
 

@@ -8,11 +8,4 @@
         public int? HealthInformationId { get; set; }
         public HealthInformation? HealthInformation { get; set; }
     }
-
-    public enum ProfileStatus
-    {
-        Pending,
-        Approved,
-        Rejected,
-    }
 }

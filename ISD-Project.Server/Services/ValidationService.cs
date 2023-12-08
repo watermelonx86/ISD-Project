@@ -55,7 +55,7 @@ namespace ISD_Project.Server.Services
                 //Create new account for customer after approval
                 if (request.ProfileStatus == ProfileStatus.Approved && customer.UserAccount is null)
                 {
-                    var userRegisterRequest = new UserAccountRegisterRequest(customer.Email, "Demo123", "Demo123");
+                    var userRegisterRequest = new UserAccountRegisterRequest(customer.Email, "Demo123", "Demo123", RoleType.Customer);
                     await _userAccount.Register(userRegisterRequest);
                     customer.UserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
                     if (customer.UserAccount is not null)
