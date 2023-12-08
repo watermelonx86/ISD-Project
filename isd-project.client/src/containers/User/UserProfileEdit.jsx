@@ -63,12 +63,25 @@ const UserProfileEdit = () => {
                         <div className="md:w-3/4 mx-auto">
                             <div className="p-1">                
                                 <label className="text-sm text-black-400">Email</label>
-                                <div className="w-full inline-flex border">
+                                <div className="w-full inline-flex border bg-slate-100 ">
 
                                     <input
                                         type="email"
-                                        className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder={userData.email}
+                                        className="focus:outline-none focus:text-black-600 p-2"
+                                        value={userData.email}
+                                        disabled
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="p-1">                
+                                <label className="text-sm text-black-400">CMND/CCCD</label>
+                                <div className="w-full inline-flex border bg-slate-100 ">
+
+                                    <input
+                                        type="email"
+                                        className="focus:outline-none focus:text-black-600 p-2"
+                                        // value={userData.email}
                                         disabled
                                     />
                                 </div>
@@ -76,12 +89,12 @@ const UserProfileEdit = () => {
 
                             <div className="p-1">
                                 <label className="text-sm text-black-400">Phone number</label>
-                                <div className="w-full inline-flex border">
+                                <div className="w-full inline-flex border bg-slate-100">
 
                                     <input
                                         type="text"
-                                        className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder={userData.phoneNumber}
+                                        className="focus:outline-none focus:text-black-600 p-2"
+                                        value={userData.phoneNumber}
                                         disabled
                                     />
                                 </div>
@@ -96,23 +109,23 @@ const UserProfileEdit = () => {
                         <div className="md:w-3/4 mx-auto">
                             <div>
                                 <label className="text-sm text-black-400">Full name</label>
-                                <div className="w-full inline-flex border">
+                                <div className="w-full inline-flex border bg-slate-100">
                                     
                                     <input
                                         type="text"
-                                        className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder={userData.name}
+                                        className="focus:outline-none focus:text-black-600 p-2"
+                                        value={userData.name}
                                         disabled
                                     />
                                 </div>
                             </div>
                             <div>
                                 <label className="text-sm text-black-400">Gender</label>
-                                <div className="w-full inline-flex border">
+                                <div className="w-full inline-flex border bg-slate-100">
                                     <input
                                         type="text"
-                                        className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder="Male"
+                                        className="focus:outline-none focus:text-black-900 p-2"
+                                        value="Male"
                                         disabled
                                     />
                                 </div>
@@ -124,7 +137,7 @@ const UserProfileEdit = () => {
                                     <input
                                         type="text"
                                         className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder="Student"
+                                        defaultValue="Student"
                                         
                                     />
                                 </div>
@@ -133,7 +146,7 @@ const UserProfileEdit = () => {
                                 <label className="text-sm text-black-400">Address</label>
                                 <div className="w-full inline-flex border">
                                     <input
-                                        type="text"
+                                        type="text" 
                                         className="w-11/12 focus:outline-none focus:text-black-600 p-2"
                                         placeholder={userData.email}
                                     />
@@ -176,10 +189,12 @@ const UserProfileEdit = () => {
                                     />
                                 </div>
                             </div>
-
-                            <button className="bg-blue-600 px-4 py-2 m-5 relative left-[700px] text-white hover:bg-blue-700">
-                                Change
-                            </button>
+                            <div className="w-full" align="right">
+                                <button className="bg-blue-600 px-4 py-2 m-5 mb-0 text-white hover:bg-blue-700">
+                                    Change
+                                </button>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -187,7 +202,7 @@ const UserProfileEdit = () => {
                     <div className="w-full p-4 text-right text-black-500">
                         <button className="inline-flex items-center focus:outline-none mr-4">
                             <svg
-                                fill="none"
+                                fill="none" 
                                 className="w-4 mr-2"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"

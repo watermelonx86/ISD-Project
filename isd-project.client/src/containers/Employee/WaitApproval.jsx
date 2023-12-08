@@ -112,7 +112,7 @@ const WaitApproval = () => {
                 </section>
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-6 mt-[-12rem]">
                     {application_List.map((item) => (
-                        <div key={item} className="bg-white border border-gray-250 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative">
+                        <div key={item} className="bg-white border border-gray-250 transition transform duration-300 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative">
                             <span className="bg-red-100 border border-red-500 rounded-full text-primary text-sm poppins px-4 py-1 inline-block mb-4 ">
                                 Đăng ký bảo hiểm
                             </span>
@@ -711,7 +711,8 @@ const WaitApproval = () => {
                                             className="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                                             data-te-modal-dismiss
                                             data-te-ripple-init
-                                            data-te-ripple-color="light">
+                                            data-te-ripple-color="light"
+                                            onClick={handleCloseDetail}>
                                             Đóng
                                         </button>
                                         <button
