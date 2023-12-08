@@ -9,11 +9,6 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> GetUser();
         Task<IActionResult> GetUserById(int id);
         Task<IActionResult> GetUserByRole(RoleType role);
-        // Task<IActionResult> AddCustomerCareDept(UserDto request);
-        // Task<IActionResult> FinancialDeptAdd(UserDto financialAddRequest);
-        // Task<IActionResult> ValidationDeptAdd(UserDto validationAddRequest);
-        // Task<IActionResult> DeleteCustomerCare(int id);
-        // Task<IActionResult> DeleteFinancialDept(int id);
-        // Task<IActionResult> DeleteValidationDept(int id);
+        
     }
 }
