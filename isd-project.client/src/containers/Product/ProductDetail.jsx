@@ -1,10 +1,11 @@
-﻿import React, { useEffect } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
 
 import Circle from '../../assets/circle.png';
+import axios from 'axios';
 
 const ProductDetail = () => {
 
@@ -13,6 +14,31 @@ const ProductDetail = () => {
     const navigate = useNavigate();
 
     const array = Array.from({ length: 5 }, (_, index) => index + 1); //test
+
+    const [insuranceData, setInsuranceData] = useState([]);
+
+    const pathSegments = window.location.pathname.split('/');
+    const id = pathSegments[pathSegments.length - 1];
+
+    console.log("Test", insuranceData[0]); 
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`https://localhost:7267/api/Insurance/get-insurance-detail/${id}`); 
+                if (response.status === 200) {
+                    const newData = Array.isArray(response.data) ? response.data : [response.data];
+                    setInsuranceData(newData);
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
 
     const handleForm = () => {
         // Truy cập thông tin sản phẩm (item) tại đây và thực hiện công việc cần thiết
@@ -24,33 +50,35 @@ const ProductDetail = () => {
     return (
         <React.Fragment>
             <Header />
-            
             <section className= "h-auto px-6 py-2 rounded-xl mx-auto max-w-screen-xl bg-white border-2 border-gray-150 my-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+            {insuranceData.map(type => (
+                <div key={type.id} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
                     <div className= "flex flex-col justify-center">
                         <img className="w-11/12 h-3/4 mx-auto rounded-xl"
-                            src="https://www.prudential.com.vn/export/sites/prudential-vn/vi/.thu-vien/hinh-anh/san-pham-bao-hiem-nhan-tho/ke-hoach-bao-ve/sp-phu-bao-an-thumb-366x206.jpg"
+                            src="https://www.prudential.com.vn/export/sites/prudential-vn/vi/.thu-vien/hinh-anh/san-pham-bao-hiem-bo-tro/sp-bao-hiem-tai-nan-danh-cho-tre-em-hero-766x432.jpg"
                             alt="" />
                     </div>
                     <div className="flex flex-col mt-7">
                         <p className= "text-xl font-bold md:leading-[30px]">
-                            Tên gói bảo hiểm. Ví dụ: Quyền lợi Trợ cấp viện phí - Trợ cấp phẫu thuật - Bảo hiểm bệnh Ung Thư - Bảo hiểm Tử vong
+                            {type.insuranceName} 
                         </p>
                         <div className= "flex items-center mt-[8px] md:mt-[4px]">
                             <span className="text-xl font-bold text-textPrice md:leading-[30px]">
-                                100.000 - 1.000.000 VND
+                                {type.priceAmount} VND
                             </span>
                         </div>
                     </div>
                 </div>
+           ))}
             </section>
-
+          
             <div className="h-auto mx-auto max-w-screen-xl">
                 <p className="text-lg font-bold text-[#1C1D1F]">Chính sách bảo hiểm</p>
                 <section className="h-auto px-6 py-2 rounded-xl bg-white border-2 border-gray-150 my-6">
-                    <div className="flex flex-wrap flex-row justify-between box-border">
-                        {array.map((item) => (
-                            <div key={item} className="md:border-1 md:rounded-none md:border-b md:border-solid md:border-[#EBEDF0]">
+                
+                    <div  className="flex flex-wrap flex-row justify-between box-border">
+                        
+                            <div className="md:border-1 md:rounded-none md:border-b md:border-solid md:border-[#EBEDF0]">
                                 <div className="flex justify-start items-start flex-row px-5 py-5 cursor-pointer">
                                     <div className="text-center ml-1">
                                         <div className="mb-3 mt-1 w-[30px] h-[30px]">
@@ -73,12 +101,12 @@ const ProductDetail = () => {
                                 </div>
                             </div>
 
-                        ))}
+                        
                         
                     </div>
-
                 </section>
             </div>
+            
 
             <div className="h-auto mx-auto max-w-screen-xl">
                 <p className="text-lg font-bold text-[#1C1D1F]">Điều kiện tham gia</p>

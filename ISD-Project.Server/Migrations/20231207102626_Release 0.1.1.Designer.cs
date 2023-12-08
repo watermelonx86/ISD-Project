@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231206124158_Release 0.1.2 update  HealthInfomation, Insurance, InsuranceType")]
-    partial class Release012updateHealthInfomationInsuranceInsuranceType
+    [Migration("20231207102626_Release 0.1.1")]
+    partial class Release011
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

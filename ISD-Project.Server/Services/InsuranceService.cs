@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
@@ -16,12 +17,19 @@ namespace ISD_Project.Server.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<IActionResult> GetInsurance()
+        public async Task<IActionResult> GetInsuranceByTypes(int id)
         {
             try
             {
-                var listInsurance = await _dbContext.Insurances.ToListAsync();
-                var listInsuranceDto = _mapper.Map<List<Insurance>, List<InsuranceDto>>(listInsurance);
+                var listInsurances = await _dbContext.Insurances
+                .Where(i => i.InsuranceTypeId == id)
+                .ToListAsync();
+                if (listInsurances == null)
+                {
+                    return new BadRequestObjectResult("Insurance Type does not exist");
+                }
+
+                var listInsuranceDto = _mapper.Map<List<Insurance>, List<InsuranceDto>>(listInsurances);
                 return new OkObjectResult(listInsuranceDto);
             }
             catch (Exception ex)
@@ -32,5 +40,45 @@ namespace ISD_Project.Server.Services
                 };
             }
         }
+
+        public async Task<IActionResult> GetInsuranceTypes()
+        {
+            try
+            {
+                var insuranceType = await _dbContext.InsuranceTypes.ToListAsync();
+
+                var listInsuranceDto = _mapper.Map<List<InsuranceType>>(insuranceType);
+                return new OkObjectResult(listInsuranceDto);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500 // Internal Server Error
+                };
+            }
+        }
+
+        public async Task<IActionResult> GetInsuranceDetail(int id)
+        {
+            try
+            {
+                var listInsurances = await _dbContext.Insurances.FirstOrDefaultAsync(u => u.InsuranceId == id);
+                if (listInsurances == null)
+                {
+                    return new BadRequestObjectResult("Insurance does not exist");
+                }
+                // var listInsuranceDto = _mapper.Map<List<Insurance>, List<InsuranceDto>>(listInsurances);
+                return new OkObjectResult(listInsurances);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+
     }
 }
