@@ -52,7 +52,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        //BUG
+        //BUG : Liên quan đến khoá ngoại của Customer
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())

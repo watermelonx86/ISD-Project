@@ -60,32 +60,44 @@ namespace ISD_Project.Server.Services
                     var userAccountResult = await _dbContext.UserAccounts.AddAsync(userAccount);
                     await _dbContext.SaveChangesAsync();
 
-                    //If not customer then create a new User by default
-                    //BUG here
+
+                    int userId = 0;
                     if (request.Role != RoleType.Customer)
                     {
                         var role = request.Role;
                         switch (role)
                         {
+
                             case RoleType.Admin:
-                                var admin = new Admin();
-                                await _dbContext.Admins.AddAsync(admin);
+                                var admin = new Admin(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v1 = await _dbContext.Admins.AddAsync(admin);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v1.Entity.Id;
                                 break;
                             case RoleType.FinancialDepartment:
-                                var financialDepartment = new FinancialDepartment();
-                                await _dbContext.FinancialDepartments.AddAsync(financialDepartment);
+                                var financialDepartment = new FinancialDepartment(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v2 = await _dbContext.FinancialDepartments.AddAsync(financialDepartment);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v2.Entity.Id;
                                 break;
                             case RoleType.ValidationDepartment:
-                                var validationDepartment = new ValidationDepartment();
-                                await _dbContext.ValidationDepartments.AddAsync(validationDepartment);
+                                var validationDepartment = new ValidationDepartment(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v3 = await _dbContext.ValidationDepartments.AddAsync(validationDepartment);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v3.Entity.Id;
                                 break;
                             case RoleType.CustomerCareDepartment:
-                                var customerCareDepartment = new CustomerCareDepartment();
-                                await _dbContext.CustomerCareDepartments.AddAsync(customerCareDepartment);
+                                var customerCareDepartment = new CustomerCareDepartment(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v4 = await _dbContext.CustomerCareDepartments.AddAsync(customerCareDepartment);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v4.Entity.Id;
                                 break;
                             default:
                                 throw new Exception("Role is not valid");
                         }
+                        //Update UserId for UserAccount
+                        userAccountResult.Entity.UserId = userId;
+                        _dbContext.UserAccounts.Update(userAccountResult.Entity);
                         await _dbContext.SaveChangesAsync();
                     }
 

@@ -10,12 +10,14 @@ namespace ISD_Project.Server.Models
             this.DateIssued = new DateOnly();
             this.ValidUntil = new DateOnly();
         }
-        public User(string email)
+        public User(string email, int userAccountId, UserAccount userAccount)
         {
             this.Name = "Nguyễn Văn A";
             this.Email = email;
             this.DateIssued = new DateOnly();
             this.ValidUntil = new DateOnly();
+            this.UserAccountId = userAccountId;
+            this.UserAccount = userAccount;
         }
         [Key]
         public int Id { get; set; }

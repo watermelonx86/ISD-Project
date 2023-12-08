@@ -22,41 +22,41 @@ namespace ISD_Project.Server.Controllers
             return _userService.GetUser();
         }
 
-        [HttpPost("add-customercaredept")]
-        public Task<IActionResult> AddCustomerCareDept(UserDto request)
-        {
-            return _userService.AddCustomerCareDept(request);
-        }
+        // [HttpPost("add-customercaredept")]
+        // public Task<IActionResult> AddCustomerCareDept(UserDto request)
+        // {
+        //     return _userService.AddCustomerCareDept(request);
+        // }
 
-        [HttpPost("add-financialdept")]
-        public Task<IActionResult> FinancialDeptRegister(UserDto request)
-        {
-            return _userService.FinancialDeptAdd(request);
-        }
+        // [HttpPost("add-financialdept")]
+        // public Task<IActionResult> FinancialDeptRegister(UserDto request)
+        // {
+        //     return _userService.FinancialDeptAdd(request);
+        // }
 
-        [HttpPost("add-validationdept")]
-        public Task<IActionResult> ValdationDeptRegister(UserDto request)
-        {
-            return _userService.ValidationDeptAdd(request);
-        }
+        // [HttpPost("add-validationdept")]
+        // public Task<IActionResult> ValdationDeptRegister(UserDto request)
+        // {
+        //     return _userService.ValidationDeptAdd(request);
+        // }
 
-        [HttpDelete("delete-customercare/{id}")]
-        public Task<IActionResult> DeleteCustomerCare(int id)
-        {
-            return _userService.DeleteCustomerCare(id);
-        }
+        // [HttpDelete("delete-customercare/{id}")]
+        // public Task<IActionResult> DeleteCustomerCare(int id)
+        // {
+        //     return _userService.DeleteCustomerCare(id);
+        // }
 
-        [HttpDelete("delete-financialdept/{id}")]
-        public Task<IActionResult> DeleteFinancialDept(int id)
-        {
-            return _userService.DeleteFinancialDept(id);
-        }
+        // [HttpDelete("delete-financialdept/{id}")]
+        // public Task<IActionResult> DeleteFinancialDept(int id)
+        // {
+        //     return _userService.DeleteFinancialDept(id);
+        // }
 
-        [HttpDelete("delete-validationdept/{id}")]
-        public Task<IActionResult> DeleteValidationDept(int id)
-        {
-            return _userService.DeleteValidationDept(id);
-        }
+        // [HttpDelete("delete-validationdept/{id}")]
+        // public Task<IActionResult> DeleteValidationDept(int id)
+        // {
+        //     return _userService.DeleteValidationDept(id);
+        // }
 
     }
 }
