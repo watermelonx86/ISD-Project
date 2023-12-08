@@ -5,8 +5,8 @@ namespace ISD_Project.Server.Services
 {
     public interface IUserAccountService
     {
-        Task<IActionResult> Register(UserRegisterRequest request);
-        Task<IActionResult> Login(UserLoginRequest request);
+        Task<IActionResult> Register(UserAccountRegisterRequest request);
+        Task<IActionResult> Login(UserAccountLoginRequest request);
         Task<IActionResult> Verify(string token);
         Task<List<string>> GetUserRole(int userId);
         Task<IActionResult> GetUserAccount();

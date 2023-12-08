@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
 
 import { useAuth } from '../../services/auth.jsx';
@@ -18,10 +18,32 @@ const Header = () => {
     const { isLoggedIn, login, logout } = useAuth();
 
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     const navigate = useNavigate();
 
+    const role = localStorage.getItem('role');
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
     const toggleMobileMenu = () => {
+        console.log(role);
         setMobileMenuOpen(!isMobileMenuOpen);
     };
 
@@ -54,14 +76,14 @@ const Header = () => {
                             <NavLink to="/login" className="text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 hover:bg-gray-400 focus:outline-none focus:ring-gray-800">
                                 Log in
                             </NavLink>
-                            <NavLink to="/signup" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                            <NavLink to="/signup" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none">
                                 Sign up
                             </NavLink>
                         </div>
                         )}
                         <button data-collapse-toggle="mobile-menu-2"
                             type="button"
-                            className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                            className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
                             onClick={toggleMobileMenu}
                             aria-controls="mobile-menu-2"
                             aria-expanded={isMobileMenuOpen}>
@@ -100,16 +122,31 @@ const Header = () => {
                                     Liên hệ
                                 </a>
                             </li>
-                            {/*<li>
-                                <a href="#" className="block py-2 pr-4 pl-3 text-gray-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-white hover:bg-gray-700 hover:text-white lg:hover:bg-transparent border-gray-700">
-                                    Team
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="block py-2 pr-4 pl-3 text-gray-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-white hover:bg-gray-700 hover:text-white lg:hover:bg-transparent border-gray-700">
-                                    Contact
-                                </a>
-                            </li>*/}
+                            {role === "ValidationDepartment" && (
+                            <li className="hs-dropdown" ref={dropdownRef}>
+                                <div id="hs-dropdown-default" type="button"
+                                     className={`hs-dropdown-toggle block py-2 pr-4 pl-3 text-gray-700 border-b cursor-pointer 
+                                     border-gray-100 hover:bg-gray-600 lg:hover:bg-transparent lg:border-0 
+                                     lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-gray-500 
+                                     hover:bg-gray-700 lg:hover:bg-transparent border-gray-700 ${isOpen ? 'active' : ''}`}
+                                    onClick={toggleDropdown}
+                                >
+                                    Duyệt đơn đăng ký
+                                    <div
+                                        className={`absolute z-10 transition-[opacity,margin] duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} ${isOpen ? 'block' : 'hidden'
+                                            } min-w-[10rem] bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full`}
+                                        aria-labelledby="hs-dropdown-default"
+                                    >
+                                        <NavLink to="/duyet-don-dang-ky" className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="#">
+                                            Đơn đăng ký chờ duyệt
+                                        </NavLink>
+                                        <NavLink to="/lich-su-duyet" className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="#">
+                                            Lịch sử duyệt
+                                        </NavLink>
+                                    </div>
+                                </div>
+                            </li> 
+                            )}
                         </ul>
                     </div>
                 </div>

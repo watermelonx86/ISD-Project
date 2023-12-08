@@ -47,6 +47,8 @@ export default {
                 "2xl": "1536px",
             },
             colors: {
+                bgColor: "#e5eaef",
+                overLay: "#000",
                 textPrice: "rgb(237 27 45)",
                 buttonProduct: "#ed1b2e",
                 require: "#ed1b2c",

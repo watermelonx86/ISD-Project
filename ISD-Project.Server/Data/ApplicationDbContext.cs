@@ -30,7 +30,11 @@ namespace ISD_Project.Server.DataAccess
                 .WithOne(ua => ua.User)
                 .HasForeignKey<UserAccount>(ua => ua.UserId)
                 .IsRequired(false);
-
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.HealthInformation)
+                .WithOne(hi => hi.Customer)
+                .HasForeignKey<HealthInformation>(hi => hi.CustomerId)
+                .IsRequired(false);
             modelBuilder.Entity<Customer>()
                 .HasBaseType<User>();
 

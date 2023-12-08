@@ -1,6 +1,6 @@
 ﻿namespace ISD_Project.Server.Models.DTOs
 {
-    public class UserLoginResponse
+    public class UserAccountLoginResponse
     {
         public int UserAccountId { get; set; }
         public string? Token { get; set; } = String.Empty;

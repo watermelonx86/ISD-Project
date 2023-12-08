@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Release011 : Migration
+    public partial class Release012 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,8 @@ namespace ISD_Project.Server.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IdentityDocumentId = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
+                    DateIssued = table.Column<DateOnly>(type: "date", nullable: false),
+                    ValidUntil = table.Column<DateOnly>(type: "date", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
@@ -55,7 +57,10 @@ namespace ISD_Project.Server.Migrations
                     PhoneNumber = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
                     UserAccountId = table.Column<int>(type: "integer", nullable: true),
                     Discriminator = table.Column<string>(type: "text", nullable: false),
-                    IsApproved = table.Column<int>(type: "integer", nullable: true)
+                    IsApproved = table.Column<int>(type: "integer", nullable: true),
+                    Nationality = table.Column<string>(type: "text", nullable: true),
+                    Job = table.Column<string>(type: "text", nullable: true),
+                    HealthInformationId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -104,8 +109,6 @@ namespace ISD_Project.Server.Migrations
                     HasSpecificHealthConditions = table.Column<bool>(type: "boolean", nullable: false),
                     ExperiencedDiseasesInLast5Years = table.Column<bool>(type: "boolean", nullable: false),
                     ExperiencedDiseasesDetails = table.Column<string>(type: "text", nullable: false),
-                    OtherDisabilities = table.Column<bool>(type: "boolean", nullable: false),
-                    OtherDisabilitiesDetails = table.Column<string>(type: "text", nullable: false),
                     UnexplainedWeightLoss = table.Column<bool>(type: "boolean", nullable: false),
                     UnexplainedWeightLossDetails = table.Column<string>(type: "text", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),

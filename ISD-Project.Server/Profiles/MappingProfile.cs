@@ -12,6 +12,7 @@ namespace ISD_Project.Server.Profiles
             //Model -> DTO
             CreateMap<User, UserDto>();
             CreateMap<Customer, CustomerDto>();
+            CreateMap<Customer, CustomerRegisterRequest>();
             CreateMap<ValidationDepartment, UserDto>();
             CreateMap<CustomerCareDepartment, UserDto>();
             CreateMap<FinancialDepartment, UserDto>();
@@ -22,6 +23,7 @@ namespace ISD_Project.Server.Profiles
             //DTO -> Model
             CreateMap<UserDto, User>();
             CreateMap<CustomerDto, Customer>();
+            CreateMap<CustomerRegisterRequest, Customer>();
             CreateMap<UserDto, ValidationDepartment>();
             CreateMap<UserDto, CustomerCareDepartment>();
             CreateMap<UserDto, FinancialDepartment>();

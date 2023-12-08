@@ -16,7 +16,7 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("add-customer")]
-        public Task<IActionResult> AddCustomer(CustomerDto request)
+        public Task<IActionResult> AddCustomer(CustomerRegisterRequest request)
         {
             return _customerService.AddCustomer(request);
         }

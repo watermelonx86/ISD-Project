@@ -92,13 +92,6 @@ namespace ISD_Project.Server.Migrations
                     b.Property<DateTime>("LastUpdate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("OtherDisabilities")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("OtherDisabilitiesDetails")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("Smoking")
                         .HasColumnType("boolean");
 
@@ -212,6 +205,9 @@ namespace ISD_Project.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateOnly>("DateIssued")
+                        .HasColumnType("date");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("text");
@@ -239,6 +235,9 @@ namespace ISD_Project.Server.Migrations
 
                     b.Property<int?>("UserAccountId")
                         .HasColumnType("integer");
+
+                    b.Property<DateOnly>("ValidUntil")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -333,8 +332,19 @@ namespace ISD_Project.Server.Migrations
                 {
                     b.HasBaseType("ISD_Project.Server.Models.User");
 
+                    b.Property<int?>("HealthInformationId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("IsApproved")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Job")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasDiscriminator().HasValue("Customer");
                 });

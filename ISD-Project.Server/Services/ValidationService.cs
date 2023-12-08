@@ -40,49 +40,70 @@ namespace ISD_Project.Server.Services
 
         public async Task<IActionResult> ValidateCustomer(CustomerValidateRequest request)
         {
-            try
+            if (request.ProfileStatus == ProfileStatus.Approved)
             {
-                var customer = await _dbContext.Customers
-                     .Include(uc => uc.UserAccount)
-                    .FirstOrDefaultAsync(c => c.Id == request.CustomerId);
-                if (customer is null)
+                try
                 {
-                    return new NotFoundObjectResult("Customer not found");
-                }
-                customer.IsApproved = (int)request.ProfileStatus;
-                _dbContext.Update(customer);
-                await _dbContext.SaveChangesAsync();
-                //Create new account for customer after approval
-                if (request.ProfileStatus == ProfileStatus.Approved && customer.UserAccount is null)
-                {
-                    var userRegisterRequest = new UserRegisterRequest(customer.Email, "Demo123", "Demo123");
-                    await _userAccount.Register(userRegisterRequest);
-                    customer.UserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
-                    if (customer.UserAccount is not null)
+                    var customer = await _dbContext.Customers
+                         .Include(uc => uc.UserAccount)
+                        .FirstOrDefaultAsync(c => c.Id == request.CustomerId);
+                    if (customer is null)
                     {
-                        //Update user id in user account table
-                        customer.UserAccount.UserId = customer.Id;
-                        _dbContext.Update(customer);
-                        await _dbContext.SaveChangesAsync();
+                        return new NotFoundObjectResult("Customer not found");
                     }
-                    //TODO: Edit email body message
-                    await _emailService.SendEmail(customer.Email, "Account created", "Your account has been created successfully.");
-                }
-                if (request.ProfileStatus == ProfileStatus.Approved)
-                {
-                    var response = new { userAccountId = customer.UserAccount?.Id, message = $"Customer information updated successfully: {request.ProfileStatus}" };
+                    customer.IsApproved = (int)request.ProfileStatus;
+                    _dbContext.Update(customer);
+                    await _dbContext.SaveChangesAsync();
+
+                    //Create new account for customer after approval
+                    if (customer.UserAccount is null)
+                    {
+                        await CreateAndAssignUserAccountForCustomer(customer);
+                        //TODO: Edit email body message
+                        await _emailService.SendEmail(customer.Email, "Account created", EmailMessageBody.ProfileApproved(customer.UserAccount.Email, "Demo123", $"https://localhost:5173/activate/{customer.UserAccount.Id}"));
+                    }
+
+                    var response = new { userAccountId = customer.UserAccount?.Id, message = $"Validate customer successfully {request.ProfileStatus}" };
                     return new OkObjectResult(response);
                 }
-                else
+                catch (Exception)
                 {
-                    return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
+                    return new StatusCodeResult(500);
                 }
+            }
+            else
+            {
+                return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
 
             }
-            catch (Exception)
+
+        }
+
+        public async Task CreateAndAssignUserAccountForCustomer(Customer customer)
+        {
+            var existingUserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
+            if (existingUserAccount is null)
             {
-                return new StatusCodeResult(500);
+                var userRegisterRequest = new UserAccountRegisterRequest(customer.Email, "Demo123", "Demo123", RoleType.Customer);
+                await _userAccount.Register(userRegisterRequest);
+
+                customer.UserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
+
+                if (customer.UserAccount is not null)
+                {
+                    customer.UserAccountId = customer.UserAccount.Id;
+                    _dbContext.Update(customer);
+                    await _dbContext.SaveChangesAsync();
+                }
             }
+            else
+            {
+                customer.UserAccount = existingUserAccount;
+                customer.UserAccountId = existingUserAccount.Id;
+                _dbContext.Update(customer);
+                await _dbContext.SaveChangesAsync();
+            }
+
         }
     }
 }

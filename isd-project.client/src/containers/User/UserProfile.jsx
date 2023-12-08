@@ -36,6 +36,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                //BUG: Vị gọi API get-customer nên nếu loại user khác thì sẽ không fetch thông tin -> Tạo API chung
                 const response = await axios.get(`https://localhost:7267/api/Customer/get-customer/${userId}`);
                 if (response.status === 200) {
                     setUserData(response.data);

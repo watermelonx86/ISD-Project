@@ -1,5 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import axios from 'axios';
+
 
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
@@ -95,12 +97,119 @@ const FillForm = () => {
         "Chi tiết sụt cân": weight_loss_detail,
     };
 
-    const handleSendForm = () => {
-        console.log(
-            "Thông tin: ", information,
-            "Địa chỉ: ", address,
-            "Sức khỏe: ", healthDeclare);
+    // Hàm chuyển đổi dữ liệu để match với backend
+    const convertGenderToInt = (genderString) => {
+        if(genderString === 'Nam') return 1;
+        else if (genderString === 'Nữ') return 2;
     }
+
+    const convertPhoneNumber = (phoneNumber) => {
+        return phoneNumber.replace('0','+84');
+    }
+
+    const convertToBoolean = (value) => {
+        if (value === 'Yes') return true;
+        else if (value === 'No') return false;
+    }
+
+    // Hàm gửi form
+    const handleSendForm = async () => {
+    try {
+        const genderInt = convertGenderToInt(gender);
+        const formattedPhoneNumber = convertPhoneNumber(phoneNumber);
+        const api_add_customer = "https://localhost:7267/api/Customer/add-customer";
+        const api_add_health_info = "https://localhost:7267/api/HealthInformation/add-health-information";
+
+        // Customer information
+        const customerInfo = {
+            identityDocumentId: cccd,
+            dateIssued : day_start,
+            validUntil : day_end,
+            email: email,
+            name: fullname,
+            gender: genderInt,
+            address: street + ", " + ward + ", " + district + ", " + city,
+            phoneNumber: formattedPhoneNumber,
+            nationality: country,
+            job: job
+        };
+
+        // Gửi POST API request để tạo customer
+        const responseCustomer = await axios.post(api_add_customer, customerInfo);
+        const customerData = responseCustomer.data;
+
+        try {
+            if (responseCustomer.status === 200) {
+                console.log('Customer created successfully:', customerData);
+
+                // Lấy UserId từ dữ liệu trả về
+                const userId = customerData.userId;
+
+                // Health information
+                const healthInfo = {
+                    height: Number(height),
+                    weight: Number(weight),
+                    smoking: convertToBoolean(smoking),
+                    cigarettesPerDay: Number(smoking_frequency),
+                    alcoholConsumption: convertToBoolean(alcohol),
+                    daysPerWeekAlcohol: Number(alcohol_frequency),
+                    drugUse: convertToBoolean(drug),
+                    engagesInDangerousSports: convertToBoolean(sport),
+                    dangerousSportsDetails: sport_detail,
+                    diagnosedWithHealthConditions: convertToBoolean(cancer),
+                    hasSpecificHealthConditions: convertToBoolean(congenital_disease),
+                    experiencedDiseasesInLast5Years: convertToBoolean(dengue),
+                    experiencedDiseasesDetails: congenital_disease_detail,
+                    unexplainedWeightLoss: convertToBoolean(weight_loss),
+                    unexplainedWeightLossDetails: weight_loss_detail,
+                    customerId: Number(userId)
+                };
+
+                console.log(healthInfo);
+
+                // Gửi POST API request để thêm thông tin sức khỏe
+                const responseHealthInfo = await axios.post(api_add_health_info, healthInfo);
+                const healthInfoData = responseHealthInfo.data;
+
+                try {
+                    if (responseHealthInfo.status === 200) {
+                        console.log('Health information added successfully:', healthInfoData);
+                    } else {
+                        console.error('Failed to add health information:', healthInfoData);
+
+                        // Nếu thất bại, gọi API để xoá customer
+                        const responseDeleteCustomer = await axios.delete(`https://localhost:7267/api/Customer/delete-customer/${userId}`);
+                        const deleteCustomerData = responseDeleteCustomer.data;
+
+                        try {
+                            if (responseDeleteCustomer.status === 200) {
+                                console.log('Customer deleted successfully:', deleteCustomerData);
+                            } else {
+                                console.error('Failed to delete customer:', deleteCustomerData);
+                            }
+                        } catch (deleteError) {
+                            console.error('Error in deleting customer:', deleteError);
+                        }
+                    }
+                } catch (healthInfoError) {
+                    console.error('Error in adding health information:', healthInfoError);
+                }
+            } else {
+                console.error('Failed to create customer:', customerData);
+            }
+        } catch (customerError) {
+            console.error('Error in creating customer:', customerError);
+        }
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            // Handle Axios-specific errors
+            console.error('Axios error:', error.response || error.message);
+        } else {
+            // Handle other types of errors
+            console.error('Unexpected error:', error);
+        }
+    }
+};
 
 
     return (
@@ -138,7 +247,7 @@ const FillForm = () => {
                             </div>
                             <div className="w-[48%]">
                                 <div className="inline-flex flex-col relative w-full">
-                                    <input type="text" name="CCCD" id="CCCD"
+                                    <input type="number" name="CCCD" id="CCCD"
                                         value={cccd}
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                         placeholder=" "
@@ -236,7 +345,7 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="phone" id="phone"
+                                <input type="number" name="phone" id="phone"
                                     value={phoneNumber}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
@@ -366,7 +475,7 @@ const FillForm = () => {
                     <div className="flex flex-wrap justify-between border-box">
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="height" id="height"
+                                <input type="number" name="height" id="height"
                                     value={height}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
@@ -381,7 +490,7 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="weight" id="weight"
+                                <input type="number" name="weight" id="weight"
                                     value={weight}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
@@ -432,7 +541,7 @@ const FillForm = () => {
                         <p className="pt-6 pl-8 text-[#1C1D1F]">Nếu có, vui lòng cho biết số điếu hút bình quân trong 1 ngày?</p>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="smoking-frequency" id="smoking-frequency"
+                                <input type="number" name="smoking-frequency" id="smoking-frequency"
                                     value={smoking_frequency}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
@@ -478,7 +587,7 @@ const FillForm = () => {
                         <p className="pt-6 pl-8 text-[#1C1D1F]">Trung bình số ngày uống rượu/bia trong 1 tuần?</p>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="alcohol-frequency" id="alcohol-frequency"
+                                <input type="number" name="alcohol-frequency" id="alcohol-frequency"
                                     value={alcohol_frequency}
                                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                                     placeholder=" "
