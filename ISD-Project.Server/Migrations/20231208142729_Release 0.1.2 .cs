@@ -109,11 +109,6 @@ namespace ISD_Project.Server.Migrations
                     HasSpecificHealthConditions = table.Column<bool>(type: "boolean", nullable: false),
                     ExperiencedDiseasesInLast5Years = table.Column<bool>(type: "boolean", nullable: false),
                     ExperiencedDiseasesDetails = table.Column<string>(type: "text", nullable: false),
-<<<<<<<< HEAD:ISD-Project.Server/Migrations/20231207080525_Release 0.1.2 .cs
-========
-                    OtherDisabilities = table.Column<bool>(type: "boolean", nullable: false),
-                    OtherDisabilitiesDetails = table.Column<string>(type: "text", nullable: false),
->>>>>>>> Minh:ISD-Project.Server/Migrations/20231207102626_Release 0.1.1.cs
                     UnexplainedWeightLoss = table.Column<bool>(type: "boolean", nullable: false),
                     UnexplainedWeightLossDetails = table.Column<string>(type: "text", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
