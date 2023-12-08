@@ -1,77 +1,92 @@
-﻿
+﻿using AutoMapper;
+using ISD_Project.Server.DataAccess;
+using ISD_Project.Server.Models;
+using ISD_Project.Server.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 namespace ISD_Project.Server.Services
 {
     public class HealthInformationService : IHealthInformationService
     {
-        //TODO: Add more options
-        public Lazy<List<string>> GetCurrentMedications()
+        private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
+        public HealthInformationService(ApplicationDbContext dbContext, IMapper mapper)
         {
-            return new Lazy<List<string>>(() => new List<string>
-            {
-                "Cảm cúm",
-                "Đau dạ dày",
-                "Tiểu đường",
-                "Huyết áp cao",
-                "Đau lưng",
-                "Viêm khớp",
-                "Tiêu chảy",
-                "Migraine",
-                "Thận thấp",
-                "Tiền sử ung thư",
-                "Đau tim",
-                "Viêm gan",
-                "Thấp khớp",
-                "Đau cơ",
-                "Gout",
-                "Bệnh tiêu hóa",
-                "Bệnh tăng lipid máu"
-            });
+            _dbContext = dbContext;
+            _mapper = mapper;
         }
 
-        public Lazy<List<string>> GetMedicalHistory()
+
+        public async Task<IActionResult> AddHealthInformation(HealthInformationDto request)
         {
-            return new Lazy<List<string>>(() => new List<string>
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
-                "Bệnh tinh mạch",
-                "Bệnh thận đa nang",
-                "Bệnh thận đa polyp",
-                "Parkinson",
-                "Xơ cứng bì",
-                "Viêm gan B",
-                "Uốn ván",
-                "Rubella",
-                "Viêm gan A",
-                "HPV",
-                "HIB",
-                "Bạch hầu"
-            
-             });
+                try
+                {
+                    //Validate request
+                    if (request is null)
+                    {
+                        return new BadRequestObjectResult("Request is null");
+                    }
+                    if (request.CustomerId == 0)
+                    {
+                        return new BadRequestObjectResult("Customer Id is null");
+                    }
+
+                    var customer = await _dbContext.Customers.FindAsync(request.CustomerId);
+                    if (customer is null)
+                    {
+                        return new BadRequestObjectResult("Customer not found");
+                    }
+                    if (customer.HealthInformation != null && customer.HealthInformationId != 0)
+                    {
+                        return new BadRequestObjectResult("Customer already has health information");
+                    }
+                    //Validate input data
+                    if(!request.Smoking) {
+                        request.CigarettesPerDay = 0;
+                    }
+                    if(!request.AlcoholConsumption) {
+                        request.DaysPerWeekAlcohol = 0;
+                    }
+                    if(!request.EngagesInDangerousSports) {
+                        request.DangerousSportsDetails = String.Empty;
+                    }
+                    if(!request.ExperiencedDiseasesInLast5Years) {
+                        request.ExperiencedDiseasesDetails = String.Empty;
+                    }
+                    if(!request.UnexplainedWeightLoss) {
+                        request.UnexplainedWeightLossDetails = String.Empty;
+                    }
+                    var healthInformation = _mapper.Map<HealthInformation>(request);
+                    healthInformation.LastUpdate = DateTime.UtcNow;
+
+                    await _dbContext.HealthInformation.AddAsync(healthInformation);
+                    await _dbContext.SaveChangesAsync();
+
+                    //After adding health information, update customer's health information id
+                    customer.HealthInformationId = healthInformation.Id;
+                    customer.HealthInformation = healthInformation;
+
+                    _dbContext.Customers.Update(customer);
+                    await _dbContext.SaveChangesAsync();
+                    var response = new { healthInformationId = healthInformation.Id, customerId = customer.Id, message = "Health information successfully created" };
+                    await transaction.CommitAsync();
+                    return new OkObjectResult(response);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
+                }
+            }
+
+
         }
-
-        public Lazy<List<string>> GetVaccinationHistory()
-        {
-            return new Lazy<List<string>>(() => new List<string>()
-            {
-
-            });
-        }
-
-        public Lazy<List<string>> LifestyleHabits()
-        {
-            return new Lazy<List<string>>(() => new List<string>
-            {
-                "Hút thuốc lá",
-                "Uống rượu",
-                "Nghiện ma tuý đá",
-                "Tập thể dục thường xuyên",
-                "Ăn kiêng",
-                "Sử dụng nhiều caffeine",
-                "Tiếp xúc với môi trường độc hại",
-                "Ăn uống ít chất béo",
-                "Ăn uống nhiều đường",
-                "Sử dụng mỹ phẩm hóa học",
-                "Sử dụng nhiều đồ chứa chất BPA",
-            });
-    }
     }
 }
+

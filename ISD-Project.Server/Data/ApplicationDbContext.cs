@@ -30,22 +30,26 @@ namespace ISD_Project.Server.DataAccess
                 .WithOne(ua => ua.User)
                 .HasForeignKey<UserAccount>(ua => ua.UserId)
                 .IsRequired(false);
-            
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.HealthInformation)
+                .WithOne(hi => hi.Customer)
+                .HasForeignKey<HealthInformation>(hi => hi.CustomerId)
+                .IsRequired(false);
             modelBuilder.Entity<Customer>()
                 .HasBaseType<User>();
-          
+
             modelBuilder.Entity<Admin>()
                 .HasBaseType<User>();
-           
+
             modelBuilder.Entity<FinancialDepartment>()
                 .HasBaseType<User>();
-           
+
             modelBuilder.Entity<ValidationDepartment>()
                 .HasBaseType<User>();
-           
+
             modelBuilder.Entity<CustomerCareDepartment>()
                 .HasBaseType<User>();
-           
+
             modelBuilder.Entity<Role>().HasData(
                  new Role { Id = 1, Name = "Customer" },
                  new Role { Id = 2, Name = "Admin" },
@@ -68,5 +72,7 @@ namespace ISD_Project.Server.DataAccess
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Insurance> Insurances { get; set; }
+        public DbSet<InsuranceType> InsuranceTypes { get; set; }
     }
 }

@@ -1,24 +1,41 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
-
+import axios from 'axios';
 import Header from '../HomePage/Header.jsx';
 
 const UserProfileEdit = () => {
 
     const UserInfo = () => {
-        const id = localStorage.getItem('id');
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role');
-
-
 
         // thực hiện các hành động khác với id, token, role ở đây
-        console.log('User Info:', { id, token, role });
+        //console.log('User Info:', { userAccountId, token, role, userId });
     }
 
     //này để lúc bấm vào avatar là nó tự chạy cái hàm UserInfo
     useEffect(() => {
         UserInfo();
+    }, []);
+
+    const [userData, setUserData] = useState('');
+
+    const userId = localStorage.getItem('userId');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                 //BUG: Vị gọi API get-customer nên nếu loại user khác thì sẽ không fetch thông tin -> Tạo API chung
+                const response = await axios.get(`https://localhost:7267/api/Customer/get-customer/${userId}`);
+                if (response.status === 200) {
+                    setUserData(response.data);
+                    console.log(response.data);
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
     }, []);
 
     return (
@@ -65,7 +82,7 @@ const UserProfileEdit = () => {
                                     <input
                                         type="email"
                                         className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder="email@example.com"
+                                        placeholder={userData.email}
                                         disabled
                                     />
                                 </div>
@@ -92,7 +109,7 @@ const UserProfileEdit = () => {
                                     <input
                                         type="text"
                                         className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder="12341234"
+                                        placeholder={userData.phoneNumber}
                                         disabled
                                     />
                                 </div>
@@ -151,7 +168,7 @@ const UserProfileEdit = () => {
                                     <input
                                         type="text"
                                         className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder="Nguyễn Vũ Thành Đạt"
+                                        placeholder={userData.name}
                                         disabled
                                     />
                                 </div>
@@ -177,8 +194,7 @@ const UserProfileEdit = () => {
                                     <input
                                         type="text"
                                         className="w-11/12 focus:outline-none focus:text-black-600 p-2"
-                                        placeholder="227 Nguyen Van Cu"
-
+                                        placeholder={userData.email}
                                     />
                                 </div>
                             </div>

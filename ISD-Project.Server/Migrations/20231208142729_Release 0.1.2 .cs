@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,11 +9,25 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Release011 : Migration
+    public partial class Release012 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "InsuranceTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InsuranceTypes", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -35,17 +48,46 @@ namespace ISD_Project.Server.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IdentityDocumentId = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
+                    DateIssued = table.Column<DateOnly>(type: "date", nullable: false),
+                    ValidUntil = table.Column<DateOnly>(type: "date", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
                     PhoneNumber = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
+                    UserAccountId = table.Column<int>(type: "integer", nullable: true),
                     Discriminator = table.Column<string>(type: "text", nullable: false),
-                    IsApproved = table.Column<int>(type: "integer", nullable: true)
+                    IsApproved = table.Column<int>(type: "integer", nullable: true),
+                    Nationality = table.Column<string>(type: "text", nullable: true),
+                    Job = table.Column<string>(type: "text", nullable: true),
+                    HealthInformationId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Insurances",
+                columns: table => new
+                {
+                    InsuranceId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    InsuranceName = table.Column<string>(type: "text", nullable: false),
+                    CoveragePeriodInYears = table.Column<int>(type: "integer", nullable: false),
+                    SummaryDescription = table.Column<string>(type: "text", nullable: false),
+                    DetailDescription = table.Column<string>(type: "text", nullable: false),
+                    PriceAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    InsuranceTypeId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Insurances", x => x.InsuranceId);
+                    table.ForeignKey(
+                        name: "FK_Insurances_InsuranceTypes_InsuranceTypeId",
+                        column: x => x.InsuranceTypeId,
+                        principalTable: "InsuranceTypes",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -56,11 +98,19 @@ namespace ISD_Project.Server.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Height = table.Column<double>(type: "double precision", nullable: false),
                     Weight = table.Column<double>(type: "double precision", nullable: false),
-                    BMI = table.Column<double>(type: "double precision", nullable: false),
-                    MedicalHistory = table.Column<List<string>>(type: "text[]", nullable: true),
-                    CurrentMedications = table.Column<List<string>>(type: "text[]", nullable: true),
-                    VaccinationHistory = table.Column<List<string>>(type: "text[]", nullable: true),
-                    LifestyleHabits = table.Column<List<string>>(type: "text[]", nullable: true),
+                    Smoking = table.Column<bool>(type: "boolean", nullable: false),
+                    CigarettesPerDay = table.Column<int>(type: "integer", nullable: false),
+                    AlcoholConsumption = table.Column<bool>(type: "boolean", nullable: false),
+                    DaysPerWeekAlcohol = table.Column<int>(type: "integer", nullable: false),
+                    DrugUse = table.Column<bool>(type: "boolean", nullable: false),
+                    EngagesInDangerousSports = table.Column<bool>(type: "boolean", nullable: false),
+                    DangerousSportsDetails = table.Column<string>(type: "text", nullable: false),
+                    DiagnosedWithHealthConditions = table.Column<bool>(type: "boolean", nullable: false),
+                    HasSpecificHealthConditions = table.Column<bool>(type: "boolean", nullable: false),
+                    ExperiencedDiseasesInLast5Years = table.Column<bool>(type: "boolean", nullable: false),
+                    ExperiencedDiseasesDetails = table.Column<string>(type: "text", nullable: false),
+                    UnexplainedWeightLoss = table.Column<bool>(type: "boolean", nullable: false),
+                    UnexplainedWeightLossDetails = table.Column<string>(type: "text", nullable: false),
                     LastUpdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CustomerId = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -145,6 +195,11 @@ namespace ISD_Project.Server.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Insurances_InsuranceTypeId",
+                table: "Insurances",
+                column: "InsuranceTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserAccounts_UserId",
                 table: "UserAccounts",
                 column: "UserId",
@@ -174,7 +229,13 @@ namespace ISD_Project.Server.Migrations
                 name: "HealthInformation");
 
             migrationBuilder.DropTable(
+                name: "Insurances");
+
+            migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "InsuranceTypes");
 
             migrationBuilder.DropTable(
                 name: "Roles");

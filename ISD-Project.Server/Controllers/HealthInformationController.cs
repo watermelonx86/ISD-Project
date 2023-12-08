@@ -1,4 +1,5 @@
-﻿using ISD_Project.Server.Services;
+﻿using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,33 +9,17 @@ namespace ISD_Project.Server.Controllers
     [ApiController]
     public class HealthInformationController : ControllerBase
     {
-         private readonly IHealthInformationService _healthInfor;
+        private readonly IHealthInformationService _healthInformation;
         public HealthInformationController(IHealthInformationService healthInformationService)
         {
-                this._healthInfor = healthInformationService;
-        }
-         [HttpGet("CurrentMedications")]
-         public ActionResult<List<string>> GetCurrentMedications()
-         {
-            return Ok(_healthInfor.GetCurrentMedications().Value);
-         }
-
-        [HttpGet("MedicalHistory")]
-        public ActionResult<List<string>> GetMedicalHistory()
-        {
-            return Ok(_healthInfor.GetMedicalHistory().Value);
+            this._healthInformation = healthInformationService;
         }
 
-        [HttpGet("VaccinationHistory")]
-        public ActionResult<List<string>> GetVaccinationHistory()
+        [HttpPost("add-health-information")]
+        public async Task<IActionResult> AddHealthInformation(HealthInformationDto request)
         {
-            return Ok(_healthInfor.GetVaccinationHistory().Value);
+            return await _healthInformation.AddHealthInformation(request);
         }
 
-        [HttpGet("LifestyleHabits")]
-        public ActionResult<List<string>> LifestyleHabits()
-        {
-            return Ok(_healthInfor.LifestyleHabits().Value);
-        }
     }
 }

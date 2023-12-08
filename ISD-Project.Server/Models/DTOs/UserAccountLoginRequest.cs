@@ -2,7 +2,7 @@
 
 namespace ISD_Project.Server.Models.DTOs
 {
-    public class UserLoginRequest
+    public class UserAccountLoginRequest
     {
         [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;

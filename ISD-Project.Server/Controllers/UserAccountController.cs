@@ -26,21 +26,33 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("register")]
-        public Task<IActionResult> Register([FromBody] UserRegisterRequest request)
+        public Task<IActionResult> Register([FromBody] UserAccountRegisterRequest request)
         {
             return _userAccountService.Register(request);
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        public Task<IActionResult> Login([FromBody] UserAccountLoginRequest request)
         {
             return _userAccountService.Login(request);
         }
 
-        [HttpGet("get-role")]
-        public Task<List<string>> GetRole(int userId)
+        [HttpGet("get-user-account")]
+        public Task<IActionResult> GetUserAccount()
         {
-            return _userAccountService.GetUserRole(userId);
+            return _userAccountService.GetUserAccount();
+        }
+
+        [HttpGet("get-user-account/{id}")]
+        public Task<IActionResult> GetUserAccount(int id)
+        {
+            return _userAccountService.GetUserAccount(id);
+        }
+
+        [HttpGet("get-role/{id}")]
+        public Task<List<string>> GetRole(int id)
+        {
+            return _userAccountService.GetUserRole(id);
         }
 
         [HttpPost("verify")]
