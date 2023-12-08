@@ -12,8 +12,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:ISD-Project.Server/Migrations/20231207080525_Release 0.1.2 .Designer.cs
     [Migration("20231207080525_Release 0.1.2 ")]
     partial class Release012
+========
+    [Migration("20231207102626_Release 0.1.1")]
+    partial class Release011
+>>>>>>>> Minh:ISD-Project.Server/Migrations/20231207102626_Release 0.1.1.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

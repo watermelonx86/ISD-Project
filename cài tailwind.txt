@@ -1,2 +1,0 @@
-Link: https://www.freecodecamp.org/news/how-to-install-tailwindcss-in-react/?fbclid=IwAR3i_2IqD6Yps9cmwJ2YXOVG5ydF7PBPQGKnMxbckpf7dIMFi-0fv3FrP4M
-làm từ step 3
