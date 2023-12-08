@@ -1,8 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
-
-
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
 
@@ -101,43 +99,6 @@ const FillForm = () => {
         "Sụt cân": weight_loss,
         "Chi tiết sụt cân": weight_loss_detail,
     };
-
-    // Hàm chuyển đổi dữ liệu để match với backend
-    const convertGenderToInt = (genderString) => {
-        if(genderString === 'Nam') return 1;
-        else if (genderString === 'Nữ') return 2;
-    }
-
-    const convertPhoneNumber = (phoneNumber) => {
-        return phoneNumber.replace('0','+84');
-    }
-
-    const convertToBoolean = (value) => {
-        if (value === 'Yes') return true;
-        else if (value === 'No') return false;
-    }
-
-    // Hàm gửi form
-    const handleSendForm = async () => {
-    try {
-        const genderInt = convertGenderToInt(gender);
-        const formattedPhoneNumber = convertPhoneNumber(phoneNumber);
-        const api_add_customer = "https://localhost:7267/api/Customer/add-customer";
-        const api_add_health_info = "https://localhost:7267/api/HealthInformation/add-health-information";
-
-        // Customer information
-        const customerInfo = {
-            identityDocumentId: cccd,
-            dateIssued : day_start,
-            validUntil : day_end,
-            email: email,
-            name: fullname,
-            gender: genderInt,
-            address: street + ", " + ward + ", " + district + ", " + city,
-            phoneNumber: formattedPhoneNumber,
-            nationality: country,
-            job: job
-        };
 
     const [errorCCCD, setErrorCCCD] = useState('');
     const [errorDate, setErrorDate] = useState('');
@@ -537,7 +498,7 @@ const FillForm = () => {
                             </div>
                             <div className="w-[48%]">
                                 <div className="inline-flex flex-col relative w-full">
-                                    <input type="number" name="CCCD" id="CCCD"
+                                    <input type="text" name="CCCD" id="CCCD"
                                         value={cccd}
                                         className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer 
                                         ${errorCCCD && 'border-red-500' // Thêm lớp CSS đỏ khi có lỗi
@@ -644,7 +605,7 @@ const FillForm = () => {
                         </div>
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
-                                <input type="number" name="phone" id="phone"
+                                <input type="text" name="phone" id="phone"
                                     value={phoneNumber}
                                     className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer
                                     ${errorPhoneNumber && 'border-red-500'
