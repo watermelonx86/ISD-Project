@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Release01 : Migration
+    public partial class Release011 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,6 +75,29 @@ namespace ISD_Project.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Insurances",
+                columns: table => new
+                {
+                    InsuranceId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    InsuranceName = table.Column<string>(type: "text", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExpireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PriceAmount = table.Column<float>(type: "real", nullable: false),
+                    UserID = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Insurances", x => x.InsuranceId);
+                    table.ForeignKey(
+                        name: "FK_Insurances_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserAccounts",
                 columns: table => new
                 {
@@ -135,7 +158,8 @@ namespace ISD_Project.Server.Migrations
                     { 2, "Admin" },
                     { 3, "FinancialDepartment" },
                     { 4, "ValidationDepartment" },
-                    { 5, "CustomerCareDepartment" }
+                    { 5, "CustomerCareDepartment" },
+                    { 6, "Insurance" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -143,6 +167,11 @@ namespace ISD_Project.Server.Migrations
                 table: "HealthInformation",
                 column: "CustomerId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Insurances_UserID",
+                table: "Insurances",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAccounts_UserId",
@@ -172,6 +201,9 @@ namespace ISD_Project.Server.Migrations
         {
             migrationBuilder.DropTable(
                 name: "HealthInformation");
+
+            migrationBuilder.DropTable(
+                name: "Insurances");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");

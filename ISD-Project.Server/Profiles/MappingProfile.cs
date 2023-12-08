@@ -17,6 +17,8 @@ namespace ISD_Project.Server.Profiles
             CreateMap<FinancialDepartment, UserDto>();
             CreateMap<Admin, UserDto>();
             CreateMap<HealthInformation, HealthInformationDto>();
+            CreateMap<Insurance, InsuranceDto>();
+            CreateMap<UserAccount, UserAccountDto>();
             //DTO -> Model
             CreateMap<UserDto, User>();
             CreateMap<CustomerDto, Customer>();
@@ -25,8 +27,8 @@ namespace ISD_Project.Server.Profiles
             CreateMap<UserDto, FinancialDepartment>();
             CreateMap<UserDto, Admin>();
             CreateMap<HealthInformationDto, HealthInformation>();
-
-            
+            CreateMap<InsuranceDto, Insurance>();
+            CreateMap<UserAccountDto, UserAccount>();
         }
     }
 }

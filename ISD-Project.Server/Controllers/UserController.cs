@@ -1,7 +1,6 @@
 ﻿using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Controllers
@@ -16,11 +15,11 @@ namespace ISD_Project.Server.Controllers
         {
             this._userService = userService;
         }
-        //TODO Your code here
-        [HttpPost("add-customer")]
-        public Task<IActionResult> AddCustomer(CustomerDto request)
+
+        [HttpGet("get-user")]
+        public Task<IActionResult> GetUser()
         {
-            return  _userService.AddCustomer(request);
+            return _userService.GetUser();
         }
 
         [HttpPost("add-customercaredept")]
@@ -41,42 +40,6 @@ namespace ISD_Project.Server.Controllers
             return _userService.ValidationDeptAdd(request);
         }
 
-        [HttpGet("get-user")]
-        public Task<IActionResult> GetUser()
-        {
-            return _userService.GetUser();
-        }
-
-        [HttpGet("get-customer")]
-        public Task<IActionResult> GetCustomer()
-        {
-            return _userService.GetCustomer();
-        }
-
-        [HttpGet("get-customer-pending-approval")]
-        public Task<IActionResult> GetCustomerPendingApproval()
-        {
-            return _userService.GetCustomerPendingApproval();
-        }
-
-        [HttpGet("get-customer-approved")]
-        public Task<IActionResult> GetCustomerApproved()
-        {
-            return _userService.GetCustomerApproved();
-        }
-
-        [HttpGet("get-customer-rejected")]
-        public Task<IActionResult> GetCustomerRejected()
-        {
-            return _userService.GetCustomerRejected();
-        }
-
-        [HttpDelete("delete-customer/{id}")]
-        public Task<IActionResult> DeleteCustomer(int id)
-        {
-            return _userService.DeleteCustomer(id);
-        }
-
         [HttpDelete("delete-customercare/{id}")]
         public Task<IActionResult> DeleteCustomerCare(int id)
         {
@@ -95,16 +58,5 @@ namespace ISD_Project.Server.Controllers
             return _userService.DeleteValidationDept(id);
         }
 
-        [HttpGet("get-customer/{id}")]
-        public Task<IActionResult> GetCustomer(int id)
-        {
-            return _userService.GetCustomer(id);
-        }
-
-        [HttpGet("get-health-info-customer/{id}")]
-        public Task<IActionResult> GetHealthInformationOfCustomer(int id)
-        {
-            return _userService.GetHealthInformationOfCustomer(id);
-        }
     }
 }

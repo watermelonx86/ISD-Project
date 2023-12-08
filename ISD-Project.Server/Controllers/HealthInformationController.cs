@@ -8,33 +8,11 @@ namespace ISD_Project.Server.Controllers
     [ApiController]
     public class HealthInformationController : ControllerBase
     {
-         private readonly IHealthInformationService _healthInfor;
+        private readonly IHealthInformationService _healthInformation;
         public HealthInformationController(IHealthInformationService healthInformationService)
         {
-                this._healthInfor = healthInformationService;
-        }
-         [HttpGet("CurrentMedications")]
-         public ActionResult<List<string>> GetCurrentMedications()
-         {
-            return Ok(_healthInfor.GetCurrentMedications().Value);
-         }
-
-        [HttpGet("MedicalHistory")]
-        public ActionResult<List<string>> GetMedicalHistory()
-        {
-            return Ok(_healthInfor.GetMedicalHistory().Value);
+            this._healthInformation = healthInformationService;
         }
 
-        [HttpGet("VaccinationHistory")]
-        public ActionResult<List<string>> GetVaccinationHistory()
-        {
-            return Ok(_healthInfor.GetVaccinationHistory().Value);
-        }
-
-        [HttpGet("LifestyleHabits")]
-        public ActionResult<List<string>> LifestyleHabits()
-        {
-            return Ok(_healthInfor.LifestyleHabits().Value);
-        }
     }
 }
