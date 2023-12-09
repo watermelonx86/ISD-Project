@@ -44,19 +44,24 @@ namespace ISD_Project.Server.Services
                         return new BadRequestObjectResult("Customer already has health information");
                     }
                     //Validate input data
-                    if(!request.Smoking) {
+                    if (!request.Smoking)
+                    {
                         request.CigarettesPerDay = 0;
                     }
-                    if(!request.AlcoholConsumption) {
+                    if (!request.AlcoholConsumption)
+                    {
                         request.DaysPerWeekAlcohol = 0;
                     }
-                    if(!request.EngagesInDangerousSports) {
+                    if (!request.EngagesInDangerousSports)
+                    {
                         request.DangerousSportsDetails = String.Empty;
                     }
-                    if(!request.ExperiencedDiseasesInLast5Years) {
+                    if (!request.ExperiencedDiseasesInLast5Years)
+                    {
                         request.ExperiencedDiseasesDetails = String.Empty;
                     }
-                    if(!request.UnexplainedWeightLoss) {
+                    if (!request.UnexplainedWeightLoss)
+                    {
                         request.UnexplainedWeightLossDetails = String.Empty;
                     }
                     var healthInformation = _mapper.Map<HealthInformation>(request);
@@ -86,6 +91,17 @@ namespace ISD_Project.Server.Services
             }
 
 
+        }
+
+        public async Task<IActionResult> GetHealthInformation(int userId)
+        {
+            var healthInformation = await _dbContext.HealthInformation.Where(h => h.CustomerId == userId).FirstOrDefaultAsync();
+            if (healthInformation is null)
+            {
+                return new NotFoundObjectResult("Health information not found");
+            }
+            var response = _mapper.Map<HealthInformationDto>(healthInformation);
+            return new OkObjectResult(response);
         }
     }
 }
