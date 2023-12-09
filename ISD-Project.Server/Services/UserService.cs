@@ -35,9 +35,27 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+                var UserDto = _mapper.Map<UserDto>(user);
+                if (user == null)
+                {
+                    return new NotFoundObjectResult("User not found");
+                }
+                return new OkObjectResult(UserDto);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500 // Internal Server Error
+                };
+            }
+
+
         }
 
         public Task<IActionResult> GetUserByRole(RoleType role)
