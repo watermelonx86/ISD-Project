@@ -21,5 +21,11 @@ namespace ISD_Project.Server.Controllers
             return await _healthInformation.AddHealthInformation(request);
         }
 
+        [HttpGet("get-health-information/{userId}")]
+        public async Task<IActionResult> GetHealthInformation(int userId)
+        {
+            return await _healthInformation.GetHealthInformation(userId);
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import Header from "../HomePage/Header";
@@ -14,42 +15,43 @@ const WaitApproval = () => {
     const [applicationID, setApplicationID] = useState('');
 
     //test
-    const bh = "Bảo hiểm nhân thọ";
-    const cccd = "1234567890";
-    const day_start = "2000/01/01";
-    const day_end = "2026/01/01";
-    const fullname = "Nguyễn Văn A";
-    const birthday = "01/01/1980";
-    const gender = "Nam";
-    const phoneNumber = "4334354334";
-    const email = "test@gmail.com";
-    const country = "Việt Nam";
-    const job = "Giám đốc nhân sự";
-    const city = "Hồ Chí Minh";
-    const district = "Quận 5";
-    const ward = "Phường 6";
-    const street = "An Dương Vương";
-    const height = "170";
-    const weight = "70";
-    const smoking = "Có"; //hút thuốc
-    const smoking_frequency = ""; //tần suất hút thuốc
-    const alcohol = "Có"; //rượu bia
-    const alcohol_frequency = ""; //tần suất rượu bia
-    const sport = "Không"; //thể thao 
-    const sport_detail = "";
-    const cancer = "Không"; //ung thư :v
-    const dengue = "Không"; //sốt xuất huyết :V
-    const drug = "Không"; //ma túy :V
-    const congenital_disease = "Có"; //bệnh bẩm sinh
-    const congenital_disease_detail = "Mù màu";
-    const weight_loss = "Không"; //sụt cân
+    const [bh, setBh] = useState("Bảo hiểm nhân thọ");
+    const [cccd, setCccd] = useState("");
+    const [day_start, setDayStart] = useState("");
+    const [day_end, setDayEnd] = useState("");
+    const [fullname, setFullname] = useState("");
+    const [birthday, setBirthday] = useState("");
+    const [gender, setGender] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [email, setEmail] = useState("");
+    const [country, setCountry] = useState("");
+    const [job, setJob] = useState("");
+    const [city, setCity] = useState("");
+    const [district, setDistrict] = useState("");
+    const [ward, setWard] = useState("");
+    const [street, setStreet] = useState("");
+    const [height, setHeight] = useState("");
+    const [weight, setWeight] = useState("");
+    const [smoking, setSmoking] = useState(""); //hút thuốc
+    const [smoking_frequency, setSmokingFrequency] = useState(""); //tần suất hút thuốc
+    const [alcohol, setAlcohol] = useState(""); //rượu bia
+    const [alcohol_frequency, setAlcoholFrequency] = useState(""); //tần suất rượu bia
+    const [sport, setSport] = useState(""); //thể thao 
+    const [sport_detail, setSportDetail] = useState("");
+    const [cancer, setCancer] = useState(""); //ung thư :v
+    const [dengue, setDengue] = useState(""); //sốt xuất huyết :V
+    const [drug, setDrug] = useState(""); //ma túy :V
+    const [congenital_disease, setCongenitalDisease] = useState(""); //bệnh bẩm sinh
+    const [congenital_disease_detail, setCongenitalDiseaseDetail] = useState("");
+    const [weight_loss, setWeightLoss] = useState(""); //sụt cân
     /*const weight_loss_detail = "";*/
+
 
     //mở modal từ chối 
     const handleOpenRefuse = (item) => {
         setOpenRefuse(true);
-        console.log(item);
-        setApplicationID(item);
+        //console.log(item);
+        setApplicationID(item.id);
     }
 
     const handleCloseRefuse = () => {
@@ -72,7 +74,7 @@ const WaitApproval = () => {
     // mở modal thông báo duyệt đơn
     const handleSendAccept = (item) => {
         setOpenAccept(true);
-        setApplicationID(item);
+        setApplicationID(item.id);
     }
 
     const handleCloseAccept = () => {
@@ -80,11 +82,63 @@ const WaitApproval = () => {
         setApplicationID('');
     }
 
+    const convertBooleanToString = (value) => {
+        if (value === true) return 'Có';
+        else if (value === false) return 'Không';
+    }
+
 
     // mở modal xem chi tiết đơn đăng kí
     const handleOpenDetail = (item) => {
+        
         setOpenDetail(true);
-        setApplicationID(item);
+        console.log(item);  
+        setApplicationID(item.id);
+        axios.get(`https://localhost:7267/api/HealthInformation/get-health-information/${item.id}`)
+        .then(response => {
+            const data = response.data;
+            console.log(data);
+            setCccd(item.identityDocumentId); // 1. Căn cước công dân
+            setDayStart(item.dateIssued);// 2. Ngày cấp
+            setDayEnd(item.validUntil); // 3. Ngày hết hạn
+            setFullname(item.name); // 4. Họ tên
+            //TODO: setBirthday
+            //Address
+            const address = item.address; // 5. Địa chỉ
+            const parts = address.split(', ');
+            const street = parts[0];
+            const ward = parts[1].replace('phường ', '');
+            const district = parts[2].replace('quận ', '');
+            const city = parts[3];
+            setStreet(street);
+            setWard(ward);
+            setDistrict(district);
+            setCity(city);
+            setGender(item.gender === 0 ? 'Nam' : 'Nữ'); // 6. Giới tính
+            setPhoneNumber(item.phoneNumber); // 7. Số điện thoại
+            setEmail(item.email); // 8. Email
+            setCountry(item.nationality); // 9. Quốc tịch
+            setJob(item.job); // 10. Nghề nghiệp
+            setHeight(data.height); // 11. Chiều cao
+            setWeight(data.weight); // 12. Cân nặng
+            setSmoking(convertBooleanToString(data.smoking)); // 13. Hút thuốc
+            setSmokingFrequency(data.cigarettesPerDay); // 14. Tần suất hút thuốc
+            setAlcohol(convertBooleanToString(data.alcoholConsumption)); // 15. Uống rượu bia
+            setAlcoholFrequency(data.daysPerWeekAlcohol); // 16. Tần suất uống rượu bia
+            setSport(convertBooleanToString(data.engagesInDangerousSports)); // 17. Thể thao nguy hiểm
+            setSportDetail(data.dangerousSportsDetails); // 18. Chi tiết thể thao nguy hiểm
+            setDrug(convertBooleanToString(data.drugUse)); // 19. Sử dụng ma túy
+            setWeightLoss(convertBooleanToString(data.unexplainedWeightLoss)); // 20. Sụt cân
+            setDengue(convertBooleanToString(data.experiencedDiseasesInLast5Years)); // 21. Sốt xuất huyết
+            setCongenitalDisease(convertBooleanToString(data.hasSpecificHealthConditions)); // 22. Bệnh bẩm sinh
+            setCongenitalDiseaseDetail(data.experiencedDiseasesDetails); // 23. Chi tiết bệnh bẩm sinh
+            setCancer(convertBooleanToString(data.diagnosedWithHealthConditions)); // 24. Ung thư
+
+            
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });
     }
 
     const handleCloseDetail = () => {
@@ -96,6 +150,19 @@ const WaitApproval = () => {
         setOpenDetail(false);
         setApplicationID('');
     }
+    
+    const [applicationList, setApplicationList] = useState([]);
+    useEffect(() => {
+        axios.get('https://localhost:7267/api/Customer/get-customer-pending-approval')
+            .then(response => {
+                console.log(response.data)
+                setApplicationList(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    }, []);
+
 
     return (
         <React.Fragment>
@@ -111,15 +178,18 @@ const WaitApproval = () => {
                     </div>
                 </section>
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-6 mt-[-12rem]">
-                    {application_List.map((item) => (
-                        <div key={item} className="bg-white border border-gray-250 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative">
+                    {applicationList.map((item,index) => (
+                        <div key={index} className="bg-white border border-gray-250 transition transform duration-700 hover:shadow-xl hover:scale-105 p-4 rounded-lg relative">
                             <span className="bg-red-100 border border-red-500 rounded-full text-primary text-sm poppins px-4 py-1 inline-block mb-4 ">
                                 Đăng ký bảo hiểm
                             </span>
                             <div className="flex flex-col my-3 space-y-2">
-                                <h1 className="py-3 text-gray-900 poppins text-base">Họ tên: Nguyễn Văn A</h1>
-                                <h1 className="py-3 text-gray-900 poppins text-base">CCCD: 1234567890</h1>
-                                <h1 className="py-3 text-gray-900 poppins text-base">Email: test@gmail.com</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Họ tên: {item.name}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Email: {item.email}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Giới tính: {item.gender === 0 ? 'Nam' : 'Nữ'}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Số điện thoại: {item.phoneNumber}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">CCCD: {item.identityDocumentId}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Địa chỉ: {item.address}</h1>
                                 <div className="w-11/12 border-b-2"></div>
                                 <p className="py-3 text-red-500 poppins text-base text-center font-bold">Bảo hiểm nhân thọ</p>
                                 <div className="w-11/12 border-b-2"></div>
@@ -283,7 +353,7 @@ const WaitApproval = () => {
                                                         />
                                                         <label htmlFor="CCCD"
                                                             className="peer-focus:font-medium absolute text-base text-blue-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                                            Số CMND/CCCD:
+                                                            Số CMND/CCCD: 
                                                         </label>
                                                     </div>
                                                 </div>

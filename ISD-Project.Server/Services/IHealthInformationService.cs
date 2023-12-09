@@ -6,5 +6,6 @@ namespace ISD_Project.Server.Services
     public interface IHealthInformationService
     {
        public Task<IActionResult> AddHealthInformation(HealthInformationDto request);
+       public Task<IActionResult> GetHealthInformation(int userId);
     }
 }

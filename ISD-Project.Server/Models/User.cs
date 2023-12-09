@@ -36,6 +36,7 @@ namespace ISD_Project.Server.Models
         public string Name { get; set; } = String.Empty;
         [Required]
         public int Gender { get; set; } = (int)GenderType.Male;
+        public DateOnly DateOfBirth { get; set; }
         public string Address { get; set; } = String.Empty;
         [Required]
         [RegularExpression(@"^\+84[0-9]*$", ErrorMessage = "The phone number must start with the country code +84.")]
