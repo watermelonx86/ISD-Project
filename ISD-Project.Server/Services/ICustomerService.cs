@@ -13,6 +13,6 @@ namespace ISD_Project.Server.Services
         Task<IActionResult> GetHealthInformationOfCustomer(int id);
 
         Task<IActionResult> AddCustomer(CustomerRegisterRequest request);
-        Task<IActionResult> DeleteCustomer(int id);
+        Task<IActionResult> DeleteCustomerForce(int userId);
     }
 }

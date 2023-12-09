@@ -59,8 +59,10 @@ namespace ISD_Project.Server.Services
                     if (customer.UserAccount is null)
                     {
                         await CreateAndAssignUserAccountForCustomer(customer);
-                        //TODO: Edit email body message
-                        await _emailService.SendEmail(customer.Email, "Account created", EmailMessageBody.ProfileApproved(customer.UserAccount.Email, "Demo123", $"https://localhost:5173/activate/{customer.UserAccount.Id}"));
+                        if (customer.UserAccount is not null)
+                        {
+                            await _emailService.SendEmail(customer.Email, "Account created", EmailMessageBody.ProfileApproved(customer.UserAccount.Email, "Demo123", $"https://localhost:5173/activate/{customer.UserAccount.Id}"));
+                        }
                     }
 
                     var response = new { userAccountId = customer.UserAccount?.Id, message = $"Validate customer successfully {request.ProfileStatus}" };

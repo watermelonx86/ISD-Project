@@ -37,7 +37,7 @@ namespace ISD_Project.Server.Services
                     _dbContext.Customers.Add(customer);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    
+
                     var response = new { userId = customer.Id, message = "Customer successfully created" };
                     return new OkObjectResult(response);
                 }
@@ -52,23 +52,37 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        //BUG : Liên quan đến khoá ngoại của Customer
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteCustomerForce(int userId)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    var customer = await _dbContext.Customers.FindAsync(id);
+                    var customer = await _dbContext.Customers.FindAsync(userId);
 
                     if (customer is null)
                     {
                         return new BadRequestObjectResult("Customer doesn't exist");
                     }
+
+                    var healthInformation = await _dbContext.HealthInformation.FirstOrDefaultAsync(c => c.CustomerId == userId);
+                    if (healthInformation is not null)
+                    {
+                        _dbContext.HealthInformation.Remove(healthInformation);
+                        await _dbContext.SaveChangesAsync();
+                    }
+
+                    var userAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(ua => ua.UserId == userId);
+                    if (userAccount is not null)
+                    {
+                        _dbContext.UserAccounts.Remove(userAccount);
+                        await _dbContext.SaveChangesAsync();
+                    }
+
                     _dbContext.Customers.Remove(customer);
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
-                    return new OkObjectResult("Customer successfully removed");
+                    return new OkObjectResult($"Customer: {customer.Id} successfully removed");
                 }
                 catch (Exception ex)
                 {
@@ -200,5 +214,7 @@ namespace ISD_Project.Server.Services
                 };
             }
         }
+
+
     }
 }

@@ -24,7 +24,7 @@ namespace ISD_Project.Server.Controllers
         [HttpDelete("delete-customer/{id}")]
         public Task<IActionResult> DeleteCustomer(int id)
         {
-            return _customerService.DeleteCustomer(id);
+            return _customerService.DeleteCustomerForce(id);
         }
         [HttpGet("get-customer")]
         public Task<IActionResult> GetCustomer()
