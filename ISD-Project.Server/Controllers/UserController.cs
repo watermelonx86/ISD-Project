@@ -19,13 +19,13 @@ namespace ISD_Project.Server.Controllers
         [HttpGet("get-user")]
         public Task<IActionResult> GetUser()
         {
-            return _userService.GetUser();
+            return _userService.GetUserAsync();
         }
 
         [HttpGet("get-user/{id}")]
         public Task<IActionResult> GetUserById(int id)
         {
-            return _userService.GetUserById(id);
+            return _userService.GetUserByIdAsync(id);
         }
 
     }

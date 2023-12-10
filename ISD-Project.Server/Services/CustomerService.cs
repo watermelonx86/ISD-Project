@@ -18,7 +18,7 @@ namespace ISD_Project.Server.Services
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> AddCustomer(CustomerRegisterRequest request)
+        public async Task<IActionResult> AddCustomerAsync(CustomerRegisterRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -52,7 +52,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> DeleteCustomerForce(int userId)
+        public async Task<IActionResult> DeleteCustomerForceAsync(int userId)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -95,7 +95,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetCustomer()
+        public async Task<IActionResult> GetCustomerAsync()
         {
             try
             {
@@ -116,7 +116,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetCustomer(int id)
+        public async Task<IActionResult> GetCustomerAsync(int id)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetHealthInformationOfCustomer(int id)
+        public async Task<IActionResult> GetHealthInformationOfCustomerAsync(int id)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace ISD_Project.Server.Services
                 };
             }
         }
-        public async Task<IActionResult> GetCustomerApproved()
+        public async Task<IActionResult> GetCustomerApprovedAsync()
         {
             try
             {
@@ -181,7 +181,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetCustomerPendingApproval()
+        public async Task<IActionResult> GetCustomerPendingApprovalAsync()
         {
             try
             {
@@ -198,7 +198,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetCustomerRejected()
+        public async Task<IActionResult> GetCustomerRejectedAsync()
         {
             try
             {

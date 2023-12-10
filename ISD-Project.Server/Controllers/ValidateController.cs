@@ -17,12 +17,12 @@ namespace ISD_Project.Server.Controllers
         [HttpPost("validate-customer")]
         public Task<IActionResult> ValidateCustomer(CustomerValidateRequest request)
         {
-            return _validationService.ValidateCustomer(request);
+            return _validationService.ValidateCustomerAsync(request);
         }
         [HttpPost("validate-user-account")]
         public Task<IActionResult> ValidateUserAccount(UserAccountValidateRequest request)
         {
-            return _validationService.ValidateUserAccount(request);
+            return _validationService.ValidateUserAccountAsync(request);
         }
     }
 }

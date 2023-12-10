@@ -6,8 +6,8 @@ namespace ISD_Project.Server.Services
 {
     public interface IValidationService
     {
-        Task<IActionResult> ValidateCustomer(CustomerValidateRequest request);
-        Task CreateAndAssignUserAccountForCustomer(Customer customer);
-        Task<IActionResult> ValidateUserAccount(UserAccountValidateRequest request);
+        Task<IActionResult> ValidateCustomerAsync(CustomerValidateRequest request);
+        Task CreateAndAssignUserAccountForCustomerAsync(Customer customer);
+        Task<IActionResult> ValidateUserAccountAsync(UserAccountValidateRequest request);
     }
 }

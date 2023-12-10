@@ -153,8 +153,8 @@ const FillForm = () => {
 
     // Hàm chuyển đổi dữ liệu để match với backend
     const convertGenderToInt = (genderString) => {
-        if (genderString === 'Nam') return 1;
-        else if (genderString === 'Nữ') return 2;
+        if (genderString === 'Nam') return 0;
+        else if (genderString === 'Nữ') return 1;
     }
 
     const convertPhoneNumber = (phoneNumber) => {
@@ -181,6 +181,7 @@ const FillForm = () => {
                 email: email,
                 name: fullname,
                 gender: genderInt,
+                dateOfBirth: birthday,
                 address: street + ", " + ward + ", " + district + ", " + city,
                 phoneNumber: formattedPhoneNumber,
                 nationality: country,
@@ -420,6 +421,11 @@ const FillForm = () => {
         else {
             setErrorWeightLoss('');
         }
+        //TODO: Handle more cases here
+        if(flag === 1) {
+            handleSendForm();
+        }
+        
     };
 
 

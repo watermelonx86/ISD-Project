@@ -18,7 +18,7 @@ namespace ISD_Project.Server.Services
             _emailService = emailService;
         }
 
-        public async Task<IActionResult> ValidateUserAccount(UserAccountValidateRequest request)
+        public async Task<IActionResult> ValidateUserAccountAsync(UserAccountValidateRequest request)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> ValidateCustomer(CustomerValidateRequest request)
+        public async Task<IActionResult> ValidateCustomerAsync(CustomerValidateRequest request)
         {
             if (request.ProfileStatus == ProfileStatus.Approved)
             {
@@ -58,10 +58,10 @@ namespace ISD_Project.Server.Services
                     //Create new account for customer after approval
                     if (customer.UserAccount is null)
                     {
-                        await CreateAndAssignUserAccountForCustomer(customer);
+                        await CreateAndAssignUserAccountForCustomerAsync(customer);
                         if (customer.UserAccount is not null)
                         {
-                            await _emailService.SendEmail(customer.Email, "Account created", EmailMessageBody.ProfileApproved(customer.UserAccount.Email, "Demo123", $"https://localhost:5173/activate/{customer.UserAccount.Id}"));
+                            await _emailService.SendEmailAsync(customer.Email, "Account created", EmailMessageBody.ProfileApproved(customer.UserAccount.Email, "Demo123", $"https://localhost:5173/activate/{customer.UserAccount.Id}"));
                         }
                     }
 
@@ -81,7 +81,7 @@ namespace ISD_Project.Server.Services
 
         }
 
-        public async Task CreateAndAssignUserAccountForCustomer(Customer customer)
+        public async Task CreateAndAssignUserAccountForCustomerAsync(Customer customer)
         {
             var existingUserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
             if (existingUserAccount is null)

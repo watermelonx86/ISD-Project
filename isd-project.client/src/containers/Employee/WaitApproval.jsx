@@ -102,7 +102,7 @@ const WaitApproval = () => {
             setDayStart(item.dateIssued);// 2. Ngày cấp
             setDayEnd(item.validUntil); // 3. Ngày hết hạn
             setFullname(item.name); // 4. Họ tên
-            //TODO: setBirthday
+            setBirthday(item.dateOfBirth); // Ngày sinh  
             //Address
             const address = item.address; // 5. Địa chỉ
             const parts = address.split(', ');

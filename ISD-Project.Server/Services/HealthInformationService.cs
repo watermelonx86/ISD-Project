@@ -18,7 +18,7 @@ namespace ISD_Project.Server.Services
         }
 
 
-        public async Task<IActionResult> AddHealthInformation(HealthInformationDto request)
+        public async Task<IActionResult> AddHealthInformationAsync(HealthInformationDto request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -93,7 +93,7 @@ namespace ISD_Project.Server.Services
 
         }
 
-        public async Task<IActionResult> GetHealthInformation(int userId)
+        public async Task<IActionResult> GetHealthInformationAsync(int userId)
         {
             var healthInformation = await _dbContext.HealthInformation.Where(h => h.CustomerId == userId).FirstOrDefaultAsync();
             if (healthInformation is null)

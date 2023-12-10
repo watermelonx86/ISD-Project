@@ -18,7 +18,7 @@ namespace ISD_Project.Server.Services
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUserAsync()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetUserByIdAsync(int id)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace ISD_Project.Server.Services
 
         }
 
-        public Task<IActionResult> GetUserByRole(RoleType role)
+        public Task<IActionResult> GetUserByRoleAsync(RoleType role)
         {
             throw new NotImplementedException();
         }
