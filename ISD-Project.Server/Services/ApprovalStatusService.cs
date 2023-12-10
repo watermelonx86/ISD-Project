@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 using AutoMapper;
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
+using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +13,13 @@ namespace ISD_Project.Server;
 public class ApprovalStatusService : IApprovalStatusService
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IValidationService _validationService;
     private readonly IMapper _mapper;
-    public ApprovalStatusService(ApplicationDbContext dbContext, IMapper mapper)
+    public ApprovalStatusService(ApplicationDbContext dbContext, IValidationService validationService, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
+        _validationService = validationService;
     }
 
     public async Task<IActionResult> AddApprovalStatusAsync(ApprovalStatusDto approvalStatusDto)
@@ -54,6 +58,10 @@ public class ApprovalStatusService : IApprovalStatusService
             approvalStatus.ValidationDepartment = validationDepartment;
             await _dbContext.ApprovalStatuses.AddAsync(approvalStatus);
             await _dbContext.SaveChangesAsync();
+            // Validate customer
+            var request = new CustomerValidateRequest { CustomerId = customer.Id, ProfileStatus = approvalStatus.ProfileStatus };
+            await _validationService.ValidateCustomerAsync(request);
+
             var response = new { approvalStatusId = approvalStatus.Id, message = "Approval status successfully created", value = approvalStatusDto };
             return new OkObjectResult(response);
         }

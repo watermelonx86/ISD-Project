@@ -7,12 +7,15 @@ import Footer from "../HomePage/Footer";
 
 const ApprovalHistory = () => {
     const [data, setData] = useState([]);
+    const [data1, setData1] = useState([]); // State for additional data
+
     useEffect(() => {
         const fetchData = async () => {
           try {
             const response = await axios.get('https://localhost:7267/api/ApprovalStatus/get-approval-status/2');
-            // Update the component state with the fetched data
             setData(response.data);
+            const response1 = await axios.get('https://localhost:7267/api/ApprovalStatus/get-approval-status/1');
+            setData1(response1.data);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -43,29 +46,15 @@ const ApprovalHistory = () => {
                             </tr>
                         </thead>
                         <tbody >
-                            <tr className="border hover:bg-slate-100">
-                                <td className="p-3 text-center ">Nguyen Van A</td>
-                                <td className="p-3 text-center">nguyenvana@gmail.com</td>
-                                <td className="p-3 text-center">0123456789</td>
-                                <td className="p-3 text-center">1/1/2024</td>
-                                <td className="p-3 text-center font-bold">Le Van B</td>
+                        {data1.map((item,index) => (
+                            <tr key={index} className="border hover:bg-slate-100">
+                                <td className="p-3 text-center">{item.customerName}</td>
+                                <td className="p-3 text-center">{item.customerEmail}</td>
+                                <td className="p-3 text-center">{item.insuranceName}</td>
+                                <td className="p-3 text-center">{item.approvalDate}</td>
+                                <td className="p-3 text-center font-bold">{item.validationDepartmentName}</td>
                             </tr>
-
-                            <tr className="border hover:bg-slate-100">
-                                <td className="p-3 text-center ">Nguyen Van A</td>
-                                <td className="p-3 text-center">nguyenvana@gmail.com</td>
-                                <td className="p-3 text-center">0123456789</td>
-                                <td className="p-3 text-center">1/1/2024</td>
-                                <td className="p-3 text-center font-bold">Le Van B</td>
-                            </tr>
-
-                            <tr className="border hover:bg-slate-100">
-                                <td className="p-3 text-center ">Nguyen Van A</td>
-                                <td className="p-3 text-center">nguyenvana@gmail.com</td>
-                                <td className="p-3 text-center">0123456789</td>
-                                <td className="p-3 text-center">1/1/2024</td>
-                                <td className="p-3 text-center font-bold">Le Van B</td>
-                            </tr>
+                            ))}
 
                         </tbody>
                     </table>
@@ -87,14 +76,14 @@ const ApprovalHistory = () => {
                             </tr>
                         </thead>
                         <tbody >
-                        {data.map((data,index) => (
+                        {data.map((item,index) => (
                             <tr key={index} className="border hover:bg-slate-100">
-                                <td className="p-3 text-center">{data.customerName}</td>
-                                <td className="p-3 text-center">{data.customerEmail}</td>
-                                <td className="p-3 text-center">{data.insuranceName}</td>
-                                <td className="p-3 text-center">{data.approvalDate}</td>
-                                <td className="p-3 text-center font-bold">{data.validationDepartmentName}</td>
-                                <td className="p-3 text-center text-red-500">{data.approvalComment}</td>
+                                <td className="p-3 text-center">{item.customerName}</td>
+                                <td className="p-3 text-center">{item.customerEmail}</td>
+                                <td className="p-3 text-center">{item.insuranceName}</td>
+                                <td className="p-3 text-center">{item.approvalDate}</td>
+                                <td className="p-3 text-center font-bold">{item.validationDepartmentName}</td>
+                                <td className="p-3 text-center text-red-500">{item.approvalComment}</td>
                             </tr>
                             ))}
                         </tbody>

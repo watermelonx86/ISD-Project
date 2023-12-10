@@ -76,6 +76,7 @@ const WaitApproval = () => {
                 approvalDate : new Date().toISOString().split('T')[0],
                 approvalComment : reason
             }
+            console.log(data);
             axios.post('https://localhost:7267/api/ApprovalStatus/add-approval-status', data)
             .then(response => {
                 // Xử lý dữ liệu trả về khi gọi API thành công
