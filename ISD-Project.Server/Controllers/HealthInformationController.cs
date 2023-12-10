@@ -18,13 +18,13 @@ namespace ISD_Project.Server.Controllers
         [HttpPost("add-health-information")]
         public async Task<IActionResult> AddHealthInformation(HealthInformationDto request)
         {
-            return await _healthInformation.AddHealthInformation(request);
+            return await _healthInformation.AddHealthInformationAsync(request);
         }
 
         [HttpGet("get-health-information/{userId}")]
         public async Task<IActionResult> GetHealthInformation(int userId)
         {
-            return await _healthInformation.GetHealthInformation(userId);
+            return await _healthInformation.GetHealthInformationAsync(userId);
         }
 
     }

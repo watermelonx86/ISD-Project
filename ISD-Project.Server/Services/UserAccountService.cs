@@ -38,7 +38,7 @@ namespace ISD_Project.Server.Services
                         return new BadRequestObjectResult("User already exists");
                     }
 
-                    var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHash(request.Password);
+                    var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHashAsync(request.Password);
 
                     var userAccount = new UserAccount
                     {
@@ -48,7 +48,7 @@ namespace ISD_Project.Server.Services
                     };
                     // If not customer then activate userAccount by default
                     userAccount.IsActivated = request.Role == RoleType.Customer ? (int)AccountStatus.Inactive : (int)AccountStatus.Active;
-                    var token = await _cryptoService.CreateToken(userAccount);
+                    var token = await _cryptoService.CreateTokenAsync(userAccount);
                     if (token != null)
                     {
                         userAccount.VerificationToken = token;
@@ -132,7 +132,7 @@ namespace ISD_Project.Server.Services
                 return new BadRequestObjectResult("User does not exist");
             }
 
-            if (!await _cryptoService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!await _cryptoService.VerifyPasswordHashAsync(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return new BadRequestObjectResult("Password is incorrect");
             }
@@ -151,7 +151,7 @@ namespace ISD_Project.Server.Services
             {
                 UserAccountId = user.Id,
                 Token = user.VerificationToken,
-                Role = await GetUserRole(user.Id),
+                Role = await GetUserRoleAsync(user.Id),
                 UserId = user.UserId ?? 0,
                 IsActivated = user.IsActivated
             };
@@ -177,7 +177,7 @@ namespace ISD_Project.Server.Services
             return new OkObjectResult("User Verified");
         }
 
-        public async Task<IActionResult> GetUserAccount()
+        public async Task<IActionResult> GetUserAccountAsync()
         {
             try
             {
@@ -198,7 +198,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetUserAccount(int id)
+        public async Task<IActionResult> GetUserAccountAsync(int id)
         {
             try
             {
@@ -219,7 +219,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<List<String>> GetUserRole(int userAccountId)
+        public async Task<List<String>> GetUserRoleAsync(int userAccountId)
         {
             var userRoles = await _dbContext.UserRoles
                 .Where(ur => ur.UserId == userAccountId)
@@ -239,7 +239,7 @@ namespace ISD_Project.Server.Services
                 {
                     return new BadRequestObjectResult("User does not exist");
                 }
-                user.PasswordResetToken = await _cryptoService.CreateRandomToken();
+                user.PasswordResetToken = await _cryptoService.CreateRandomTokenAsync();
                 user.RestTokenExpires = System.DateTime.UtcNow.AddHours(1);
                 await _dbContext.SaveChangesAsync();
                 return new OkObjectResult("You may now reset your password");
@@ -266,7 +266,7 @@ namespace ISD_Project.Server.Services
                 {
                     return new BadRequestObjectResult("Token has expired");
                 }
-                var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHash(request.Password);
+                var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHashAsync(request.Password);
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
                 user.PasswordResetToken = null;
