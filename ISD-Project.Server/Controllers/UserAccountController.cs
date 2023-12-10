@@ -40,19 +40,19 @@ namespace ISD_Project.Server.Controllers
         [HttpGet("get-user-account")]
         public Task<IActionResult> GetUserAccount()
         {
-            return _userAccountService.GetUserAccount();
+            return _userAccountService.GetUserAccountAsync();
         }
 
         [HttpGet("get-user-account/{id}")]
         public Task<IActionResult> GetUserAccount(int id)
         {
-            return _userAccountService.GetUserAccount(id);
+            return _userAccountService.GetUserAccountAsync(id);
         }
 
         [HttpGet("get-role/{id}")]
         public Task<List<string>> GetRole(int id)
         {
-            return _userAccountService.GetUserRole(id);
+            return _userAccountService.GetUserRoleAsync(id);
         }
 
         [HttpPost("verify")]

@@ -6,10 +6,10 @@ namespace ISD_Project.Server.Services
     public interface ICryptoService
     {
 
-        Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password);
-        Task<string> CreateRandomToken();
-        Task<string> CreateToken(UserAccount userAccount);
-        Task<bool> VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt);
+        Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHashAsync(string password);
+        Task<string> CreateRandomTokenAsync();
+        Task<string> CreateTokenAsync(UserAccount userAccount);
+        Task<bool> VerifyPasswordHashAsync(string password, byte[] storedHash, byte[] storedSalt);
 
     }
 }

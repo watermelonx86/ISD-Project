@@ -5,8 +5,8 @@ namespace ISD_Project.Server.Services
 {
     public interface IInsuranceService
     {
-        Task<IActionResult> GetInsuranceByTypes(int id);
-        Task<IActionResult> GetInsuranceDetail(int id);
-        Task<IActionResult> GetInsuranceTypes();
+        Task<IActionResult> GetInsuranceByTypesAsync(int insuranceTypeId);
+        Task<IActionResult> GetInsuranceDetailAsync(int id);
+        Task<IActionResult> GetInsuranceTypesAsync();
     }
 }

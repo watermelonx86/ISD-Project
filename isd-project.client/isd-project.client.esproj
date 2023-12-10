@@ -14,7 +14,6 @@
     <TypeScriptConfiguration Remove="src\components\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\containers\Employee\" />
     <Folder Include="src\containers\Product\" />
     <Folder Include="src\containers\User\" />
     <Folder Include="src\store\actions\" />

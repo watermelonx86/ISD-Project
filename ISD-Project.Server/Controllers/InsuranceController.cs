@@ -16,19 +16,19 @@ namespace ISD_Project.Server.Controllers
         [HttpGet("get-insurance/{id}")]
         public Task<IActionResult> GetInsurances(int id)
         {
-            return _insuranceService.GetInsuranceByTypes(id);
+            return _insuranceService.GetInsuranceByTypesAsync(id);
         }
 
         [HttpGet("get-insurance-detail/{id}")]
         public Task<IActionResult> GetInsurancesDetail(int id)
         {
-            return _insuranceService.GetInsuranceDetail(id);
+            return _insuranceService.GetInsuranceDetailAsync(id);
         }
 
         [HttpGet("get-insurance-type")]
         public Task<IActionResult> GetInsurancesType()
         {
-            return _insuranceService.GetInsuranceTypes();
+            return _insuranceService.GetInsuranceTypesAsync();
         }
     }
 }

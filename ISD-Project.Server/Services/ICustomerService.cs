@@ -5,14 +5,14 @@ namespace ISD_Project.Server.Services
 {
     public interface ICustomerService
     {
-        Task<IActionResult> GetCustomer();
-        Task<IActionResult> GetCustomerPendingApproval();
-        Task<IActionResult> GetCustomerApproved();
-        Task<IActionResult> GetCustomerRejected();
-        Task<IActionResult> GetCustomer(int id);
-        Task<IActionResult> GetHealthInformationOfCustomer(int id);
+        Task<IActionResult> GetCustomerAsync();
+        Task<IActionResult> GetCustomerPendingApprovalAsync();
+        Task<IActionResult> GetCustomerApprovedAsync();
+        Task<IActionResult> GetCustomerRejectedAsync();
+        Task<IActionResult> GetCustomerAsync(int id);
+        Task<IActionResult> GetHealthInformationOfCustomerAsync(int id);
 
-        Task<IActionResult> AddCustomer(CustomerRegisterRequest request);
-        Task<IActionResult> DeleteCustomer(int id);
+        Task<IActionResult> AddCustomerAsync(CustomerRegisterRequest request);
+        Task<IActionResult> DeleteCustomerForceAsync(int userId);
     }
 }

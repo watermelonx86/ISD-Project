@@ -17,12 +17,12 @@ namespace ISD_Project.Server.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<IActionResult> GetInsuranceByTypes(int id)
+        public async Task<IActionResult> GetInsuranceByTypesAsync(int insuranceTypeId)
         {
             try
             {
                 var listInsurances = await _dbContext.Insurances
-                .Where(i => i.InsuranceTypeId == id)
+                .Where(i => i.InsuranceTypeId == insuranceTypeId)
                 .ToListAsync();
                 if (listInsurances == null)
                 {
@@ -41,7 +41,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetInsuranceTypes()
+        public async Task<IActionResult> GetInsuranceTypesAsync()
         {
             try
             {
@@ -59,7 +59,7 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetInsuranceDetail(int id)
+        public async Task<IActionResult> GetInsuranceDetailAsync(int id)
         {
             try
             {
