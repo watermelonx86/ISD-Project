@@ -13,6 +13,7 @@ const WaitApproval = () => {
     const [openDetail, setOpenDetail] = useState(false);
     const [reason, setReason] = useState('');
     const [applicationID, setApplicationID] = useState('');
+    const [selectedItem, setSelectedItem] = useState(null); // Add state to store selected item
 
     //test
     const [bh, setBh] = useState("Bảo hiểm nhân thọ");
@@ -50,7 +51,7 @@ const WaitApproval = () => {
     //mở modal từ chối 
     const handleOpenRefuse = (item) => {
         setOpenRefuse(true);
-        //console.log(item);
+        setSelectedItem(item);
         setApplicationID(item.id);
     }
 
@@ -64,6 +65,27 @@ const WaitApproval = () => {
                     "Lý do: ", reason);
         setOpenRefuse(false);
         setApplicationID('');
+        if (selectedItem) 
+        {   
+            const validationDepartmentId = parseInt(localStorage.getItem('userId'));
+            const data = {
+                customerId : selectedItem.id,
+                insuranceId : 1, //TODO: Truyền id insurance vào đây nha minh
+                validationDepartmentId : validationDepartmentId,
+                profileStatus : 2, // từ chối
+                approvalDate : new Date().toISOString().split('T')[0],
+                approvalComment : reason
+            }
+            console.log(data);
+            axios.post('https://localhost:7267/api/ApprovalStatus/add-approval-status', data)
+            .then(response => {
+                // Xử lý dữ liệu trả về khi gọi API thành công
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('Error during API call:', error);
+            });
+        }
     }
 
     useEffect(() => {

@@ -7,5 +7,7 @@
         public string Job { get; set; } = String.Empty;
         public int? HealthInformationId { get; set; }
         public HealthInformation? HealthInformation { get; set; }
+        // 1 Customer có nhiều ApprovalStatus
+        public ICollection<ApprovalStatus>? ApprovalStatuses { get; set; }
     }
 }

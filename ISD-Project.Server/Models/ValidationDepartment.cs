@@ -11,5 +11,8 @@
         {
 
         }
+        // 1 ValidationDepartment có nhiều ApprovalStatus
+        public ICollection<ApprovalStatus>? ApprovalStatuses { get; set; }
+
     }
 }

@@ -16,5 +16,9 @@ namespace ISD_Project.Server.Models
         // 1 Insurance thuộc về 1 InsuranceType
         public int? InsuranceTypeId { get; set; }
         public InsuranceType? InsuranceType { get; set; }
+
+        // 1 Insurance có nhiều ApprovalStatus
+        public ICollection<ApprovalStatus>? ApprovalStatuses { get; set; }
+
     }
 }

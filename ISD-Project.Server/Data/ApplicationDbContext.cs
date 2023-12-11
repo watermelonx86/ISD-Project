@@ -77,5 +77,6 @@ namespace ISD_Project.Server.DataAccess
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Insurance> Insurances { get; set; }
         public DbSet<InsuranceType> InsuranceTypes { get; set; }
+        public DbSet<ApprovalStatus> ApprovalStatuses { get; set; }
     }
 }
