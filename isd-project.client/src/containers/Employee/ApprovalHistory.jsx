@@ -32,7 +32,7 @@ const ApprovalHistory = () => {
             <section className="mx-auto w-4/5  h-auto my-10">
                
                 <div>
-                    <h3 className="md:w-3/4 text-2xl my-5 leading-6 font-medium pt-2 font-bold text-green-600">
+                    <h3 className="md:w-3/4 text-2xl my-5 leading-6 font-medium pt-2 text-green-600">
                         Đơn đã duyệt
                     </h3>
                     <table className="w-full select-none">
@@ -61,7 +61,7 @@ const ApprovalHistory = () => {
                 </div>
 
                 <div>
-                    <h3 className="md:w-3/4 text-2xl my-5 leading-6 font-medium pt-2 font-bold text-red-600">
+                    <h3 className="md:w-3/4 text-2xl my-5 leading-6 pt-2 font-bold text-red-600">
                         Đơn từ chối duyệt
                     </h3>
                     <table className="w-full select-none">
