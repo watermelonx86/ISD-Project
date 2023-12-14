@@ -164,56 +164,56 @@ namespace ISD_Project.Server.Services
                 };
             }
         }
-        public async Task<IActionResult> GetCustomerApprovedAsync()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Approved).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
+        // public async Task<IActionResult> GetCustomerApprovedAsync()
+        // {
+        //     try
+        //     {
+        //         var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Approved).ToListAsync();
+        //         var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
+        //         return new OkObjectResult(listCustomerDto);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return new ObjectResult(ex.Message)
+        //         {
+        //             StatusCode = 500 // Internal Server Error
+        //         };
+        //     }
+        // }
 
-        public async Task<IActionResult> GetCustomerPendingApprovalAsync()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Pending).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
+        // public async Task<IActionResult> GetCustomerPendingApprovalAsync()
+        // {
+        //     try
+        //     {
+        //         var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Pending).ToListAsync();
+        //         var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
+        //         return new OkObjectResult(listCustomerDto);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return new ObjectResult(ex.Message)
+        //         {
+        //             StatusCode = 500 // Internal Server Error
+        //         };
+        //     }
+        // }
 
-        public async Task<IActionResult> GetCustomerRejectedAsync()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Rejected).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
+        // public async Task<IActionResult> GetCustomerRejectedAsync()
+        // {
+        //     try
+        //     {
+        //         var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Rejected).ToListAsync();
+        //         var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
+        //         return new OkObjectResult(listCustomerDto);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return new ObjectResult(ex.Message)
+        //         {
+        //             StatusCode = 500 // Internal Server Error
+        //         };
+        //     }
+        // }
 
 
     }

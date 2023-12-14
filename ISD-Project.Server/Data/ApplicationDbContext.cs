@@ -78,5 +78,6 @@ namespace ISD_Project.Server.DataAccess
         public DbSet<Insurance> Insurances { get; set; }
         public DbSet<InsuranceType> InsuranceTypes { get; set; }
         public DbSet<ApprovalStatus> ApprovalStatuses { get; set; }
+        public DbSet<InsuranceContract> InsuranceContracts { get; set; }
     }
 }

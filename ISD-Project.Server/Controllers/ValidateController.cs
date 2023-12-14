@@ -14,11 +14,11 @@ namespace ISD_Project.Server.Controllers
         {
             this._validationService = validationService;
         }
-        [HttpPost("validate-customer")]
-        public Task<IActionResult> ValidateCustomer(CustomerValidateRequest request)
-        {
-            return _validationService.ValidateCustomerAsync(request);
-        }
+        // [HttpPost("validate-customer")]
+        // public Task<IActionResult> ValidateCustomer(CustomerValidateRequest request)
+        // {
+        //     return _validationService.ValidateCustomerAsync(request);
+        // }
         [HttpPost("validate-user-account")]
         public Task<IActionResult> ValidateUserAccount(UserAccountValidateRequest request)
         {

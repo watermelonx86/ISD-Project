@@ -38,79 +38,79 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> ValidateCustomerAsync(CustomerValidateRequest request)
-        {
-            if (request.ProfileStatus == ProfileStatus.Approved)
-            {
-                try
-                {
-                    var customer = await _dbContext.Customers
-                         .Include(uc => uc.UserAccount)
-                        .FirstOrDefaultAsync(c => c.Id == request.CustomerId);
-                    if (customer is null)
-                    {
-                        return new NotFoundObjectResult("Customer not found");
-                    }
-                    customer.IsApproved = (int)request.ProfileStatus;
-                    _dbContext.Update(customer);
-                    await _dbContext.SaveChangesAsync();
+        // public async Task<IActionResult> ValidateCustomerAsync(CustomerValidateRequest request)
+        // {
+        //     if (request.ProfileStatus == ProfileStatus.Approved)
+        //     {
+        //         try
+        //         {
+        //             var customer = await _dbContext.Customers
+        //                  .Include(uc => uc.UserAccount)
+        //                 .FirstOrDefaultAsync(c => c.Id == request.CustomerId);
+        //             if (customer is null)
+        //             {
+        //                 return new NotFoundObjectResult("Customer not found");
+        //             }
+        //             customer.IsApproved = (int)request.ProfileStatus;
+        //             _dbContext.Update(customer);
+        //             await _dbContext.SaveChangesAsync();
 
-                    //Create new account for customer after approval
-                    if (customer.UserAccount is null)
-                    {
-                        await CreateAndAssignUserAccountForCustomerAsync(customer);
-                        if (customer.UserAccount is not null)
-                        {
-                            await _emailService.SendEmailAsync(customer.Email, "Account created", EmailMessageBody.ProfileApproved(customer.UserAccount.Email, "Demo123", $"https://localhost:5173/activate/{customer.UserAccount.Id}"));
-                        }
-                    }
+        //             //Create new account for customer after approval
+        //             if (customer.UserAccount is null)
+        //             {
+        //                 await CreateAndAssignUserAccountForCustomerAsync(customer);
+        //                 if (customer.UserAccount is not null)
+        //                 {
+        //                     await _emailService.SendEmailAsync(customer.Email, "Account created", EmailMessageBody.ProfileApproved(customer.UserAccount.Email, "Demo123", $"https://localhost:5173/activate/{customer.UserAccount.Id}"));
+        //                 }
+        //             }
 
-                    var response = new { userAccountId = customer.UserAccount?.Id, message = $"Validate customer successfully {request.ProfileStatus}" };
-                    return new OkObjectResult(response);
-                }
-                catch (Exception)
-                {
-                    return new StatusCodeResult(500);
-                }
-            }
-            if (request.ProfileStatus == ProfileStatus.Rejected)
-            {
-                try
-                {
-                    var customer = await _dbContext.Customers
-                         .Include(uc => uc.UserAccount)
-                        .FirstOrDefaultAsync(c => c.Id == request.CustomerId);
-                    if (customer is null)
-                    {
-                        return new NotFoundObjectResult("Customer not found");
-                    }
-                    customer.IsApproved = (int)request.ProfileStatus;
-                    _dbContext.Update(customer);
-                    await _dbContext.SaveChangesAsync();
+        //             var response = new { userAccountId = customer.UserAccount?.Id, message = $"Validate customer successfully {request.ProfileStatus}" };
+        //             return new OkObjectResult(response);
+        //         }
+        //         catch (Exception)
+        //         {
+        //             return new StatusCodeResult(500);
+        //         }
+        //     }
+        //     if (request.ProfileStatus == ProfileStatus.Rejected)
+        //     {
+        //         try
+        //         {
+        //             var customer = await _dbContext.Customers
+        //                  .Include(uc => uc.UserAccount)
+        //                 .FirstOrDefaultAsync(c => c.Id == request.CustomerId);
+        //             if (customer is null)
+        //             {
+        //                 return new NotFoundObjectResult("Customer not found");
+        //             }
+        //             customer.IsApproved = (int)request.ProfileStatus;
+        //             _dbContext.Update(customer);
+        //             await _dbContext.SaveChangesAsync();
 
-                    //If customer is rejected, delete health information
-                    var healthInformation = await _dbContext.HealthInformation.FirstOrDefaultAsync(h => h.CustomerId == customer.Id);
-                    if (healthInformation is not null)
-                    {
-                        _dbContext.HealthInformation.Remove(healthInformation);
-                        await _dbContext.SaveChangesAsync();
-                    }
+        //             //If customer is rejected, delete health information
+        //             var healthInformation = await _dbContext.HealthInformation.FirstOrDefaultAsync(h => h.CustomerId == customer.Id);
+        //             if (healthInformation is not null)
+        //             {
+        //                 _dbContext.HealthInformation.Remove(healthInformation);
+        //                 await _dbContext.SaveChangesAsync();
+        //             }
 
-                    var response = new { userAccountId = customer.UserAccount?.Id, message = $"Validate customer successfully {request.ProfileStatus}" };
-                    return new OkObjectResult(response);
-                }
-                catch (Exception)
-                {
-                    return new StatusCodeResult(500);
-                }
-            }
-            else
-            {
-                return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
+        //             var response = new { userAccountId = customer.UserAccount?.Id, message = $"Validate customer successfully {request.ProfileStatus}" };
+        //             return new OkObjectResult(response);
+        //         }
+        //         catch (Exception)
+        //         {
+        //             return new StatusCodeResult(500);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
 
-            }
+        //     }
 
-        }
+        // }
 
         public async Task CreateAndAssignUserAccountForCustomerAsync(Customer customer)
         {

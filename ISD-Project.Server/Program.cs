@@ -58,6 +58,7 @@ builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IInsuranceService, InsuranceService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IApprovalStatusService, ApprovalStatusService>();
+builder.Services.AddScoped<IInsuranceContractService, InsuranceContractService>();
 //
 var app = builder.Build();
 

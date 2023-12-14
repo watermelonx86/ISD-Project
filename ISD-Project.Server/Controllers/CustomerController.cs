@@ -44,22 +44,22 @@ namespace ISD_Project.Server.Controllers
             return _customerService.GetHealthInformationOfCustomerAsync(id);
         }
 
-        [HttpGet("get-customer-pending-approval")]
-        public Task<IActionResult> GetCustomerPendingApproval()
-        {
-            return _customerService.GetCustomerPendingApprovalAsync();
-        }
+        // [HttpGet("get-customer-pending-approval")]
+        // public Task<IActionResult> GetCustomerPendingApproval()
+        // {
+        //     return _customerService.GetCustomerPendingApprovalAsync();
+        // }
 
-        [HttpGet("get-customer-approved")]
-        public Task<IActionResult> GetCustomerApproved()
-        {
-            return _customerService.GetCustomerApprovedAsync();
-        }
+        // [HttpGet("get-customer-approved")]
+        // public Task<IActionResult> GetCustomerApproved()
+        // {
+        //     return _customerService.GetCustomerApprovedAsync();
+        // }
 
-        [HttpGet("get-customer-rejected")]
-        public Task<IActionResult> GetCustomerRejected()
-        {
-            return _customerService.GetCustomerRejectedAsync();
-        }
+        // [HttpGet("get-customer-rejected")]
+        // public Task<IActionResult> GetCustomerRejected()
+        // {
+        //     return _customerService.GetCustomerRejectedAsync();
+        // }
     }
 }

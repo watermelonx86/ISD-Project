@@ -60,7 +60,7 @@ public class ApprovalStatusService : IApprovalStatusService
             await _dbContext.SaveChangesAsync();
             // Validate customer
             var request = new CustomerValidateRequest { CustomerId = customer.Id, ProfileStatus = approvalStatus.ProfileStatus };
-            await _validationService.ValidateCustomerAsync(request);
+            //await _validationService.ValidateCustomerAsync(request);
 
             var response = new { approvalStatusId = approvalStatus.Id, message = "Approval status successfully created", value = approvalStatusDto };
             return new OkObjectResult(response);
