@@ -30,7 +30,7 @@ namespace ISD_Project.Server.Services
                     }
                     if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
                     {
-                        return new BadRequestObjectResult("Email already exists");
+                        return new BadRequestObjectResult("Email đã tồn tại, hãy nhập email khác!");
                     }
                     var customer = _mapper.Map<Customer>(request);
 

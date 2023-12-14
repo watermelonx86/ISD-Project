@@ -2,18 +2,19 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
 
 const WaitApproval = () => {
-
     const application_List = Array.from({ length: 4 }, (_, index) => index + 1);
+    const [, forceUpdate] = useState();
     const [openRefuse, setOpenRefuse] = useState(false);
     const [openAccept, setOpenAccept] = useState(false);
     const [openDetail, setOpenDetail] = useState(false);
     const [reason, setReason] = useState('');
     const [applicationID, setApplicationID] = useState('');
-    const [selectedItem, setSelectedItem] = useState(null); // Add state to store selected item
+    const [selectedItem, setSelectedItem] = useState(''); // Add state to store selected item
 
     //test
     const [bh, setBh] = useState("Bảo hiểm nhân thọ");
@@ -59,7 +60,7 @@ const WaitApproval = () => {
         setOpenRefuse(false);
         setApplicationID('');
     }
-
+ 
     const handleSendReason = () => {
         console.log("Đơn đăng ký: ", applicationID,
                     "Lý do: ", reason);
@@ -86,6 +87,8 @@ const WaitApproval = () => {
                 console.error('Error during API call:', error);
             });
         }
+        alert("Từ chối thành công!");
+        window.location.reload();
     }
 
     useEffect(() => {
@@ -96,12 +99,28 @@ const WaitApproval = () => {
     // mở modal thông báo duyệt đơn
     const handleSendAccept = (item) => {
         setOpenAccept(true);
-        setApplicationID(item.id);
+        const validationDepartmentId = parseInt(localStorage.getItem('userId'));
+        const data = {
+            customerId : item.id,
+            insuranceId : 4, 
+            validationDepartmentId : validationDepartmentId,
+            profileStatus : 1, 
+            approvalDate : new Date().toISOString().split('T')[0],
+            approvalComment : ''
+        }
+        axios.post('https://localhost:7267/api/ApprovalStatus/add-approval-status', data)
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error('Error during API call:', error);
+        })
     }
 
     const handleCloseAccept = () => {
         setOpenAccept(false);
         setApplicationID('');
+        window.location.reload();
     }
 
     const convertBooleanToString = (value) => {
@@ -112,7 +131,6 @@ const WaitApproval = () => {
 
     // mở modal xem chi tiết đơn đăng kí
     const handleOpenDetail = (item) => {
-        
         setOpenDetail(true);
         console.log(item);  
         setApplicationID(item.id);
@@ -235,9 +253,9 @@ const WaitApproval = () => {
                                 >
                                     Xem thông tin
                                 </button>
-
-                            </div>
-                        </div>
+                                
+                            </div>   
+                        </div>  
                     ))}
                 </section>
                 {openRefuse && (
@@ -283,6 +301,7 @@ const WaitApproval = () => {
                                                 onClick={ handleSendReason }
                                             >
                                                 Xác nhận
+                                            
                                             </button>
                                             
                                         </form>
@@ -299,18 +318,12 @@ const WaitApproval = () => {
                             className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[300] justify-center items-center w-full md:inset-0 h-modal md:h-full">
                             <div className="relative p-4 w-full max-w-md h-full md:h-auto">
                                 <div className="relative p-4 text-center bg-white border-2 border-slate-400 rounded-lg shadow sm:p-5">
-                                    <button type="button"
-                                        className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                                        data-modal-toggle="successModal"
-                                        onClick={ handleCloseAccept }
-                                    >
-                                        <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                                        <span className="sr-only">Close modal</span>
-                                    </button>
+
                                     <div className="w-12 h-12 rounded-full bg-green-200 p-2 flex items-center justify-center mx-auto mb-3.5">
                                         <svg aria-hidden="true" className="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
                                         <span className="sr-only">Success</span>
                                     </div>
+                                    
                                     <p className="mb-4 text-lg font-semibold text-gray-900"> Đã duyệt đơn
                                         <span className="text-red-600 mx-2 font-bold">#{applicationID}</span>
                                         !</p>
@@ -821,6 +834,7 @@ const WaitApproval = () => {
                         </div>
                     </div>  
                 )}
+                
             </div>
             <Footer />
         </React.Fragment>
