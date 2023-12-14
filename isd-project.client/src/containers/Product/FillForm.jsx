@@ -170,7 +170,7 @@ const FillForm = () => {
     }
 
     const handleSendForm = async () => {
-         let userId = 0;
+        let userId = 0;
         try {
             const genderInt = convertGenderToInt(gender);
             const formattedPhoneNumber = convertPhoneNumber(phoneNumber);
@@ -196,42 +196,43 @@ const FillForm = () => {
             const responseCustomer = await axios.post(api_add_customer, customerInfo);
             console.log("responseCustomer: ", responseCustomer);
             if (responseCustomer.status === 200) {
-                     console.log('Customer created successfully:', responseCustomer.data);
-                    // Lấy UserId 
-                    userId = Number(responseCustomer.data.userId);
-                    // Health information
-                    const healthInfo = {
-                        height: Number(height),
-                        weight: Number(weight),
-                        smoking: convertToBoolean(smoking),
-                        cigarettesPerDay: Number(smoking_frequency),
-                        alcoholConsumption: convertToBoolean(alcohol),
-                        daysPerWeekAlcohol: Number(alcohol_frequency),
-                        drugUse: convertToBoolean(drug),
-                        engagesInDangerousSports: convertToBoolean(sport),
-                        dangerousSportsDetails: sport_detail,
-                        diagnosedWithHealthConditions: convertToBoolean(cancer),
-                        hasSpecificHealthConditions: convertToBoolean(congenital_disease),
-                        experiencedDiseasesInLast5Years: convertToBoolean(dengue),
-                        experiencedDiseasesDetails: congenital_disease_detail,
-                        unexplainedWeightLoss: convertToBoolean(weight_loss),
-                        unexplainedWeightLossDetails: weight_loss_detail,
-                        customerId: Number(userId)
-                    };
-                    // Gửi POST API request để thêm thông tin sức khỏe
-                    setFlagDelete(true);
-                    const responseHealthInfo =  axios.post(api_add_health_info, healthInfo);
-                    const healthInfoData = responseHealthInfo.data;
-                    if (responseHealthInfo.status === 200) {
-                        console.log('Health information added successfully:', healthInfoData);
-                        setFlagDelete(false);
-                    } 
+                    
+                alert('Customer created successfully');
+                console.log('Customer created successfully:', responseCustomer.data);
+                // Lấy UserId 
+                userId = Number(responseCustomer.data.userId);
+                // Health information
+                const healthInfo = {
+                    height: Number(height),
+                    weight: Number(weight),
+                    smoking: convertToBoolean(smoking),
+                    cigarettesPerDay: Number(smoking_frequency),
+                    alcoholConsumption: convertToBoolean(alcohol),
+                    daysPerWeekAlcohol: Number(alcohol_frequency),
+                    drugUse: convertToBoolean(drug),
+                    engagesInDangerousSports: convertToBoolean(sport),
+                    dangerousSportsDetails: sport_detail,
+                    diagnosedWithHealthConditions: convertToBoolean(cancer),
+                    hasSpecificHealthConditions: convertToBoolean(congenital_disease),
+                    experiencedDiseasesInLast5Years: convertToBoolean(dengue),
+                    experiencedDiseasesDetails: congenital_disease_detail,
+                    unexplainedWeightLoss: convertToBoolean(weight_loss),
+                    unexplainedWeightLossDetails: weight_loss_detail,
+                    customerId: Number(userId)
+                };
+                // Gửi POST API request để thêm thông tin sức khỏe
+                setFlagDelete(true);
+                const responseHealthInfo =  axios.post(api_add_health_info, healthInfo);
+                const healthInfoData = responseHealthInfo.data;
+                if (responseHealthInfo.status === 200) {
+                    console.log('Health information added successfully:', healthInfoData);
+                    setFlagDelete(false);
+                } 
                     
                 } 
             
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                setFlag(0);
                 setErrorMessage(error.response.data);
                 console.error('Axios error:', error.response );
                 // Nếu thất bại, gọi API để xoá customer
@@ -406,26 +407,25 @@ const FillForm = () => {
         // Kiểm tra nếu flag = 1 thì gửi form
         if (flag === 1) {
             handleSendForm();
-    
         }
 
     };
 
 
-    useEffect(() => {
-        if (flag === 1) {
-            console.log("flag: ", flag);
-            //handleSendForm();
-            //setSuccess(true);
-        }
-    }, [flag]);
+    // useEffect(() => {
+    //     if (flag === 1) {
+    //         console.log("flag: ", flag);
+    //         //handleSendForm();
+    //         //setSuccess(true);
+    //     }
+    // }, [flag]);
 
-    useEffect(() => {
-        if (flag === 0) {
-            console.log("flag: ", flag);
-            setOpenToast(true);
-        }
-    }, [flag]);
+    // useEffect(() => {
+    //     if (flag === 0) {
+    //         console.log("flag: ", flag);
+            // setOpenToast(true);
+    //     }
+    // }, [flag]);
 
 
     useEffect(() => {
@@ -445,11 +445,14 @@ const FillForm = () => {
         //navigate('/san-pham-bao-hiem');
     }
 
-    const handleCloseToast = () => {
-        setOpenToast(false);
-        setFlag(-1);
-        console.log("Toast: ", openToast);
-    }
+    useEffect(() => {
+        if (openToast) {
+          const timeoutId = setTimeout(() => {
+            setOpenToast(false);
+          }, 4000);
+          return () => clearTimeout(timeoutId);
+        }
+      }, [openToast]);
 
 
     return (
@@ -1148,17 +1151,7 @@ const FillForm = () => {
                             </svg>
                             <span className="sr-only">Error icon</span>
                         </div>
-                        <div className="ms-3 text-sm font-normal">Thông tin nhập chưa chính xác: {errorMessage}</div>
-                        <button type="button" className="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8"
-                            data-dismiss-target="#toast-danger"
-                            aria-label="Close"
-                            onClick={handleCloseToast }
-                        >
-                            <span className="sr-only">Close</span>
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                        </button>
+                        <div className="ms-3 text-sm font-normal">{errorMessage}</div>
                     </div>
                 )}
                 {openModal && (
