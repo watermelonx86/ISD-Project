@@ -12,7 +12,9 @@ const FillForm = () => {
     const [openModal, setOpenModal] = useState(false);
     const [openToast, setOpenToast] = useState(false);
     const navigate = useNavigate();
-
+    
+    //biến thông tin lỗi
+    const [errorMessage, setErrorMessage] = useState('');
     //biến thông tin cá nhân
     const [cccd, setCccd] = useState('');
     const [day_start, setDayStart] = useState('');
@@ -170,8 +172,8 @@ const FillForm = () => {
         try {
             const genderInt = convertGenderToInt(gender);
             const formattedPhoneNumber = convertPhoneNumber(phoneNumber);
-            const api_add_customer = "https://localhost:7267/api/Customer/add-customer";
-            const api_add_health_info = "https://localhost:7267/api/HealthInformation/add-health-information";
+            // InsuranceId
+            const insuranceId = item;
 
             // Customer information
             const customerInfo = {
@@ -187,81 +189,46 @@ const FillForm = () => {
                 nationality: country,
                 job: job
             };
+            // Health information
+            const healthInfo = {
+                height: Number(height),
+                weight: Number(weight),
+                smoking: convertToBoolean(smoking),
+                cigarettesPerDay: Number(smoking_frequency),
+                alcoholConsumption: convertToBoolean(alcohol),
+                daysPerWeekAlcohol: Number(alcohol_frequency),
+                drugUse: convertToBoolean(drug),
+                engagesInDangerousSports: convertToBoolean(sport),
+                dangerousSportsDetails: sport_detail,
+                diagnosedWithHealthConditions: convertToBoolean(cancer),
+                hasSpecificHealthConditions: convertToBoolean(congenital_disease),
+                experiencedDiseasesInLast5Years: convertToBoolean(dengue),
+                experiencedDiseasesDetails: congenital_disease_detail,
+                unexplainedWeightLoss: convertToBoolean(weight_loss),
+                unexplainedWeightLossDetails: weight_loss_detail,
+            };
 
-            // Gửi POST API request để tạo customer
-            const responseCustomer = await axios.post(api_add_customer, customerInfo);
-            const customerData = responseCustomer.data;
-
-            try {
-                if (responseCustomer.status === 200) {
-                    console.log('Customer created successfully:', customerData);
-
-                    // Lấy UserId từ dữ liệu trả về
-                    const userId = customerData.userId;
-
-                    // Health information
-                    const healthInfo = {
-                        height: Number(height),
-                        weight: Number(weight),
-                        smoking: convertToBoolean(smoking),
-                        cigarettesPerDay: Number(smoking_frequency),
-                        alcoholConsumption: convertToBoolean(alcohol),
-                        daysPerWeekAlcohol: Number(alcohol_frequency),
-                        drugUse: convertToBoolean(drug),
-                        engagesInDangerousSports: convertToBoolean(sport),
-                        dangerousSportsDetails: sport_detail,
-                        diagnosedWithHealthConditions: convertToBoolean(cancer),
-                        hasSpecificHealthConditions: convertToBoolean(congenital_disease),
-                        experiencedDiseasesInLast5Years: convertToBoolean(dengue),
-                        experiencedDiseasesDetails: congenital_disease_detail,
-                        unexplainedWeightLoss: convertToBoolean(weight_loss),
-                        unexplainedWeightLossDetails: weight_loss_detail,
-                        customerId: Number(userId)
-                    };
-
-                    console.log(healthInfo);
-
-                    // Gửi POST API request để thêm thông tin sức khỏe
-                    const responseHealthInfo = await axios.post(api_add_health_info, healthInfo);
-                    const healthInfoData = responseHealthInfo.data;
-
-                    try {
-                        if (responseHealthInfo.status === 200) {
-                            console.log('Health information added successfully:', healthInfoData);
-                        } else {
-                            console.error('Failed to add health information:', healthInfoData);
-
-                            // Nếu thất bại, gọi API để xoá customer
-                            const responseDeleteCustomer = await axios.delete(`https://localhost:7267/api/Customer/delete-customer/${userId}`);
-                            const deleteCustomerData = responseDeleteCustomer.data;
-
-                            try {
-                                if (responseDeleteCustomer.status === 200) {
-                                    console.log('Customer deleted successfully:', deleteCustomerData);
-                                } else {
-                                    console.error('Failed to delete customer:', deleteCustomerData);
-                                }
-                            } catch (deleteError) {
-                                console.error('Error in deleting customer:', deleteError);
-                            }
-                        }
-                    } catch (healthInfoError) {
-                        console.error('Error in adding health information:', healthInfoError);
-                    }
-                } else {
-                    console.error('Failed to create customer:', customerData);
-                }
-            } catch (customerError) {
-                console.error('Error in creating customer:', customerError);
+            // Gửi POST API request để tạo InsuranceContract
+            const requestData = {
+                insuranceId: insuranceId,
+                customerRegisterRequest: customerInfo,
+                healthInformationDto: healthInfo
+            };
+            console.log('Request:', requestData);
+            const apiUrl = 'https://localhost:7267/api/Validate/validate-insurance-contract';
+            const response = await axios.post(apiUrl, requestData);
+            console.log('Response:', response.data);
+            if(response.status === 200) {
+                //TODO: Hiện thông báo thành công
+                alert('Đã gửi đơn đăng ký bảo hiểm của bạn. Xin hãy đợi kết quả duyệt hồ sơ của chúng tôi');
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                // Handle Axios-specific errors
-                console.error('Axios error:', error.response || error.message);
-            } else {
-                // Handle other types of errors
-                console.error('Unexpected error:', error);
-            }
+                // TODO: Nếu có lỗi, hiên thông báo lỗi
+                alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+                setErrorMessage(error.response.data);
+                console.error('Axios error:', error.response );
+            } 
         }
     };
 
@@ -282,7 +249,7 @@ const FillForm = () => {
         if ((cccd.length === 9 || cccd.length === 12) && /^\d+$/.test(cccd)) {
             // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
             setErrorCCCD('');
-            console.log('Đã nhập đúng định dạng CCCD');
+            //console.log('Đã nhập đúng định dạng CCCD');
         } else {
             // Hiển thị thông báo lỗi và không thực hiện hành động
             setErrorCCCD('Định dạng không đúng. Vui lòng nhập 9 hoặc 12 ký tự số.');
@@ -290,7 +257,7 @@ const FillForm = () => {
         }
         if (day_end > day_start) {
             setErrorDate('');
-            console.log('Đã nhập đúng định dạng ngày cấp và ngày hết hạn CCCD');
+            //console.log('Đã nhập đúng định dạng ngày cấp và ngày hết hạn CCCD');
         } else {
             setErrorDate('Ngày "Có giá trị đến" phải lớn hơn ngày "Ngày cấp".');
             setFlag(0);
@@ -298,7 +265,7 @@ const FillForm = () => {
         // Kiểm tra nếu tên chỉ chứa kí tự chữ
         if (/^[a-zA-ZÀ-ỹ\s]+$/.test(fullname)) {
             setErrorFullname('');
-            console.log('Đã nhập đúng định dạng họ tên');
+            //console.log('Đã nhập đúng định dạng họ tên');
         } else {
             setErrorFullname('Tên chỉ được chứa kí tự chữ.');
             setFlag(0);
@@ -307,7 +274,7 @@ const FillForm = () => {
         if (/^\d+$/.test(phoneNumber)) {
             // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
             setErrorPhoneNumber('');
-            console.log('Đã nhập đúng định dạng SĐT');
+            //console.log('Đã nhập đúng định dạng SĐT');
         } else {
             // Hiển thị thông báo lỗi và không thực hiện hành động
             setErrorPhoneNumber('Định dạng không đúng. Vui lòng chỉ điền ký tự số.');
@@ -316,7 +283,7 @@ const FillForm = () => {
         // Kiểm tra xem địa chỉ email có chứa ký tự @ hay không
         if (email.includes('@')) {
             setErrorEmail('');
-            console.log('Đã nhập đúng định dạng email');
+            //console.log('Đã nhập đúng định dạng email');
         } else {
             setErrorEmail('Vui lòng điền đúng định dạng email.');
             setFlag(0);
@@ -324,7 +291,7 @@ const FillForm = () => {
         // Kiểm tra nếu quốc tịch chỉ chứa kí tự chữ
         if (/^[a-zA-ZÀ-ỹ\s]+$/.test(country)) {
             setErrorCountry('');
-            console.log('Đã nhập đúng định dạng quốc tịch');
+            //console.log('Đã nhập đúng định dạng quốc tịch');
         } else {
             setErrorCountry('Quốc tịch chỉ được chứa kí tự chữ.');
             setFlag(0);
@@ -332,7 +299,7 @@ const FillForm = () => {
         // Kiểm tra nếu nghề nghiệp chỉ chứa kí tự chữ
         if (/^[a-zA-ZÀ-ỹ\s]+$/.test(job)) {
             setErrorJob('');
-            console.log('Đã nhập đúng định dạng nghề nghiệp');
+            //console.log('Đã nhập đúng định dạng nghề nghiệp');
         } else {
             setErrorJob('Nghề nghiệp chỉ được chứa kí tự chữ.');
             setFlag(0);
@@ -341,7 +308,7 @@ const FillForm = () => {
         if (/^\d+$/.test(height)) {
             // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
             setErrorHeight('');
-            console.log('Đã nhập đúng định dạng chiều cao');
+            //console.log('Đã nhập đúng định dạng chiều cao');
         } else {
             // Hiển thị thông báo lỗi và không thực hiện hành động
             setErrorHeight('Vui lòng nhập chiều cao chỉ toàn số.');
@@ -350,7 +317,7 @@ const FillForm = () => {
         if (/^\d+$/.test(weight)) {
             // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
             setErrorWeight('');
-            console.log('Đã nhập đúng định dạng cân nặng');
+            //console.log('Đã nhập đúng định dạng cân nặng');
         } else {
             // Hiển thị thông báo lỗi và không thực hiện hành động
             setErrorWeight('Vui lòng nhập cân nặng chỉ toàn số.');
@@ -421,34 +388,34 @@ const FillForm = () => {
         else {
             setErrorWeightLoss('');
         }
-        //TODO: Handle more cases here
-        if(flag === 1) {
+        // Kiểm tra nếu flag = 1 thì gửi form
+        if (flag === 1) {
             handleSendForm();
         }
-        
+
     };
 
 
-    useEffect(() => {
-        if (flag === 1) {
-            console.log("flag: ", flag);
-            setSuccess(true);
-        }
-    }, [flag]);
+    // useEffect(() => {
+    //     if (flag === 1) {
+    //         console.log("flag: ", flag);
+    //         //handleSendForm();
+    //         //setSuccess(true);
+    //     }
+    // }, [flag]);
 
-    useEffect(() => {
-        if (flag === 0) {
-            console.log("flag: ", flag);
-            setOpenToast(true);
-        }
-    }, [flag]);
+    // useEffect(() => {
+    //     if (flag === 0) {
+    //         console.log("flag: ", flag);
+            // setOpenToast(true);
+    //     }
+    // }, [flag]);
 
 
     useEffect(() => {
         // Kiểm tra thay đổi của success và thực hiện hành động nếu success là true
         if (success) {
             setOpenModal(true);
-            handleSendForm();
         }
     }, [success]);
 
@@ -459,14 +426,17 @@ const FillForm = () => {
 
     const handleCloseModal = () => {
         setOpenModal(false);
-        navigate('/san-pham-bao-hiem');
+        //navigate('/san-pham-bao-hiem');
     }
 
-    const handleCloseToast = () => {
-        setOpenToast(false);
-        setFlag(-1);
-        console.log("Toast: ", openToast);
-    }
+    useEffect(() => {
+        if (openToast) {
+          const timeoutId = setTimeout(() => {
+            setOpenToast(false);
+          }, 4000);
+          return () => clearTimeout(timeoutId);
+        }
+      }, [openToast]);
 
 
     return (
@@ -491,7 +461,7 @@ const FillForm = () => {
                                 <div className="inline-flex flex-col relative w-full">
                                     <input type="text" name="product" id="product"
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        value={item }
+                                        value={item}
                                         required
                                         disabled
                                     />
@@ -1165,17 +1135,7 @@ const FillForm = () => {
                             </svg>
                             <span className="sr-only">Error icon</span>
                         </div>
-                        <div className="ms-3 text-sm font-normal">Thông tin nhập chưa chính xác.</div>
-                        <button type="button" className="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8"
-                            data-dismiss-target="#toast-danger"
-                            aria-label="Close"
-                            onClick={handleCloseToast }
-                        >
-                            <span className="sr-only">Close</span>
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                        </button>
+                        <div className="ms-3 text-sm font-normal">{errorMessage}</div>
                     </div>
                 )}
                 {openModal && (
@@ -1199,7 +1159,7 @@ const FillForm = () => {
                                     </div>
                                     <p className="mb-4 text-lg font-semibold text-gray-900"> Đã gửi thành công!
                                     </p>
-                                    <p className="mb-4 text-lg font-semibold text-gray-900"> Vui lòng chờ email phản hồi của chúng tôi (Tối đa 2 ngày).
+                                    <p className="mb-4 text-lg font-semibold text-gray-900"> Vui lòng chờ email phản hồi của chúng tôi.
                                     </p>
                                     <button data-modal-toggle="successModal"
                                         type="button"

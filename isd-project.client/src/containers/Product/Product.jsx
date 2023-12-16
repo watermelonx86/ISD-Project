@@ -65,7 +65,7 @@ const Product = () => {
         fetchData();
     }, [selectedId]);
 
-    console.log("ID", selectedId);
+    //console.log("ID", selectedId);
    
     return (
         <React.Fragment>

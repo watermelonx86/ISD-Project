@@ -2,21 +2,22 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
 
 const WaitApproval = () => {
-
     const application_List = Array.from({ length: 4 }, (_, index) => index + 1);
+    const [, forceUpdate] = useState();
     const [openRefuse, setOpenRefuse] = useState(false);
     const [openAccept, setOpenAccept] = useState(false);
     const [openDetail, setOpenDetail] = useState(false);
     const [reason, setReason] = useState('');
     const [applicationID, setApplicationID] = useState('');
-    const [selectedItem, setSelectedItem] = useState(null); // Add state to store selected item
+    const [selectedItem, setSelectedItem] = useState(''); // Add state to store selected item
 
     //test
-    const [bh, setBh] = useState("Bảo hiểm nhân thọ");
+    const [bh, setBh] = useState("");
     const [cccd, setCccd] = useState("");
     const [day_start, setDayStart] = useState("");
     const [day_end, setDayEnd] = useState("");
@@ -45,6 +46,13 @@ const WaitApproval = () => {
     const [congenital_disease, setCongenitalDisease] = useState(""); //bệnh bẩm sinh
     const [congenital_disease_detail, setCongenitalDiseaseDetail] = useState("");
     const [weight_loss, setWeightLoss] = useState(""); //sụt cân
+
+
+    //TODO: refactor
+    //code bẩn
+    const[insuranceId, setInsuranceId] = useState("");
+    const[customerId, setCustomerId] = useState("");
+
     /*const weight_loss_detail = "";*/
 
 
@@ -59,7 +67,7 @@ const WaitApproval = () => {
         setOpenRefuse(false);
         setApplicationID('');
     }
-
+ 
     const handleSendReason = () => {
         console.log("Đơn đăng ký: ", applicationID,
                     "Lý do: ", reason);
@@ -69,10 +77,10 @@ const WaitApproval = () => {
         {   
             const validationDepartmentId = parseInt(localStorage.getItem('userId'));
             const data = {
-                customerId : selectedItem.id,
-                insuranceId : 1, //TODO: Truyền id insurance vào đây nha minh
+                customerId : customerId,
+                insuranceId : insuranceId, 
                 validationDepartmentId : validationDepartmentId,
-                profileStatus : 2, // từ chối
+                profileStatus : 2, 
                 approvalDate : new Date().toISOString().split('T')[0],
                 approvalComment : reason
             }
@@ -81,11 +89,14 @@ const WaitApproval = () => {
             .then(response => {
                 // Xử lý dữ liệu trả về khi gọi API thành công
                 console.log(response.data);
+                alert("Từ chối thành công!");
             })
             .catch(error => {
                 console.error('Error during API call:', error);
             });
         }
+        
+        //window.location.reload();
     }
 
     useEffect(() => {
@@ -96,12 +107,28 @@ const WaitApproval = () => {
     // mở modal thông báo duyệt đơn
     const handleSendAccept = (item) => {
         setOpenAccept(true);
-        setApplicationID(item.id);
+        const validationDepartmentId = parseInt(localStorage.getItem('userId'));
+        const data = {
+            customerId : item.customerDto.id,
+            insuranceId : item.insuranceDto.insuranceId, 
+            validationDepartmentId : validationDepartmentId,
+            profileStatus : 1, 
+            approvalDate : new Date().toISOString().split('T')[0],
+            approvalComment : ''
+        }
+        axios.post('https://localhost:7267/api/ApprovalStatus/add-approval-status', data)
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error('Error during API call:', error);
+        })
     }
 
     const handleCloseAccept = () => {
         setOpenAccept(false);
         setApplicationID('');
+        window.location.reload();
     }
 
     const convertBooleanToString = (value) => {
@@ -112,21 +139,20 @@ const WaitApproval = () => {
 
     // mở modal xem chi tiết đơn đăng kí
     const handleOpenDetail = (item) => {
-        
         setOpenDetail(true);
         console.log(item);  
         setApplicationID(item.id);
-        axios.get(`https://localhost:7267/api/HealthInformation/get-health-information/${item.id}`)
+        axios.get(`https://localhost:7267/api/HealthInformation/get-health-information/${item.customerDto.id}`)
         .then(response => {
             const data = response.data;
             console.log(data);
-            setCccd(item.identityDocumentId); // 1. Căn cước công dân
-            setDayStart(item.dateIssued);// 2. Ngày cấp
-            setDayEnd(item.validUntil); // 3. Ngày hết hạn
-            setFullname(item.name); // 4. Họ tên
-            setBirthday(item.dateOfBirth); // Ngày sinh  
+            setCccd(item.customerDto.identityDocumentId); // 1. Căn cước công dân
+            setDayStart(item.customerDto.dateIssued);// 2. Ngày cấp
+            setDayEnd(item.customerDto.validUntil); // 3. Ngày hết hạn
+            setFullname(item.customerDto.name); // 4. Họ tên
+            setBirthday(item.customerDto.dateOfBirth); // Ngày sinh  
             //Address
-            const address = item.address; // 5. Địa chỉ
+            const address = item.customerDto.address; // 5. Địa chỉ
             const parts = address.split(', ');
             const street = parts[0];
             const ward = parts[1].replace('phường ', '');
@@ -136,11 +162,11 @@ const WaitApproval = () => {
             setWard(ward);
             setDistrict(district);
             setCity(city);
-            setGender(item.gender === 0 ? 'Nam' : 'Nữ'); // 6. Giới tính
-            setPhoneNumber(item.phoneNumber); // 7. Số điện thoại
-            setEmail(item.email); // 8. Email
-            setCountry(item.nationality); // 9. Quốc tịch
-            setJob(item.job); // 10. Nghề nghiệp
+            setGender(item.customerDto.gender === 0 ? 'Nam' : 'Nữ'); // 6. Giới tính
+            setPhoneNumber(item.customerDto.phoneNumber); // 7. Số điện thoại
+            setEmail(item.customerDto.email); // 8. Email
+            setCountry(item.customerDto.nationality); // 9. Quốc tịch
+            setJob(item.customerDto.job); // 10. Nghề nghiệp
             setHeight(data.height); // 11. Chiều cao
             setWeight(data.weight); // 12. Cân nặng
             setSmoking(convertBooleanToString(data.smoking)); // 13. Hút thuốc
@@ -155,7 +181,7 @@ const WaitApproval = () => {
             setCongenitalDisease(convertBooleanToString(data.hasSpecificHealthConditions)); // 22. Bệnh bẩm sinh
             setCongenitalDiseaseDetail(data.experiencedDiseasesDetails); // 23. Chi tiết bệnh bẩm sinh
             setCancer(convertBooleanToString(data.diagnosedWithHealthConditions)); // 24. Ung thư
-
+            setBh(item.insuranceDto.insuranceName); // 25. Bảo hiểm đã chọn
             
         })
         .catch(error => {
@@ -175,9 +201,10 @@ const WaitApproval = () => {
     
     const [applicationList, setApplicationList] = useState([]);
     useEffect(() => {
-        axios.get('https://localhost:7267/api/Customer/get-customer-pending-approval')
+        axios.get('https://localhost:7267/api/InsuranceContract/pending-contracts')
             .then(response => {
-                console.log(response.data)
+                setCustomerId(response.data[0].customerDto.id)
+                setInsuranceId(response.data[0].insuranceDto.insuranceId)
                 setApplicationList(response.data);
             })
             .catch(error => {
@@ -206,14 +233,14 @@ const WaitApproval = () => {
                                 Đăng ký bảo hiểm
                             </span>
                             <div className="flex flex-col my-3 space-y-2">
-                                <h1 className="py-1 text-gray-900 poppins text-base">Họ tên: {item.name}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Email: {item.email}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Giới tính: {item.gender === 0 ? 'Nam' : 'Nữ'}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Số điện thoại: {item.phoneNumber}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">CCCD: {item.identityDocumentId}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Địa chỉ: {item.address}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Họ tên: {item.customerDto.name}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Email: {item.customerDto.email}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Giới tính: {item.customerDto.gender === 0 ? 'Nam' : 'Nữ'}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Số điện thoại: {item.customerDto.phoneNumber}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">CCCD: {item.customerDto.identityDocumentId}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Địa chỉ: {item.customerDto.address}</h1>
                                 <div className="w-11/12 border-b-2"></div>
-                                <p className="py-3 text-red-500 poppins text-base text-center font-bold">Bảo hiểm nhân thọ</p>
+                                <p className="py-3 text-red-500 poppins text-base text-center font-bold">{item.insuranceDto.insuranceName}</p>
                                 <div className="w-11/12 border-b-2"></div>
                                 <div className="flex justify-between">
                                     <button type="button"
@@ -235,9 +262,9 @@ const WaitApproval = () => {
                                 >
                                     Xem thông tin
                                 </button>
-
-                            </div>
-                        </div>
+                                
+                            </div>   
+                        </div>  
                     ))}
                 </section>
                 {openRefuse && (
@@ -283,6 +310,7 @@ const WaitApproval = () => {
                                                 onClick={ handleSendReason }
                                             >
                                                 Xác nhận
+                                            
                                             </button>
                                             
                                         </form>
@@ -299,18 +327,12 @@ const WaitApproval = () => {
                             className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[300] justify-center items-center w-full md:inset-0 h-modal md:h-full">
                             <div className="relative p-4 w-full max-w-md h-full md:h-auto">
                                 <div className="relative p-4 text-center bg-white border-2 border-slate-400 rounded-lg shadow sm:p-5">
-                                    <button type="button"
-                                        className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-                                        data-modal-toggle="successModal"
-                                        onClick={ handleCloseAccept }
-                                    >
-                                        <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                                        <span className="sr-only">Close modal</span>
-                                    </button>
+
                                     <div className="w-12 h-12 rounded-full bg-green-200 p-2 flex items-center justify-center mx-auto mb-3.5">
                                         <svg aria-hidden="true" className="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
                                         <span className="sr-only">Success</span>
                                     </div>
+                                    
                                     <p className="mb-4 text-lg font-semibold text-gray-900"> Đã duyệt đơn
                                         <span className="text-red-600 mx-2 font-bold">#{applicationID}</span>
                                         !</p>
@@ -821,6 +843,7 @@ const WaitApproval = () => {
                         </div>
                     </div>  
                 )}
+                
             </div>
             <Footer />
         </React.Fragment>

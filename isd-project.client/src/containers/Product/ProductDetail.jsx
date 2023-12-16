@@ -20,7 +20,7 @@ const ProductDetail = () => {
     const pathSegments = window.location.pathname.split('/');
     const id = pathSegments[pathSegments.length - 1];
 
-    console.log("Test", insuranceData[0]); 
+    console.log( insuranceData[0]); 
 
     useEffect(() => {
         const fetchData = async () => {
