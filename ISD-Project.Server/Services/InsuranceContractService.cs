@@ -79,12 +79,34 @@ public class InsuranceContractService : IInsuranceContractService
         return (InsuranceContracts);
     }
 
-    public async Task<IActionResult> GetInsuranceContractsPendingApprovalByCustomerAsync()
+    public async Task<IActionResult> GetInsuranceApproval()
     {
-        var list = _dbContext.InsuranceContracts.Where(ic => ic.ProfileStatus == ProfileStatus.Pending)
-            .Select(ic => ic.CustomerId).ToList();
-        var customers = await _dbContext.Customers.Where(c => list.Contains(c.Id)).ToListAsync();
-        return new OkObjectResult(customers);
+        var pendingContracts = await _dbContext.InsuranceContracts
+        .Where(ic => ic.ProfileStatus == ProfileStatus.Pending)
+        .ToListAsync();
+
+        var listCustomerId = pendingContracts.Select(ic => ic.CustomerId).ToList();
+        var customers = await _dbContext.Customers.Where(c => listCustomerId.Contains(c.Id)).ToListAsync();
+
+        var listInsuranceId = pendingContracts.Select(ic => ic.InsuranceId).ToList();
+        var insurances = await _dbContext.Insurances.Where(i => listInsuranceId.Contains(i.InsuranceId)).ToListAsync();
+
+        // Tạo danh sách DTOs
+        var customerInsuranceDtos = new List<CustomerInsuranceDto>();
+
+        foreach (var contract in pendingContracts)
+        {
+            var customer = customers.FirstOrDefault(c => c.Id == contract.CustomerId);
+            var insurance = insurances.FirstOrDefault(i => i.InsuranceId == contract.InsuranceId);
+            var customerDto = new CustomerInsuranceDto
+            {
+                CustomerDto = _mapper.Map<CustomerDto>(customer),
+                InsuranceDto = _mapper.Map<InsuranceDto>(insurance),
+            };
+            customerInsuranceDtos.Add(customerDto);
+        }
+
+        return new OkObjectResult(customerInsuranceDtos);
     }
     
 

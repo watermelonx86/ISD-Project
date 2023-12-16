@@ -10,7 +10,7 @@ public interface IInsuranceContractService
     Task<IActionResult> GetInsuranceContractAsync(int id);
     Task<List<InsuranceContract>> GetInsuranceContractsAsync();
     Task<List<InsuranceContract>> GetInsuranceContractsPendingApproval();
-    Task<IActionResult> GetInsuranceContractsPendingApprovalByCustomerAsync();
+    Task<IActionResult> GetInsuranceApproval();
 
     Task<IActionResult> UpdateInsuranceContractAsync(InsuranceContract insuranceContract);
 }

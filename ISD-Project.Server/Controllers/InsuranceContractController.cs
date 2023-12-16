@@ -48,10 +48,10 @@ namespace ISD_Project.Server.Controllers
             return await _insuranceContractService.AddInsuranceContractAsync(insuranceContractDto);
         }
 
-        [HttpGet("get-insurance-contract-pending-approval-by-customer")]
-        public async Task<IActionResult> GetInsuranceContractsPendingApprovalByCustomer()
+        [HttpGet("pending-contracts")]
+        public async Task<IActionResult> InsuranceApproval()
         {
-            return await _insuranceContractService.GetInsuranceContractsPendingApprovalByCustomerAsync();
+            return await _insuranceContractService.GetInsuranceApproval();
         }
       
     }
