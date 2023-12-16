@@ -73,10 +73,10 @@ namespace ISD_Project.Server.Services
 
                     //After adding health information, update customer's health information id
                     customer.HealthInformation = healthInformation;
-
                     _dbContext.Customers.Update(customer);
                     await _dbContext.SaveChangesAsync();
-                    var response = new { healthInformationId = healthInformation.Id, customerId = customer.Id, message = "Health information successfully created" };
+
+                    var response = new { healthInformationId = customer.HealthInformation.Id, customerId = customer.Id, message = "Health information successfully created" };
                     await transaction.CommitAsync();
                     return new OkObjectResult(response);
                 }

@@ -4,5 +4,6 @@
     {
         public string Nationality { get; set; } = String.Empty;
         public string Job { get; set; } = String.Empty;
+       
     }
 }

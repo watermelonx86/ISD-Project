@@ -7,7 +7,7 @@ namespace ISD_Project.Server.Services.Interfaces
     {
         Task<IActionResult> GetCustomerAsync();
         Task<IActionResult> GetCustomerAsync(int id);
-        Task<IActionResult> AddCustomerAsync(CustomerRegisterRequest request);
+        Task<(IActionResult result, int customerId)> AddCustomerAsync(CustomerRegisterRequest request);
         Task<IActionResult> DeleteCustomerForceAsync(int userId);
     }
 }

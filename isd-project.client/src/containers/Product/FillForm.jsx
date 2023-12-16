@@ -170,12 +170,11 @@ const FillForm = () => {
     }
 
     const handleSendForm = async () => {
-        let userId = 0;
         try {
             const genderInt = convertGenderToInt(gender);
             const formattedPhoneNumber = convertPhoneNumber(phoneNumber);
-            const api_add_customer = "https://localhost:7267/api/Customer/add-customer";
-            const api_add_health_info = "https://localhost:7267/api/HealthInformation/add-health-information";
+            // InsuranceId
+            const insuranceId = item;
 
             // Customer information
             const customerInfo = {
@@ -191,45 +190,28 @@ const FillForm = () => {
                 nationality: country,
                 job: job
             };
+            // Health information
+            const healthInfo = {
+                height: Number(height),
+                weight: Number(weight),
+                smoking: convertToBoolean(smoking),
+                cigarettesPerDay: Number(smoking_frequency),
+                alcoholConsumption: convertToBoolean(alcohol),
+                daysPerWeekAlcohol: Number(alcohol_frequency),
+                drugUse: convertToBoolean(drug),
+                engagesInDangerousSports: convertToBoolean(sport),
+                dangerousSportsDetails: sport_detail,
+                diagnosedWithHealthConditions: convertToBoolean(cancer),
+                hasSpecificHealthConditions: convertToBoolean(congenital_disease),
+                experiencedDiseasesInLast5Years: convertToBoolean(dengue),
+                experiencedDiseasesDetails: congenital_disease_detail,
+                unexplainedWeightLoss: convertToBoolean(weight_loss),
+                unexplainedWeightLossDetails: weight_loss_detail,
+            };
 
-            // Gửi POST API request để tạo customer
-            const responseCustomer = await axios.post(api_add_customer, customerInfo);
-            console.log("responseCustomer: ", responseCustomer);
-            if (responseCustomer.status === 200) {
-                    
-                alert('Customer created successfully');
-                console.log('Customer created successfully:', responseCustomer.data);
-                // Lấy UserId 
-                userId = Number(responseCustomer.data.userId);
-                // Health information
-                const healthInfo = {
-                    height: Number(height),
-                    weight: Number(weight),
-                    smoking: convertToBoolean(smoking),
-                    cigarettesPerDay: Number(smoking_frequency),
-                    alcoholConsumption: convertToBoolean(alcohol),
-                    daysPerWeekAlcohol: Number(alcohol_frequency),
-                    drugUse: convertToBoolean(drug),
-                    engagesInDangerousSports: convertToBoolean(sport),
-                    dangerousSportsDetails: sport_detail,
-                    diagnosedWithHealthConditions: convertToBoolean(cancer),
-                    hasSpecificHealthConditions: convertToBoolean(congenital_disease),
-                    experiencedDiseasesInLast5Years: convertToBoolean(dengue),
-                    experiencedDiseasesDetails: congenital_disease_detail,
-                    unexplainedWeightLoss: convertToBoolean(weight_loss),
-                    unexplainedWeightLossDetails: weight_loss_detail,
-                    customerId: Number(userId)
-                };
-                // Gửi POST API request để thêm thông tin sức khỏe
-                setFlagDelete(true);
-                const responseHealthInfo =  axios.post(api_add_health_info, healthInfo);
-                const healthInfoData = responseHealthInfo.data;
-                if (responseHealthInfo.status === 200) {
-                    console.log('Health information added successfully:', healthInfoData);
-                    setFlagDelete(false);
-                } 
-                    
-                } 
+            // Gửi POST API request để tạo InsuranceContract
+            
+
             
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -477,7 +459,7 @@ const FillForm = () => {
                                 <div className="inline-flex flex-col relative w-full">
                                     <input type="text" name="product" id="product"
                                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                        value={item }
+                                        value={item}
                                         required
                                         disabled
                                     />

@@ -19,7 +19,7 @@ namespace ISD_Project.Server.Services
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> AddCustomerAsync(CustomerRegisterRequest request)
+        public async Task<(IActionResult result, int customerId)> AddCustomerAsync(CustomerRegisterRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -27,11 +27,11 @@ namespace ISD_Project.Server.Services
                 {
                     if (request is null)
                     {
-                        return new BadRequestObjectResult("Request is null");
+                        return (new BadRequestObjectResult("Request is null"), 0);
                     }
                     if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
                     {
-                        return new BadRequestObjectResult("Email đã tồn tại, hãy nhập email khác!");
+                        return (new BadRequestObjectResult("Email đã tồn tại, hãy nhập email khác!"), 0);
                     }
                     var customer = _mapper.Map<Customer>(request);
 
@@ -39,16 +39,16 @@ namespace ISD_Project.Server.Services
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
 
-                    var response = new { userId = customer.Id, message = "Customer successfully created" };
-                    return new OkObjectResult(response);
+                    var response = new { customerId = customer.Id, message = "Customer successfully created" };
+                    return (new OkObjectResult(response), customer.Id);
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new ObjectResult(ex.Message)
+                    return (new ObjectResult(ex.Message)
                     {
                         StatusCode = 500 // Internal Server Error
-                    };
+                    }, 0);
                 }
             }
         }
@@ -105,8 +105,8 @@ namespace ISD_Project.Server.Services
                 {
                     return new NotFoundObjectResult("Customers not found");
                 }
-                List<CustomerDto>? listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomer);
+                List<CustomerDto> listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
+                return new OkObjectResult(listCustomerDto);
             }
             catch (Exception ex)
             {

@@ -18,11 +18,9 @@ const LoginForm = () => {
         })
             .then(response => {
                 if (response.status === 200) {
-
-                    /*const { userAccountId, token, role, isActivated, userId } = response.data;*/
                     const userAccountId = response.data.userAccountId;
                     const token = response.data.token;
-                    const role = response.data.role[0];
+                    const role = response.data.role;
                     const isActivated = response.data.isActivated;
                     const userId = response.data.userId;
                     if(isActivated === 1) {
@@ -34,7 +32,6 @@ const LoginForm = () => {
                         localStorage.setItem('userId', userId);
 
                         // Chuyển hướng đến trang chủ
-                        /*history.push('/');*/
                         navigate('/');
                         login();
                     }

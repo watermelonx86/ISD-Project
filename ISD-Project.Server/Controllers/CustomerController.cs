@@ -16,9 +16,10 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("add-customer")]
-        public Task<IActionResult> AddCustomer(CustomerRegisterRequest request)
+        public async Task<IActionResult> AddCustomer(CustomerRegisterRequest request)
         {
-            return _customerService.AddCustomerAsync(request);
+            var result = await _customerService.AddCustomerAsync(request);
+            return result.result;
         }
 
         [HttpDelete("delete-customer/{id}")]
