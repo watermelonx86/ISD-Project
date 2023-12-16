@@ -14,12 +14,14 @@ public class ApprovalStatusService : IApprovalStatusService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IValidationService _validationService;
+    private readonly IInsuranceContractService _insuranceContractService;
     private readonly IMapper _mapper;
-    public ApprovalStatusService(ApplicationDbContext dbContext, IValidationService validationService, IMapper mapper)
+    public ApprovalStatusService(ApplicationDbContext dbContext, IValidationService validationService, IInsuranceContractService insuranceContractService, IMapper mapper)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _validationService = validationService;
+        _insuranceContractService = insuranceContractService;
     }
 
     public async Task<IActionResult> AddApprovalStatusAsync(ApprovalStatusDto approvalStatusDto)
@@ -94,10 +96,10 @@ public class ApprovalStatusService : IApprovalStatusService
             return new NotFoundObjectResult("No approval status found");
         }
 
-        var result = new List<ApprovalStatusReponse>();
+        var result = new List<ApprovalStatusResponse>();
         foreach (var item in approvalStatuses)
         {
-            var approvalStatusReponse = new ApprovalStatusReponse();
+            var approvalStatusResponse = new ApprovalStatusResponse();
             var customer = await _dbContext.Customers.FindAsync(item.CustomerId);
             if (customer is null)
             {
@@ -113,15 +115,21 @@ public class ApprovalStatusService : IApprovalStatusService
             {
                 return new NotFoundObjectResult("Validation department not found");
             }
-            approvalStatusReponse.CustomerName = item.Customer.Name;
-            approvalStatusReponse.CustomerEmail = item.Customer.Email;
-            approvalStatusReponse.ValidationDepartmentName = item.ValidationDepartment.Name;
-            approvalStatusReponse.InsuranceName = item.Insurance.InsuranceName;
-            approvalStatusReponse.ProfileStatus = item.ProfileStatus.ToString();
-            approvalStatusReponse.ApprovalDate = item.ApprovalDate;
-            approvalStatusReponse.ApprovalComment = item.ApprovalComment;
-            result.Add(approvalStatusReponse);
+            approvalStatusResponse.CustomerName = item.Customer.Name;
+            approvalStatusResponse.CustomerEmail = item.Customer.Email;
+            approvalStatusResponse.ValidationDepartmentName = item.ValidationDepartment.Name;
+            approvalStatusResponse.InsuranceName = item.Insurance.InsuranceName;
+            approvalStatusResponse.ProfileStatus = item.ProfileStatus.ToString();
+            approvalStatusResponse.ApprovalDate = item.ApprovalDate;
+            approvalStatusResponse.ApprovalComment = item.ApprovalComment;
+            result.Add(approvalStatusResponse);
         }
         return new OkObjectResult(result);
+    }
+
+    public Task<IActionResult> GetInsuranceContractsPendingApproval()
+    {
+        var listInsuranceContract = _insuranceContractService.GetInsuranceContractsAsync();
+        throw new NotImplementedException();
     }
 }

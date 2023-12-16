@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
+using ISD_Project.Server.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,16 +68,25 @@ public class InsuranceContractService : IInsuranceContractService
         throw new NotImplementedException();
     }
 
-    public async Task<IActionResult> GetInsuranceContractsAsync()
+    public async Task<List<InsuranceContract>> GetInsuranceContractsAsync()
     {
         var InsuranceContracts = await _dbContext.InsuranceContracts.ToListAsync();
-        if (InsuranceContracts is null)
-        {
-            return new NotFoundObjectResult("No insurance contracts found");
-        }
-        List<InsuranceContractDto> listInsuranceContractDto = _mapper.Map<List<InsuranceContractDto>>(InsuranceContracts);
-        return new OkObjectResult(listInsuranceContractDto);
+        return (InsuranceContracts);
     }
+    public async Task<List<InsuranceContract>> GetInsuranceContractsPendingApproval()
+    {
+        var InsuranceContracts = await _dbContext.InsuranceContracts.Where(ic => ic.ProfileStatus == ProfileStatus.Pending).ToListAsync();
+        return (InsuranceContracts);
+    }
+
+    public async Task<IActionResult> GetInsuranceContractsPendingApprovalByCustomerAsync()
+    {
+        var list = _dbContext.InsuranceContracts.Where(ic => ic.ProfileStatus == ProfileStatus.Pending)
+            .Select(ic => ic.CustomerId).ToList();
+        var customers = await _dbContext.Customers.Where(c => list.Contains(c.Id)).ToListAsync();
+        return new OkObjectResult(customers);
+    }
+    
 
     public Task<IActionResult> UpdateInsuranceContractAsync(InsuranceContract insuranceContract)
     {

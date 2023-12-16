@@ -9,4 +9,5 @@ public interface IApprovalStatusService
     Task<IActionResult> GetApprovalStatusAsync();
     Task<IActionResult> GetApprovalStatusAsync(ProfileStatus profileStatus);
     Task<IActionResult> AddApprovalStatusAsync(ApprovalStatusDto approvalStatusDto);
+    Task<IActionResult> GetInsuranceContractsPendingApproval();
 }

@@ -15,7 +15,6 @@ const FillForm = () => {
     
     //biến thông tin lỗi
     const [errorMessage, setErrorMessage] = useState('');
-    const [flagDelete, setFlagDelete] = useState(false);
     //biến thông tin cá nhân
     const [cccd, setCccd] = useState('');
     const [day_start, setDayStart] = useState('');
@@ -210,22 +209,25 @@ const FillForm = () => {
             };
 
             // Gửi POST API request để tạo InsuranceContract
-            
-
-            
+            const requestData = {
+                insuranceId: insuranceId,
+                customerRegisterRequest: customerInfo,
+                healthInformationDto: healthInfo
+            };
+            console.log('Request:', requestData);
+            const apiUrl = 'https://localhost:7267/api/Validate/validate-insurance-contract';
+            const response = await axios.post(apiUrl, requestData);
+            console.log('Response:', response.data);
+            if(response.status === 200) {
+                //TODO: Hiện thông báo thành công
+                alert('Đã gửi đơn đăng ký bảo hiểm của bạn. Xin hãy đợi kết quả duyệt hồ sơ của chúng tôi');
+            }
         } catch (error) {
             if (axios.isAxiosError(error)) {
+                // TODO: Nếu có lỗi, hiên thông báo lỗi
+                alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
                 setErrorMessage(error.response.data);
                 console.error('Axios error:', error.response );
-                // Nếu thất bại, gọi API để xoá customer
-                if(flagDelete === true) {
-                    const responseDeleteCustomer = axios.delete(`https://localhost:7267/api/Customer/delete-customer/${userId}`);
-                    const deleteCustomerData = responseDeleteCustomer.data;
-                    if(deleteCustomerData.status === 200) {
-                        console.log('Customer deleted successfully:', deleteCustomerData);
-                    }
-                }
-              
             } 
         }
     };

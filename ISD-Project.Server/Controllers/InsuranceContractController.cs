@@ -1,5 +1,6 @@
 ﻿using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Controllers
@@ -15,15 +16,43 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpGet("get-insurance-contract")]
-        public Task<IActionResult> GetAllInsuranceContract()
+        public async Task<IActionResult> GetAllInsuranceContract()
         {
-            return _insuranceContractService.GetInsuranceContractsAsync();
+            try
+            {
+                var insuranceContracts = await _insuranceContractService.GetInsuranceContractsAsync();
+                return Ok(insuranceContracts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal Server Error
+            }
+        }
+        [HttpGet("get-insurance-contract-pending-approval")]
+        public async Task<IActionResult> GetAllInsuranceContractPendingApproval()
+        {
+            try
+            {
+                var insuranceContracts = await _insuranceContractService.GetInsuranceContractsPendingApproval();
+                return Ok(insuranceContracts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message); // Internal Server Error
+            }
         }
 
         [HttpPost("add-insurance-contract")]
-        public Task<IActionResult> AddInsuranceContract(InsuranceContractDto insuranceContractDto)
+        public async Task<IActionResult> AddInsuranceContract(InsuranceContractDto insuranceContractDto)
         {
-            return _insuranceContractService.AddInsuranceContractAsync(insuranceContractDto);
+            return await _insuranceContractService.AddInsuranceContractAsync(insuranceContractDto);
         }
+
+        [HttpGet("get-insurance-contract-pending-approval-by-customer")]
+        public async Task<IActionResult> GetInsuranceContractsPendingApprovalByCustomer()
+        {
+            return await _insuranceContractService.GetInsuranceContractsPendingApprovalByCustomerAsync();
+        }
+      
     }
 }

@@ -193,7 +193,7 @@ const WaitApproval = () => {
     
     const [applicationList, setApplicationList] = useState([]);
     useEffect(() => {
-        axios.get('https://localhost:7267/api/Customer/get-customer-pending-approval')
+        axios.get('https://localhost:7267/api/InsuranceContract/get-insurance-contract-pending-approval-by-customer')
             .then(response => {
                 console.log(response.data)
                 setApplicationList(response.data);
