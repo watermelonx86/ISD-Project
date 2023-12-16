@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class addApprovalStatus : Migration
+    public partial class release001 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,10 +58,8 @@ namespace ISD_Project.Server.Migrations
                     PhoneNumber = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
                     UserAccountId = table.Column<int>(type: "integer", nullable: true),
                     Discriminator = table.Column<string>(type: "text", nullable: false),
-                    IsApproved = table.Column<int>(type: "integer", nullable: true),
                     Nationality = table.Column<string>(type: "text", nullable: true),
-                    Job = table.Column<string>(type: "text", nullable: true),
-                    HealthInformationId = table.Column<int>(type: "integer", nullable: true)
+                    Job = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,6 +77,7 @@ namespace ISD_Project.Server.Migrations
                     SummaryDescription = table.Column<string>(type: "text", nullable: false),
                     DetailDescription = table.Column<string>(type: "text", nullable: false),
                     PriceAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: true),
                     InsuranceTypeId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -188,12 +187,41 @@ namespace ISD_Project.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "InsuranceContracts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    InsuranceId = table.Column<int>(type: "integer", nullable: false),
+                    ProfileStatus = table.Column<int>(type: "integer", nullable: false),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InsuranceContracts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InsuranceContracts_Insurances_InsuranceId",
+                        column: x => x.InsuranceId,
+                        principalTable: "Insurances",
+                        principalColumn: "InsuranceId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InsuranceContracts_Users_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    UserAccountId = table.Column<int>(type: "integer", nullable: false),
                     RoleId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -206,8 +234,8 @@ namespace ISD_Project.Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_UserAccounts_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UserRoles_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
                         principalTable: "UserAccounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -237,13 +265,13 @@ namespace ISD_Project.Server.Migrations
 
             migrationBuilder.InsertData(
                 table: "Insurances",
-                columns: new[] { "InsuranceId", "CoveragePeriodInYears", "DetailDescription", "InsuranceName", "InsuranceTypeId", "PriceAmount", "SummaryDescription" },
+                columns: new[] { "InsuranceId", "CoveragePeriodInYears", "DetailDescription", "ImageUrl", "InsuranceName", "InsuranceTypeId", "PriceAmount", "SummaryDescription" },
                 values: new object[,]
                 {
-                    { 1, 5, "Lựa chọn bảo hiểm tai nạn dành cho trẻ em nhằm mang lại sự đảm bảo vững chắc cho quá trình phát triển của trẻ cũng như giảm gánh nặng chi phí trước rủi ro bất ngờ xảy đến.", "Bảo hiểm Tai nạn dành cho trẻ em", 1, 1000000m, "Giải pháp bảo vệ trước rủi ro tai nạn dành cho trẻ em." },
-                    { 2, 7, "Bảo hiểm chết do tai nạn của Prudential sẽ là giải pháp san sẻ gánh nặng tài chính kịp thời. Nhờ đó, góp phần tạo điều kiện giúp gia đình người tham gia bảo hiểm nhanh chóng vượt qua những khó khăn để sớm ổn định cuộc sống sau này. Không chỉ vậy, số tiền bảo hiểm được chi trả nhanh chóng, theo quy trình rõ ràng. Hiện tại, sản phẩm được thiết kế có thể đính kèm cùng nhiều gói bảo hiểm chính của Prudential, khách hàng có thể dễ dàng lựa chọn tích hợp để bảo vệ tài chính toàn diện và tối ưu hơn.", "Bảo hiểm Chết do tai nạn", 1, 1000000m, "Giải pháp tối ưu cung cấp quyền lợi bảo vệ tài chính trước rủi ro tử vong do tai nạn." },
-                    { 3, 4, "Điểm nổi bật của sản phẩm Bảo hiểm Miễn đóng phí chết và thương tật toàn bộ vĩnh viễn thể hiện ở khả năng hỗ trợ tài chính, gia tăng quyền lợi bảo vệ tối đa cho người được bảo hiểm. Chỉ với một khoản phí hợp lý cho sản phẩm này, người tham gia được miễn đóng phí, không phải lo lắng về rủi ro phải dừng đóng phí bảo hiểm của hợp đồng bảo hiểm. Trong trường hợp bên mua bảo hiểm chẳng may tử vong hoặc thương tật toàn bộ vĩnh viễn, hợp đồng bảo hiểm vẫn có thể được duy trì, quyền lợi của sản phẩm bảo hiểm vẫn được đảm bảo.", "Bảo hiểm Miễn đóng phí chết và thương tật toàn bộ vĩnh viễn", 2, 2000000m, "Giải pháp miễn đóng phí nếu không may gặp rủi ro tử vong hoặc thương tật toàn bộ vĩnh viễn" },
-                    { 4, 3, "KHÔNG PHỤ THUỘC DANH SÁCH BỆNH TRUYỀN THỐNG, bảo hiểm theo tình trạng tổn thương của hệ cơ quan và chức năng", "Sản phẩm bảo hiểm tử kỳ với quyền lợi bảo hiểm tình trạng tổn thương theo mức độ", 3, 1500000m, "Bảo vệ “các hệ điều hành cơ thể” theo tình trạng tổn thương" }
+                    { 1, 5, "Lựa chọn bảo hiểm tai nạn dành cho trẻ em nhằm mang lại sự đảm bảo vững chắc cho quá trình phát triển của trẻ cũng như giảm gánh nặng chi phí trước rủi ro bất ngờ xảy đến.", "", "Bảo hiểm Tai nạn dành cho trẻ em", 1, 1000000m, "Giải pháp bảo vệ trước rủi ro tai nạn dành cho trẻ em." },
+                    { 2, 7, "Bảo hiểm chết do tai nạn của Prudential sẽ là giải pháp san sẻ gánh nặng tài chính kịp thời. Nhờ đó, góp phần tạo điều kiện giúp gia đình người tham gia bảo hiểm nhanh chóng vượt qua những khó khăn để sớm ổn định cuộc sống sau này. Không chỉ vậy, số tiền bảo hiểm được chi trả nhanh chóng, theo quy trình rõ ràng. Hiện tại, sản phẩm được thiết kế có thể đính kèm cùng nhiều gói bảo hiểm chính của Prudential, khách hàng có thể dễ dàng lựa chọn tích hợp để bảo vệ tài chính toàn diện và tối ưu hơn.", "", "Bảo hiểm Chết do tai nạn", 1, 1000000m, "Giải pháp tối ưu cung cấp quyền lợi bảo vệ tài chính trước rủi ro tử vong do tai nạn." },
+                    { 3, 4, "Điểm nổi bật của sản phẩm Bảo hiểm Miễn đóng phí chết và thương tật toàn bộ vĩnh viễn thể hiện ở khả năng hỗ trợ tài chính, gia tăng quyền lợi bảo vệ tối đa cho người được bảo hiểm. Chỉ với một khoản phí hợp lý cho sản phẩm này, người tham gia được miễn đóng phí, không phải lo lắng về rủi ro phải dừng đóng phí bảo hiểm của hợp đồng bảo hiểm. Trong trường hợp bên mua bảo hiểm chẳng may tử vong hoặc thương tật toàn bộ vĩnh viễn, hợp đồng bảo hiểm vẫn có thể được duy trì, quyền lợi của sản phẩm bảo hiểm vẫn được đảm bảo.", "", "Bảo hiểm Miễn đóng phí chết và thương tật toàn bộ vĩnh viễn", 2, 2000000m, "Giải pháp miễn đóng phí nếu không may gặp rủi ro tử vong hoặc thương tật toàn bộ vĩnh viễn" },
+                    { 4, 3, "KHÔNG PHỤ THUỘC DANH SÁCH BỆNH TRUYỀN THỐNG, bảo hiểm theo tình trạng tổn thương của hệ cơ quan và chức năng", "", "Sản phẩm bảo hiểm tử kỳ với quyền lợi bảo hiểm tình trạng tổn thương theo mức độ", 3, 1500000m, "Bảo vệ “các hệ điều hành cơ thể” theo tình trạng tổn thương" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -268,6 +296,16 @@ namespace ISD_Project.Server.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_InsuranceContracts_CustomerId",
+                table: "InsuranceContracts",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InsuranceContracts_InsuranceId",
+                table: "InsuranceContracts",
+                column: "InsuranceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Insurances_InsuranceTypeId",
                 table: "Insurances",
                 column: "InsuranceTypeId");
@@ -284,9 +322,10 @@ namespace ISD_Project.Server.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_UserId",
+                name: "IX_UserRoles_UserAccountId",
                 table: "UserRoles",
-                column: "UserId");
+                column: "UserAccountId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -303,6 +342,9 @@ namespace ISD_Project.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "HealthInformation");
+
+            migrationBuilder.DropTable(
+                name: "InsuranceContracts");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");

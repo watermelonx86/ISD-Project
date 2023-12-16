@@ -2,7 +2,7 @@
 
 namespace ISD_Project.Server;
 
-public class ApprovalStatusReponse
+public class ApprovalStatusResponse
 {
     public string CustomerName { get; set; } = String.Empty;
     public string CustomerEmail { get; set; } = String.Empty;

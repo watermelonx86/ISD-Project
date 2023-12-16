@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ISD_Project.Server.DataAccess;
-using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,13 +54,8 @@ namespace ISD_Project.Server.Services
                     StatusCode = 500 // Internal Server Error
                 };
             }
-
-
         }
 
-        public Task<IActionResult> GetUserByRoleAsync(RoleType role)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

@@ -17,7 +17,7 @@ const WaitApproval = () => {
     const [selectedItem, setSelectedItem] = useState(''); // Add state to store selected item
 
     //test
-    const [bh, setBh] = useState("Bảo hiểm nhân thọ");
+    const [bh, setBh] = useState("");
     const [cccd, setCccd] = useState("");
     const [day_start, setDayStart] = useState("");
     const [day_end, setDayEnd] = useState("");
@@ -46,6 +46,13 @@ const WaitApproval = () => {
     const [congenital_disease, setCongenitalDisease] = useState(""); //bệnh bẩm sinh
     const [congenital_disease_detail, setCongenitalDiseaseDetail] = useState("");
     const [weight_loss, setWeightLoss] = useState(""); //sụt cân
+
+
+    //TODO: refactor
+    //code bẩn
+    const[insuranceId, setInsuranceId] = useState("");
+    const[customerId, setCustomerId] = useState("");
+
     /*const weight_loss_detail = "";*/
 
 
@@ -70,10 +77,10 @@ const WaitApproval = () => {
         {   
             const validationDepartmentId = parseInt(localStorage.getItem('userId'));
             const data = {
-                customerId : selectedItem.id,
-                insuranceId : 1, //TODO: Truyền id insurance vào đây nha minh
+                customerId : customerId,
+                insuranceId : insuranceId, 
                 validationDepartmentId : validationDepartmentId,
-                profileStatus : 2, // từ chối
+                profileStatus : 2, 
                 approvalDate : new Date().toISOString().split('T')[0],
                 approvalComment : reason
             }
@@ -82,13 +89,14 @@ const WaitApproval = () => {
             .then(response => {
                 // Xử lý dữ liệu trả về khi gọi API thành công
                 console.log(response.data);
+                alert("Từ chối thành công!");
             })
             .catch(error => {
                 console.error('Error during API call:', error);
             });
         }
-        alert("Từ chối thành công!");
-        window.location.reload();
+        
+        //window.location.reload();
     }
 
     useEffect(() => {
@@ -101,8 +109,8 @@ const WaitApproval = () => {
         setOpenAccept(true);
         const validationDepartmentId = parseInt(localStorage.getItem('userId'));
         const data = {
-            customerId : item.id,
-            insuranceId : 4, 
+            customerId : item.customerDto.id,
+            insuranceId : item.insuranceDto.insuranceId, 
             validationDepartmentId : validationDepartmentId,
             profileStatus : 1, 
             approvalDate : new Date().toISOString().split('T')[0],
@@ -134,17 +142,17 @@ const WaitApproval = () => {
         setOpenDetail(true);
         console.log(item);  
         setApplicationID(item.id);
-        axios.get(`https://localhost:7267/api/HealthInformation/get-health-information/${item.id}`)
+        axios.get(`https://localhost:7267/api/HealthInformation/get-health-information/${item.customerDto.id}`)
         .then(response => {
             const data = response.data;
             console.log(data);
-            setCccd(item.identityDocumentId); // 1. Căn cước công dân
-            setDayStart(item.dateIssued);// 2. Ngày cấp
-            setDayEnd(item.validUntil); // 3. Ngày hết hạn
-            setFullname(item.name); // 4. Họ tên
-            setBirthday(item.dateOfBirth); // Ngày sinh  
+            setCccd(item.customerDto.identityDocumentId); // 1. Căn cước công dân
+            setDayStart(item.customerDto.dateIssued);// 2. Ngày cấp
+            setDayEnd(item.customerDto.validUntil); // 3. Ngày hết hạn
+            setFullname(item.customerDto.name); // 4. Họ tên
+            setBirthday(item.customerDto.dateOfBirth); // Ngày sinh  
             //Address
-            const address = item.address; // 5. Địa chỉ
+            const address = item.customerDto.address; // 5. Địa chỉ
             const parts = address.split(', ');
             const street = parts[0];
             const ward = parts[1].replace('phường ', '');
@@ -154,11 +162,11 @@ const WaitApproval = () => {
             setWard(ward);
             setDistrict(district);
             setCity(city);
-            setGender(item.gender === 0 ? 'Nam' : 'Nữ'); // 6. Giới tính
-            setPhoneNumber(item.phoneNumber); // 7. Số điện thoại
-            setEmail(item.email); // 8. Email
-            setCountry(item.nationality); // 9. Quốc tịch
-            setJob(item.job); // 10. Nghề nghiệp
+            setGender(item.customerDto.gender === 0 ? 'Nam' : 'Nữ'); // 6. Giới tính
+            setPhoneNumber(item.customerDto.phoneNumber); // 7. Số điện thoại
+            setEmail(item.customerDto.email); // 8. Email
+            setCountry(item.customerDto.nationality); // 9. Quốc tịch
+            setJob(item.customerDto.job); // 10. Nghề nghiệp
             setHeight(data.height); // 11. Chiều cao
             setWeight(data.weight); // 12. Cân nặng
             setSmoking(convertBooleanToString(data.smoking)); // 13. Hút thuốc
@@ -173,7 +181,7 @@ const WaitApproval = () => {
             setCongenitalDisease(convertBooleanToString(data.hasSpecificHealthConditions)); // 22. Bệnh bẩm sinh
             setCongenitalDiseaseDetail(data.experiencedDiseasesDetails); // 23. Chi tiết bệnh bẩm sinh
             setCancer(convertBooleanToString(data.diagnosedWithHealthConditions)); // 24. Ung thư
-
+            setBh(item.insuranceDto.insuranceName); // 25. Bảo hiểm đã chọn
             
         })
         .catch(error => {
@@ -193,9 +201,10 @@ const WaitApproval = () => {
     
     const [applicationList, setApplicationList] = useState([]);
     useEffect(() => {
-        axios.get('https://localhost:7267/api/Customer/get-customer-pending-approval')
+        axios.get('https://localhost:7267/api/InsuranceContract/pending-contracts')
             .then(response => {
-                console.log(response.data)
+                setCustomerId(response.data[0].customerDto.id)
+                setInsuranceId(response.data[0].insuranceDto.insuranceId)
                 setApplicationList(response.data);
             })
             .catch(error => {
@@ -224,14 +233,14 @@ const WaitApproval = () => {
                                 Đăng ký bảo hiểm
                             </span>
                             <div className="flex flex-col my-3 space-y-2">
-                                <h1 className="py-1 text-gray-900 poppins text-base">Họ tên: {item.name}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Email: {item.email}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Giới tính: {item.gender === 0 ? 'Nam' : 'Nữ'}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Số điện thoại: {item.phoneNumber}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">CCCD: {item.identityDocumentId}</h1>
-                                <h1 className="py-1 text-gray-900 poppins text-base">Địa chỉ: {item.address}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Họ tên: {item.customerDto.name}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Email: {item.customerDto.email}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Giới tính: {item.customerDto.gender === 0 ? 'Nam' : 'Nữ'}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Số điện thoại: {item.customerDto.phoneNumber}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">CCCD: {item.customerDto.identityDocumentId}</h1>
+                                <h1 className="py-1 text-gray-900 poppins text-base">Địa chỉ: {item.customerDto.address}</h1>
                                 <div className="w-11/12 border-b-2"></div>
-                                <p className="py-3 text-red-500 poppins text-base text-center font-bold">Bảo hiểm nhân thọ</p>
+                                <p className="py-3 text-red-500 poppins text-base text-center font-bold">{item.insuranceDto.insuranceName}</p>
                                 <div className="w-11/12 border-b-2"></div>
                                 <div className="flex justify-between">
                                     <button type="button"

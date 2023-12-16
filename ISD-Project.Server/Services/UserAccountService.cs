@@ -2,6 +2,7 @@
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -103,7 +104,7 @@ namespace ISD_Project.Server.Services
 
                     var userRole = new UserRole
                     {
-                        UserId = userAccount.Id,
+                        UserAccountId = userAccount.Id,
                         RoleId = (int)request.Role
                     };
 
@@ -219,16 +220,20 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<List<String>> GetUserRoleAsync(int userAccountId)
+        public async Task<String> GetUserRoleAsync(int userAccountId)
         {
-            var userRoles = await _dbContext.UserRoles
-                .Where(ur => ur.UserId == userAccountId)
-                .Select(ur => ur.Role.Name).ToListAsync();
-            if (userRoles == null || userRoles.Count == 0)
+            var userRole = _dbContext.UserRoles.FirstOrDefault(ur => ur.UserAccountId == userAccountId);
+           if (userRole == null)
             {
-                return new List<string>();
+                return "User does not have any role";
             }
-            return userRoles;
+           var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == userRole.RoleId);
+            if (role == null)
+            {
+                return "Role does not exist";
+            }
+            return role.Name;
+            
         }
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request)
         {

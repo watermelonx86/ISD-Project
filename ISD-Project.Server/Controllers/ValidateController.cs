@@ -1,5 +1,5 @@
 ﻿using ISD_Project.Server.Models.DTOs;
-using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +14,10 @@ namespace ISD_Project.Server.Controllers
         {
             this._validationService = validationService;
         }
-        [HttpPost("validate-customer")]
-        public Task<IActionResult> ValidateCustomer(CustomerValidateRequest request)
+        [HttpPost("validate-insurance-contract")]
+        public Task<IActionResult> ValidateInsuranceContract(InsuranceContractRegisterRequest request)
         {
-            return _validationService.ValidateCustomerAsync(request);
+            return _validationService.ValidateInsuranceContractAsync(request);
         }
         [HttpPost("validate-user-account")]
         public Task<IActionResult> ValidateUserAccount(UserAccountValidateRequest request)

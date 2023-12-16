@@ -2,6 +2,7 @@ using ISD_Project.Server;
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Profiles;
 using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -58,6 +59,7 @@ builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IInsuranceService, InsuranceService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IApprovalStatusService, ApprovalStatusService>();
+builder.Services.AddScoped<IInsuranceContractService, InsuranceContractService>();
 //
 var app = builder.Build();
 

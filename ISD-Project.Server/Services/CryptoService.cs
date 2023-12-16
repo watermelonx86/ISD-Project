@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using ISD_Project.Server.Services.Interfaces;
 namespace ISD_Project.Server.Services
 {
     public class CryptoService : ICryptoService

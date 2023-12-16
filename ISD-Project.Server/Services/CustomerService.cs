@@ -4,6 +4,7 @@ using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ISD_Project.Server.Services.Interfaces;
 
 namespace ISD_Project.Server.Services
 {
@@ -18,7 +19,7 @@ namespace ISD_Project.Server.Services
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> AddCustomerAsync(CustomerRegisterRequest request)
+        public async Task<(IActionResult result, int customerId)> AddCustomerAsync(CustomerRegisterRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
@@ -26,11 +27,11 @@ namespace ISD_Project.Server.Services
                 {
                     if (request is null)
                     {
-                        return new BadRequestObjectResult("Request is null");
+                        return (new BadRequestObjectResult("Request is null"), 0);
                     }
                     if (await _dbContext.Users.AnyAsync(u => u.Email == request.Email))
                     {
-                        return new BadRequestObjectResult("Email đã tồn tại, hãy nhập email khác!");
+                        return (new BadRequestObjectResult("Email đã tồn tại, hãy nhập email khác!"), 0);
                     }
                     var customer = _mapper.Map<Customer>(request);
 
@@ -38,16 +39,16 @@ namespace ISD_Project.Server.Services
                     await _dbContext.SaveChangesAsync();
                     await transaction.CommitAsync();
 
-                    var response = new { userId = customer.Id, message = "Customer successfully created" };
-                    return new OkObjectResult(response);
+                    var response = new { customerId = customer.Id, message = "Customer successfully created" };
+                    return (new OkObjectResult(response), customer.Id);
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return new ObjectResult(ex.Message)
+                    return (new ObjectResult(ex.Message)
                     {
                         StatusCode = 500 // Internal Server Error
-                    };
+                    }, 0);
                 }
             }
         }
@@ -104,8 +105,8 @@ namespace ISD_Project.Server.Services
                 {
                     return new NotFoundObjectResult("Customers not found");
                 }
-                List<CustomerDto>? listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomer);
+                List<CustomerDto> listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
+                return new OkObjectResult(listCustomerDto);
             }
             catch (Exception ex)
             {
@@ -140,81 +141,5 @@ namespace ISD_Project.Server.Services
                 };
             }
         }
-
-        public async Task<IActionResult> GetHealthInformationOfCustomerAsync(int id)
-        {
-            try
-            {
-                var healthinfo = await _dbContext.HealthInformation.FirstOrDefaultAsync(c => c.CustomerId == id);
-                if (healthinfo is null)
-                {
-                    return new NotFoundObjectResult("Health Information not found");
-                }
-                else
-                {
-                    var healthinfoDto = _mapper.Map<HealthInformationDto>(healthinfo);
-                    return new OkObjectResult(healthinfoDto);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
-        public async Task<IActionResult> GetCustomerApprovedAsync()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Approved).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
-
-        public async Task<IActionResult> GetCustomerPendingApprovalAsync()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Pending).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
-
-        public async Task<IActionResult> GetCustomerRejectedAsync()
-        {
-            try
-            {
-                var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Rejected).ToListAsync();
-                var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-                return new OkObjectResult(listCustomerDto);
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
-
-
     }
 }

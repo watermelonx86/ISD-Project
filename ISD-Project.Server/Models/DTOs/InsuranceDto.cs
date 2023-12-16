@@ -13,6 +13,8 @@ namespace ISD_Project.Server.Models.DTOs
         public string DetailDescription { get; set; } = string.Empty;
         public decimal PriceAmount { get; set; }
 
+        public string? ImageUrl { get; set; } = string.Empty;
+
         // 1 Insurance thuộc về 1 InsuranceType
         public int? InsuranceTypeId { get; set; }
         public InsuranceType? InsuranceType { get; set; }
