@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ISD_Project.Server;
+namespace ISD_Project.Server.Services.Interfaces;
 
 public interface IInsuranceContractService
 {

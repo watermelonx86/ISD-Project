@@ -1,4 +1,4 @@
-using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Controllers

@@ -10,6 +10,6 @@ public class UserAccountDto
     [Required, EmailAddress]
     public string Email { get; set; } = String.Empty;
     public int IsActivated { get; set; } = (int)AccountStatus.Inactive;
-    public ICollection<UserRole>? UserRoles { get; set; }
+    public UserRole? UserRole { get; set; }
     public int? UserId { get; set; }
 }

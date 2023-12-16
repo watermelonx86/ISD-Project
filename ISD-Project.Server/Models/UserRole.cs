@@ -7,12 +7,13 @@ namespace ISD_Project.Server.Models
     {
         [Key]
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public UserAccount User { get; set; } = null!;
-
+        [Required]
+        public int UserAccountId { get; set; }
+        public UserAccount? UserAccount { get; set; }
+        [Required]
         public int RoleId { get; set; }
-        public Role Role { get; set; } = null!;
+        public Role? Role { get; set; }
     }
 
-   
+
 }

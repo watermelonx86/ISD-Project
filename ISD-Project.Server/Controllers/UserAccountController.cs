@@ -1,7 +1,7 @@
 ﻿using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
-using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +50,7 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpGet("get-role/{id}")]
-        public Task<List<string>> GetRole(int id)
+        public Task<string> GetRole(int id)
         {
             return _userAccountService.GetUserRoleAsync(id);
         }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ISD_Project.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231211090027_Release 0.1.1")]
-    partial class Release011
+    [Migration("20231216000504_release 0.0.1")]
+    partial class release001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,38 @@ namespace ISD_Project.Server.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ISD_Project.Server.InsuranceContract", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("InsuranceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProfileStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("InsuranceId");
+
+                    b.ToTable("InsuranceContracts");
+                });
 
             modelBuilder.Entity("ISD_Project.Server.InsuranceType", b =>
                 {
@@ -189,6 +221,9 @@ namespace ISD_Project.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
                     b.Property<string>("InsuranceName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -215,6 +250,7 @@ namespace ISD_Project.Server.Migrations
                             InsuranceId = 1,
                             CoveragePeriodInYears = 5,
                             DetailDescription = "Lựa chọn bảo hiểm tai nạn dành cho trẻ em nhằm mang lại sự đảm bảo vững chắc cho quá trình phát triển của trẻ cũng như giảm gánh nặng chi phí trước rủi ro bất ngờ xảy đến.",
+                            ImageUrl = "",
                             InsuranceName = "Bảo hiểm Tai nạn dành cho trẻ em",
                             InsuranceTypeId = 1,
                             PriceAmount = 1000000m,
@@ -225,6 +261,7 @@ namespace ISD_Project.Server.Migrations
                             InsuranceId = 2,
                             CoveragePeriodInYears = 7,
                             DetailDescription = "Bảo hiểm chết do tai nạn của Prudential sẽ là giải pháp san sẻ gánh nặng tài chính kịp thời. Nhờ đó, góp phần tạo điều kiện giúp gia đình người tham gia bảo hiểm nhanh chóng vượt qua những khó khăn để sớm ổn định cuộc sống sau này. Không chỉ vậy, số tiền bảo hiểm được chi trả nhanh chóng, theo quy trình rõ ràng. Hiện tại, sản phẩm được thiết kế có thể đính kèm cùng nhiều gói bảo hiểm chính của Prudential, khách hàng có thể dễ dàng lựa chọn tích hợp để bảo vệ tài chính toàn diện và tối ưu hơn.",
+                            ImageUrl = "",
                             InsuranceName = "Bảo hiểm Chết do tai nạn",
                             InsuranceTypeId = 1,
                             PriceAmount = 1000000m,
@@ -235,6 +272,7 @@ namespace ISD_Project.Server.Migrations
                             InsuranceId = 3,
                             CoveragePeriodInYears = 4,
                             DetailDescription = "Điểm nổi bật của sản phẩm Bảo hiểm Miễn đóng phí chết và thương tật toàn bộ vĩnh viễn thể hiện ở khả năng hỗ trợ tài chính, gia tăng quyền lợi bảo vệ tối đa cho người được bảo hiểm. Chỉ với một khoản phí hợp lý cho sản phẩm này, người tham gia được miễn đóng phí, không phải lo lắng về rủi ro phải dừng đóng phí bảo hiểm của hợp đồng bảo hiểm. Trong trường hợp bên mua bảo hiểm chẳng may tử vong hoặc thương tật toàn bộ vĩnh viễn, hợp đồng bảo hiểm vẫn có thể được duy trì, quyền lợi của sản phẩm bảo hiểm vẫn được đảm bảo.",
+                            ImageUrl = "",
                             InsuranceName = "Bảo hiểm Miễn đóng phí chết và thương tật toàn bộ vĩnh viễn",
                             InsuranceTypeId = 2,
                             PriceAmount = 2000000m,
@@ -245,6 +283,7 @@ namespace ISD_Project.Server.Migrations
                             InsuranceId = 4,
                             CoveragePeriodInYears = 3,
                             DetailDescription = "KHÔNG PHỤ THUỘC DANH SÁCH BỆNH TRUYỀN THỐNG, bảo hiểm theo tình trạng tổn thương của hệ cơ quan và chức năng",
+                            ImageUrl = "",
                             InsuranceName = "Sản phẩm bảo hiểm tử kỳ với quyền lợi bảo hiểm tình trạng tổn thương theo mức độ",
                             InsuranceTypeId = 3,
                             PriceAmount = 1500000m,
@@ -415,14 +454,15 @@ namespace ISD_Project.Server.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserAccountId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
 
                     b.ToTable("UserRoles");
                 });
@@ -437,12 +477,6 @@ namespace ISD_Project.Server.Migrations
             modelBuilder.Entity("ISD_Project.Server.Models.Customer", b =>
                 {
                     b.HasBaseType("ISD_Project.Server.Models.User");
-
-                    b.Property<int?>("HealthInformationId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("IsApproved")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Job")
                         .IsRequired()
@@ -474,6 +508,25 @@ namespace ISD_Project.Server.Migrations
                     b.HasBaseType("ISD_Project.Server.Models.User");
 
                     b.HasDiscriminator().HasValue("ValidationDepartment");
+                });
+
+            modelBuilder.Entity("ISD_Project.Server.InsuranceContract", b =>
+                {
+                    b.HasOne("ISD_Project.Server.Models.Customer", "Customer")
+                        .WithMany("InsuranceContracts")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ISD_Project.Server.Models.Insurance", "Insurance")
+                        .WithMany("InsuranceContracts")
+                        .HasForeignKey("InsuranceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Insurance");
                 });
 
             modelBuilder.Entity("ISD_Project.Server.Models.ApprovalStatus", b =>
@@ -538,15 +591,15 @@ namespace ISD_Project.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ISD_Project.Server.Models.UserAccount", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
+                    b.HasOne("ISD_Project.Server.Models.UserAccount", "UserAccount")
+                        .WithOne("UserRole")
+                        .HasForeignKey("ISD_Project.Server.Models.UserRole", "UserAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
 
-                    b.Navigation("User");
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("ISD_Project.Server.InsuranceType", b =>
@@ -557,6 +610,8 @@ namespace ISD_Project.Server.Migrations
             modelBuilder.Entity("ISD_Project.Server.Models.Insurance", b =>
                 {
                     b.Navigation("ApprovalStatuses");
+
+                    b.Navigation("InsuranceContracts");
                 });
 
             modelBuilder.Entity("ISD_Project.Server.Models.Role", b =>
@@ -571,7 +626,7 @@ namespace ISD_Project.Server.Migrations
 
             modelBuilder.Entity("ISD_Project.Server.Models.UserAccount", b =>
                 {
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("ISD_Project.Server.Models.Customer", b =>
@@ -579,6 +634,8 @@ namespace ISD_Project.Server.Migrations
                     b.Navigation("ApprovalStatuses");
 
                     b.Navigation("HealthInformation");
+
+                    b.Navigation("InsuranceContracts");
                 });
 
             modelBuilder.Entity("ISD_Project.Server.Models.ValidationDepartment", b =>

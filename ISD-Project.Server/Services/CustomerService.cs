@@ -4,6 +4,7 @@ using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ISD_Project.Server.Services.Interfaces;
 
 namespace ISD_Project.Server.Services
 {
@@ -140,81 +141,5 @@ namespace ISD_Project.Server.Services
                 };
             }
         }
-
-        public async Task<IActionResult> GetHealthInformationOfCustomerAsync(int id)
-        {
-            try
-            {
-                var healthinfo = await _dbContext.HealthInformation.FirstOrDefaultAsync(c => c.CustomerId == id);
-                if (healthinfo is null)
-                {
-                    return new NotFoundObjectResult("Health Information not found");
-                }
-                else
-                {
-                    var healthinfoDto = _mapper.Map<HealthInformationDto>(healthinfo);
-                    return new OkObjectResult(healthinfoDto);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ObjectResult(ex.Message)
-                {
-                    StatusCode = 500 // Internal Server Error
-                };
-            }
-        }
-        // public async Task<IActionResult> GetCustomerApprovedAsync()
-        // {
-        //     try
-        //     {
-        //         var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Approved).ToListAsync();
-        //         var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-        //         return new OkObjectResult(listCustomerDto);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return new ObjectResult(ex.Message)
-        //         {
-        //             StatusCode = 500 // Internal Server Error
-        //         };
-        //     }
-        // }
-
-        // public async Task<IActionResult> GetCustomerPendingApprovalAsync()
-        // {
-        //     try
-        //     {
-        //         var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Pending).ToListAsync();
-        //         var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-        //         return new OkObjectResult(listCustomerDto);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return new ObjectResult(ex.Message)
-        //         {
-        //             StatusCode = 500 // Internal Server Error
-        //         };
-        //     }
-        // }
-
-        // public async Task<IActionResult> GetCustomerRejectedAsync()
-        // {
-        //     try
-        //     {
-        //         var listCustomer = await _dbContext.Customers.Where(c => c.IsApproved == (int)ProfileStatus.Rejected).ToListAsync();
-        //         var listCustomerDto = _mapper.Map<List<CustomerDto>>(listCustomer);
-        //         return new OkObjectResult(listCustomerDto);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return new ObjectResult(ex.Message)
-        //         {
-        //             StatusCode = 500 // Internal Server Error
-        //         };
-        //     }
-        // }
-
-
     }
 }

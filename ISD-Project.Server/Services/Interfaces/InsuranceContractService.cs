@@ -4,7 +4,7 @@ using ISD_Project.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ISD_Project.Server;
+namespace ISD_Project.Server.Services.Interfaces;
 
 public class InsuranceContractService : IInsuranceContractService
 {

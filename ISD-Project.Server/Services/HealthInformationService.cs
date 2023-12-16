@@ -2,6 +2,7 @@
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +40,7 @@ namespace ISD_Project.Server.Services
                     {
                         return new BadRequestObjectResult("Customer not found");
                     }
-                    if (customer.HealthInformation != null && customer.HealthInformationId != 0)
+                    if (customer.HealthInformation != null)
                     {
                         return new BadRequestObjectResult("Customer already has health information");
                     }
@@ -71,7 +72,6 @@ namespace ISD_Project.Server.Services
                     await _dbContext.SaveChangesAsync();
 
                     //After adding health information, update customer's health information id
-                    customer.HealthInformationId = healthInformation.Id;
                     customer.HealthInformation = healthInformation;
 
                     _dbContext.Customers.Update(customer);

@@ -2,6 +2,7 @@ using ISD_Project.Server;
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Profiles;
 using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
