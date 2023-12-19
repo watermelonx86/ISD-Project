@@ -37,7 +37,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7267/api/User/get-user/${userId}`);
+                const response = await axios.get(`https://localhost:7267/api/Customer/get-customer/${userId}`);
                 if (response.status === 200) {
                     setUserData(response.data);
                     console.log(response.data);
@@ -50,7 +50,7 @@ const UserProfile = () => {
         };
         fetchData();
     }, []);
-    
+
     return (
         <section className="bg-gray-100bg-opacity-50 h-auto">
             <Header />
@@ -61,7 +61,7 @@ const UserProfile = () => {
                         Thông tin người dùng
                     </h3>
                     <div className="md:w-1/4 text-right">
-                        <button className="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
+                        <button className="bg-slate-500 hover:bg-slate-600 text-white py-2 px-4 rounded" onClick={editt}>
                             Chỉnh sửa
                         </button>
                     </div>
@@ -71,7 +71,7 @@ const UserProfile = () => {
                     <dl className="sm:divide-y sm:divide-gray-200">
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Full name 
+                                Họ và tên
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {userData.name}
@@ -79,7 +79,7 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Gender
+                                Giới tính
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {userData.gender === 0 ? 'Nam' : 'Nữ'}
@@ -87,23 +87,23 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Date of Birth
+                                Ngày sinh
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                10/3/1998
+                                {/* data here */}
                             </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Job
+                                Nghề nghiệp
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                Student 
+                                {/* data here */}
                             </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Email address
+                                Email
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                  {userData.email}
@@ -111,7 +111,7 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Phone number
+                                Số điện thoại
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {userData.phoneNumber}
@@ -119,10 +119,28 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Address
+                                CCCD/CMND
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {userData.address}
+                                {/* data here */}
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Địa chỉ
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+
+                                {/*  Đường*/}, {/*  Phường*/}, {/*  Quận Huyện*/}, {/*  Thành phố, Tỉnh*/}
+                                {/* Nguyễn Văn Cừ, Phường 1, Quận 5, Thành phố Hồ Chí Minh*/}
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Quốc tịch
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {/* data here */}
                             </dd>
                         </div>
                     </dl>
@@ -191,7 +209,7 @@ const UserProfile = () => {
 
             </div> */}
 
-            <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
+            {/* <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
 
                 <div className="px-4 py-5 sm:px-6 w-full inline-flex">
                     <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
@@ -199,11 +217,11 @@ const UserProfile = () => {
                     </h3>
                     {/* <div className="md:w-1/4" align="right">
                         <button class="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
-                            
+
                         </button>
-                    </div> */}
+                    </div>
                 </div>
-                
+
                 <table className="w-full select-none">
                     <thead>
                         <tr className="bg-gray-400 border-2">
@@ -230,7 +248,7 @@ const UserProfile = () => {
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> */}
             
             <Footer />
         </section>
