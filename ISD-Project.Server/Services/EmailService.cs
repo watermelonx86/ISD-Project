@@ -1,11 +1,12 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using ISD_Project.Server.Services.Interfaces;
 
 namespace ISD_Project.Server;
 
 public class EmailService : IEmailService
 {
-    public async Task SendEmail(string to, string subject, string body)
+    public async Task SendEmailAsync(string to, string subject, string body)
     {
         using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"))
         {

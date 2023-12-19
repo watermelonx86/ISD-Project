@@ -1,7 +1,7 @@
 ﻿using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
-using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +26,13 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("register")]
-        public Task<IActionResult> Register([FromBody] UserRegisterRequest request)
+        public Task<IActionResult> Register([FromBody] UserAccountRegisterRequest request)
         {
             return _userAccountService.Register(request);
         }
 
         [HttpPost("login")]
-        public Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        public Task<IActionResult> Login([FromBody] UserAccountLoginRequest request)
         {
             return _userAccountService.Login(request);
         }
@@ -40,19 +40,19 @@ namespace ISD_Project.Server.Controllers
         [HttpGet("get-user-account")]
         public Task<IActionResult> GetUserAccount()
         {
-            return _userAccountService.GetUserAccount();
+            return _userAccountService.GetUserAccountAsync();
         }
 
         [HttpGet("get-user-account/{id}")]
         public Task<IActionResult> GetUserAccount(int id)
         {
-            return _userAccountService.GetUserAccount(id);
+            return _userAccountService.GetUserAccountAsync(id);
         }
 
         [HttpGet("get-role/{id}")]
-        public Task<List<string>> GetRole(int id)
+        public Task<string> GetRole(int id)
         {
-            return _userAccountService.GetUserRole(id);
+            return _userAccountService.GetUserRoleAsync(id);
         }
 
         [HttpPost("verify")]

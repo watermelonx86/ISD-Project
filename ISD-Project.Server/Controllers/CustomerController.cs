@@ -1,5 +1,5 @@
 ﻿using ISD_Project.Server.Models.DTOs;
-using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Controllers
@@ -16,50 +16,27 @@ namespace ISD_Project.Server.Controllers
         }
 
         [HttpPost("add-customer")]
-        public Task<IActionResult> AddCustomer(CustomerDto request)
+        public async Task<IActionResult> AddCustomer(CustomerRegisterRequest request)
         {
-            return _customerService.AddCustomer(request);
+            var result = await _customerService.AddCustomerAsync(request);
+            return result.result;
         }
 
         [HttpDelete("delete-customer/{id}")]
         public Task<IActionResult> DeleteCustomer(int id)
         {
-            return _customerService.DeleteCustomer(id);
+            return _customerService.DeleteCustomerForceAsync(id);
         }
         [HttpGet("get-customer")]
         public Task<IActionResult> GetCustomer()
         {
-            return _customerService.GetCustomer();
+            return _customerService.GetCustomerAsync();
         }
 
         [HttpGet("get-customer/{id}")]
         public Task<IActionResult> GetCustomer(int id)
         {
-            return _customerService.GetCustomer(id);
-        }
-
-        [HttpGet("get-health-info-customer/{id}")]
-        public Task<IActionResult> GetHealthInformationOfCustomer(int id)
-        {
-            return _customerService.GetHealthInformationOfCustomer(id);
-        }
-
-        [HttpGet("get-customer-pending-approval")]
-        public Task<IActionResult> GetCustomerPendingApproval()
-        {
-            return _customerService.GetCustomerPendingApproval();
-        }
-
-        [HttpGet("get-customer-approved")]
-        public Task<IActionResult> GetCustomerApproved()
-        {
-            return _customerService.GetCustomerApproved();
-        }
-
-        [HttpGet("get-customer-rejected")]
-        public Task<IActionResult> GetCustomerRejected()
-        {
-            return _customerService.GetCustomerRejected();
+            return _customerService.GetCustomerAsync(id);
         }
     }
 }

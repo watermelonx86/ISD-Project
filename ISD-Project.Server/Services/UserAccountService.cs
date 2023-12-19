@@ -2,6 +2,7 @@
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +22,13 @@ namespace ISD_Project.Server.Services
             this._cryptoService = cryptoService;
             this._mapper = mapper;
         }
-        public async Task<IActionResult> Register(UserRegisterRequest request)
+        public async Task<IActionResult> Register(UserAccountRegisterRequest request)
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
+                    // Validate request
                     if (request is null)
                     {
                         return new BadRequestObjectResult("Request is null");
@@ -37,49 +39,93 @@ namespace ISD_Project.Server.Services
                         return new BadRequestObjectResult("User already exists");
                     }
 
-                    var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHash(request.Password);
+                    var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHashAsync(request.Password);
 
-
-                    var user = new UserAccount
+                    var userAccount = new UserAccount
                     {
                         Email = request.Email,
                         PasswordHash = passwordHash,
                         PasswordSalt = passwordSalt,
-                        //VerificationToken = await _cryptoService.CreateRandomToken()
                     };
-
-                    var token = await _cryptoService.CreateToken(user);
+                    // If not customer then activate userAccount by default
+                    userAccount.IsActivated = request.Role == RoleType.Customer ? (int)AccountStatus.Inactive : (int)AccountStatus.Active;
+                    var token = await _cryptoService.CreateTokenAsync(userAccount);
                     if (token != null)
                     {
-                        user.VerificationToken = token;
+                        userAccount.VerificationToken = token;
                     }
                     else
                     {
                         return new BadRequestObjectResult("Token is null");
                     }
-                    await _dbContext.UserAccounts.AddAsync(user);
+                    var userAccountResult = await _dbContext.UserAccounts.AddAsync(userAccount);
                     await _dbContext.SaveChangesAsync();
+
+
+                    int userId = 0;
+                    if (request.Role != RoleType.Customer)
+                    {
+                        var role = request.Role;
+                        switch (role)
+                        {
+
+                            case RoleType.Admin:
+                                var admin = new Admin(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v1 = await _dbContext.Admins.AddAsync(admin);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v1.Entity.Id;
+                                break;
+                            case RoleType.FinancialDepartment:
+                                var financialDepartment = new FinancialDepartment(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v2 = await _dbContext.FinancialDepartments.AddAsync(financialDepartment);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v2.Entity.Id;
+                                break;
+                            case RoleType.ValidationDepartment:
+                                var validationDepartment = new ValidationDepartment(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v3 = await _dbContext.ValidationDepartments.AddAsync(validationDepartment);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v3.Entity.Id;
+                                break;
+                            case RoleType.CustomerCareDepartment:
+                                var customerCareDepartment = new CustomerCareDepartment(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
+                                var v4 = await _dbContext.CustomerCareDepartments.AddAsync(customerCareDepartment);
+                                await _dbContext.SaveChangesAsync();
+                                userId = v4.Entity.Id;
+                                break;
+                            default:
+                                throw new Exception("Role is not valid");
+                        }
+                        //Update UserId for UserAccount
+                        userAccountResult.Entity.UserId = userId;
+                        _dbContext.UserAccounts.Update(userAccountResult.Entity);
+                        await _dbContext.SaveChangesAsync();
+                    }
 
                     var userRole = new UserRole
                     {
-                        UserId = user.Id,
-                        RoleId = (int)RoleType.Customer
+                        UserAccountId = userAccount.Id,
+                        RoleId = (int)request.Role
                     };
 
                     await _dbContext.UserRoles.AddAsync(userRole);
                     await _dbContext.SaveChangesAsync();
 
                     await transaction.CommitAsync(); // Commit transaction if all commands succeed
-                    return new OkObjectResult("User successfully created");
+                    var response = new { userAccountId = userAccountResult.Entity.Id, RoleType = request.Role.ToString(), message = "UserAccount successfully created" };
+                    return new OkObjectResult(response);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.RollbackAsync(); // Rollback transaction if exception occurs
-                    return new StatusCodeResult(500); // Internal Server Error
+                    return new ObjectResult(ex.Message)
+                    {
+                        StatusCode = 500 // Internal Server Error
+                    };
                 }
             }
         }
-        public async Task<IActionResult> Login(UserLoginRequest request)
+        public async Task<IActionResult> Login(UserAccountLoginRequest request)
         {
             var user = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
@@ -87,7 +133,7 @@ namespace ISD_Project.Server.Services
                 return new BadRequestObjectResult("User does not exist");
             }
 
-            if (!await _cryptoService.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!await _cryptoService.VerifyPasswordHashAsync(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return new BadRequestObjectResult("Password is incorrect");
             }
@@ -102,11 +148,11 @@ namespace ISD_Project.Server.Services
                 return new BadRequestObjectResult("User does not verified");
             }
 
-            var userDto = new UserLoginResponse
+            var userDto = new UserAccountLoginResponse
             {
                 UserAccountId = user.Id,
                 Token = user.VerificationToken,
-                Role = await GetUserRole(user.Id),
+                Role = await GetUserRoleAsync(user.Id),
                 UserId = user.UserId ?? 0,
                 IsActivated = user.IsActivated
             };
@@ -132,7 +178,7 @@ namespace ISD_Project.Server.Services
             return new OkObjectResult("User Verified");
         }
 
-        public async Task<IActionResult> GetUserAccount()
+        public async Task<IActionResult> GetUserAccountAsync()
         {
             try
             {
@@ -153,12 +199,13 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> GetUserAccount(int id)
+        public async Task<IActionResult> GetUserAccountAsync(int id)
         {
             try
             {
                 var userAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Id == id);
-                if(userAccount is null ) {
+                if (userAccount is null)
+                {
                     return new BadRequestObjectResult("User Account does not exist");
                 }
                 var userAccountDto = _mapper.Map<UserAccountDto>(userAccount);
@@ -173,16 +220,20 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<List<String>> GetUserRole(int userAccountId)
+        public async Task<String> GetUserRoleAsync(int userAccountId)
         {
-            var userRoles = await _dbContext.UserRoles
-                .Where(ur => ur.UserId == userAccountId)
-                .Select(ur => ur.Role.Name).ToListAsync();
-            if (userRoles == null || userRoles.Count == 0)
+            var userRole = _dbContext.UserRoles.FirstOrDefault(ur => ur.UserAccountId == userAccountId);
+           if (userRole == null)
             {
-                return new List<string>();
+                return "User does not have any role";
             }
-            return userRoles;
+           var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == userRole.RoleId);
+            if (role == null)
+            {
+                return "Role does not exist";
+            }
+            return role.Name;
+            
         }
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request)
         {
@@ -193,7 +244,7 @@ namespace ISD_Project.Server.Services
                 {
                     return new BadRequestObjectResult("User does not exist");
                 }
-                user.PasswordResetToken = await _cryptoService.CreateRandomToken();
+                user.PasswordResetToken = await _cryptoService.CreateRandomTokenAsync();
                 user.RestTokenExpires = System.DateTime.UtcNow.AddHours(1);
                 await _dbContext.SaveChangesAsync();
                 return new OkObjectResult("You may now reset your password");
@@ -220,7 +271,7 @@ namespace ISD_Project.Server.Services
                 {
                     return new BadRequestObjectResult("Token has expired");
                 }
-                var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHash(request.Password);
+                var (passwordHash, passwordSalt) = await _cryptoService.CreatePasswordHashAsync(request.Password);
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
                 user.PasswordResetToken = null;

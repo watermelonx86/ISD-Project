@@ -37,7 +37,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7267/api/Customer/get-customer/${userId}`);
+                const response = await axios.get(`https://localhost:7267/api/User/get-user/${userId}`);
                 if (response.status === 200) {
                     setUserData(response.data);
                     console.log(response.data);

@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using ISD_Project.Server.Services.Interfaces;
 namespace ISD_Project.Server.Services
 {
     public class CryptoService : ICryptoService
@@ -17,7 +18,7 @@ namespace ISD_Project.Server.Services
             this._dbContext = dbContext;
             this._configuration = configuration;
         }
-        public async Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHash(string password)
+        public async Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHashAsync(string password)
         {
             return await Task.Run(() =>
             {
@@ -30,17 +31,17 @@ namespace ISD_Project.Server.Services
                 }
             });
         }
-        public async Task<string> CreateRandomToken()
+        public async Task<string> CreateRandomTokenAsync()
         {
             string token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
             if (await _dbContext.UserAccounts.AnyAsync(u => u.VerificationToken == token))
             {
-                await CreateRandomToken();
+                await CreateRandomTokenAsync();
             }
             return token;
         }
 
-        public async Task<string> CreateToken(UserAccount userAccount)
+        public async Task<string> CreateTokenAsync(UserAccount userAccount)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -59,7 +60,7 @@ namespace ISD_Project.Server.Services
             return await Task.FromResult(jwt);
         }
 
-        public async Task<bool> VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        public async Task<bool> VerifyPasswordHashAsync(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             return await Task.Run(() =>
             {

@@ -27,11 +27,9 @@ namespace ISD_Project.Server.Models
         public bool DiagnosedWithHealthConditions { get; set; } //chẩn đoán: Ung thư, dị sản (ung thư tại chỗ), suy thận, đái tháo đường, HIV/AIDS, đột quỵ, cơn thiếu máu não thoáng qua hoặc bất kỳ bệnh nào liên quan đến tim
         public bool HasSpecificHealthConditions { get; set; }
         public bool ExperiencedDiseasesInLast5Years { get; set; }
-        public string ExperiencedDiseasesDetails { get; set; } = String.Empty;
-        public bool OtherDisabilities { get; set; }
-        public string OtherDisabilitiesDetails { get; set; } = String.Empty;
-        public bool UnexplainedWeightLoss { get; set; }
-        public string UnexplainedWeightLossDetails { get; set; } = String.Empty;
+        public string ExperiencedDiseasesDetails { get; set; } = String.Empty; // bệnh/thương tật bẩm sinh nào không: bệnh xơ nang, mù, điếc, bại não, bất thường tâm thần
+        public bool UnexplainedWeightLoss { get; set; } 
+        public string UnexplainedWeightLossDetails { get; set; } = String.Empty; // sụt cân không rõ nguyên nhân
         public DateTime LastUpdate { get; set; }
         // 1 HeathInformation thuộc về 1 Customer
         public int? CustomerId { get; set; }

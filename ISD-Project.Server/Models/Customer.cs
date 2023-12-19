@@ -2,14 +2,13 @@
 {
     public class Customer : User
     {
-        public int IsApproved { get; set; } = (int)ProfileStatus.Pending;
+        public string Nationality { get; set; } = String.Empty;
+        public string Job { get; set; } = String.Empty;
+        // 1 Customer có 1 HealthInformation
         public HealthInformation? HealthInformation { get; set; }
-    }
-
-    public enum ProfileStatus
-    {
-        Pending,
-        Approved,
-        Rejected,
+        // 1 Customer có nhiều InsuranceContract
+        public ICollection<InsuranceContract>? InsuranceContracts { get; set; }
+        // 1 Customer có nhiều ApprovalStatus
+        public ICollection<ApprovalStatus>? ApprovalStatuses { get; set; }
     }
 }

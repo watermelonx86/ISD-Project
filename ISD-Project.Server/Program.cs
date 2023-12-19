@@ -1,9 +1,10 @@
 using ISD_Project.Server;
 using ISD_Project.Server.DataAccess;
-using ISD_Project.Server.Models;
 using ISD_Project.Server.Profiles;
 using ISD_Project.Server.Services;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -47,7 +48,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 // inject db context
-builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 // inject services
 builder.Services.AddScoped<ICryptoService, CryptoService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
@@ -57,7 +58,8 @@ builder.Services.AddScoped<IHealthInformationService, HealthInformationService>(
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IInsuranceService, InsuranceService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
-
+builder.Services.AddScoped<IApprovalStatusService, ApprovalStatusService>();
+builder.Services.AddScoped<IInsuranceContractService, InsuranceContractService>();
 //
 var app = builder.Build();
 

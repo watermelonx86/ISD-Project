@@ -1,6 +1,7 @@
 ﻿using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
+using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,16 +10,24 @@ namespace ISD_Project.Server.Services
     public class ValidationService : IValidationService
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly ICustomerService _customerService;
+        private readonly IHealthInformationService _healthInformationService;
+        private readonly IInsuranceContractService _insuranceContractService;
+        private readonly IApprovalStatusService _approvalStatusService;
         private readonly IUserAccountService _userAccount;
         private readonly IEmailService _emailService;
-        public ValidationService(ApplicationDbContext dbContext, IUserAccountService userAccount, IEmailService emailService)
+        public ValidationService(ApplicationDbContext dbContext, ICustomerService customerService, IHealthInformationService healthInformationService, IInsuranceContractService insuranceContractService,
+            IUserAccountService userAccount, IEmailService emailService)
         {
             _dbContext = dbContext;
+            _customerService = customerService;
+            _healthInformationService = healthInformationService;
+            _insuranceContractService = insuranceContractService;
             _userAccount = userAccount;
             _emailService = emailService;
         }
 
-        public async Task<IActionResult> ValidateUserAccount(UserAccountValidateRequest request)
+        public async Task<IActionResult> ValidateUserAccountAsync(UserAccountValidateRequest request)
         {
             try
             {
@@ -38,50 +47,88 @@ namespace ISD_Project.Server.Services
             }
         }
 
-        public async Task<IActionResult> ValidateCustomer(CustomerValidateRequest request)
+        public async Task CreateAndAssignUserAccountForCustomerAsync(Customer customer)
         {
-            try
+            var existingUserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
+            if (existingUserAccount is null)
             {
-                var customer = await _dbContext.Customers
-                     .Include(uc => uc.UserAccount)
-                    .FirstOrDefaultAsync(c => c.Id == request.CustomerId);
-                if (customer is null)
+                var userRegisterRequest = new UserAccountRegisterRequest(customer.Email, "Demo123", "Demo123", RoleType.Customer);
+                await _userAccount.Register(userRegisterRequest);
+
+                customer.UserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
+
+                if (customer.UserAccount is not null)
                 {
-                    return new NotFoundObjectResult("Customer not found");
+                    customer.UserAccountId = customer.UserAccount.Id;
+                    _dbContext.Update(customer);
+                    await _dbContext.SaveChangesAsync();
                 }
-                customer.IsApproved = (int)request.ProfileStatus;
+            }
+            else
+            {
+                customer.UserAccount = existingUserAccount;
+                customer.UserAccountId = existingUserAccount.Id;
                 _dbContext.Update(customer);
                 await _dbContext.SaveChangesAsync();
-                //Create new account for customer after approval
-                if (request.ProfileStatus == ProfileStatus.Approved && customer.UserAccount is null)
+            }
+
+        }
+
+        public async Task<IActionResult> ValidateInsuranceContractAsync(InsuranceContractRegisterRequest request)
+        {
+            bool flagRollback = false;
+            int customerIdForRollback = 0;
+            try
+            {
+
+                var customerServiceResponse = await _customerService.AddCustomerAsync(request.CustomerRegisterRequest);
+                if (customerServiceResponse.result is not OkObjectResult)
                 {
-                    var userRegisterRequest = new UserRegisterRequest(customer.Email, "Demo123", "Demo123");
-                    await _userAccount.Register(userRegisterRequest);
-                    customer.UserAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(u => u.Email == customer.Email);
-                    if (customer.UserAccount is not null)
-                    {
-                        //Update user id in user account table
-                        customer.UserAccount.UserId = customer.Id;
-                        _dbContext.Update(customer);
-                        await _dbContext.SaveChangesAsync();
-                    }
-                    //TODO: Edit email body message
-                    await _emailService.SendEmail(customer.Email, "Account created", "Your account has been created successfully.");
+                    return new BadRequestObjectResult("Failed to add customer.");
                 }
-                if (request.ProfileStatus == ProfileStatus.Approved)
+                var customerId = customerServiceResponse.customerId;
+                customerIdForRollback = customerId;
+                var insuranceId = request.InsuranceId;
+                request.HealthInformationDto.CustomerId = customerId;
+                var healthInformationServiceResponse = await _healthInformationService.AddHealthInformationAsync(request.HealthInformationDto);
+                if (healthInformationServiceResponse is not OkObjectResult)
                 {
-                    var response = new { userAccountId = customer.UserAccount?.Id, message = $"Customer information updated successfully: {request.ProfileStatus}" };
-                    return new OkObjectResult(response);
+                    flagRollback = true;
+                    return new BadRequestObjectResult("Failed to add health information.");
                 }
-                else
+                var insurance = await _dbContext.Insurances.FirstOrDefaultAsync(i => i.InsuranceId == request.InsuranceId);
+                if (insurance is null)
                 {
-                    return new OkObjectResult($"Customer information updated successfully: {request.ProfileStatus}");
+                    flagRollback = true;
+
+                    return new BadRequestObjectResult("Insurance not found.");
                 }
 
+                var insuranceContractDto = new InsuranceContractDto(customerId, insuranceId);
+                var insuranceContractServiceResponse = await _insuranceContractService.AddInsuranceContractAsync(insuranceContractDto);
+                if (insuranceContractServiceResponse is not OkObjectResult)
+                {
+                    flagRollback = true;
+                    return new BadRequestObjectResult("Failed to add insurance contract.");
+                }
+                var response = new { customerId = customerId, insuranceId = insuranceId, message = $"The insurance contract has been successfully created, for the customer: {customerId} , the insurance id the customer has registered is: {insuranceId}" };
+                return (new OkObjectResult(response));
+
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new StatusCodeResult(500);
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500 // Internal Server Error
+                };
+            }
+            finally
+            {
+                if (flagRollback)
+                {
+                    await _customerService.DeleteCustomerForceAsync(customerIdForRollback);
+                }
             }
         }
     }
