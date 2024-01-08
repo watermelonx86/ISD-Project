@@ -21,6 +21,9 @@ const UserProfile = () => {
         navigate('/edit')
     }
 
+    const myProduct = () => {
+        navigate('/my-product')
+    }
     //này để lúc bấm vào avatar là nó tự chạy cái hàm UserInfo
     useEffect(() => {
         UserInfo();
@@ -60,8 +63,11 @@ const UserProfile = () => {
                     <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
                         Thông tin người dùng
                     </h3>
-                    <div className="md:w-1/4 text-right">
-                        <button className="bg-slate-500 hover:bg-slate-600 text-white py-2 px-4 rounded" onClick={editt}>
+                    <div className="md:w-2/4 text-right">
+                        <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={myProduct}>
+                        Chính sách bảo hiểm
+                        </button>
+                        <button className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded mx-1" onClick={editt}>
                             Chỉnh sửa
                         </button>
                     </div>
@@ -209,13 +215,13 @@ const UserProfile = () => {
 
             </div> */}
 
-            {/* <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
+            <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
 
                 <div className="px-4 py-5 sm:px-6 w-full inline-flex">
                     <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
                         Danh sách gói bảo hiểm
                     </h3>
-                    {/* <div className="md:w-1/4" align="right">
+                     <div className="md:w-1/4" align="right">
                         <button class="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
 
                         </button>
@@ -248,7 +254,7 @@ const UserProfile = () => {
                         </tr>
                     </tbody>
                 </table>
-            </div> */}
+            </div>
             
             <Footer />
         </section>

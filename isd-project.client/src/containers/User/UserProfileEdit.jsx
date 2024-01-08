@@ -16,6 +16,7 @@ const UserProfileEdit = () => {
     
     //biến thông tin lỗi
     const [errorMessage, setErrorMessage] = useState('');
+
     //biến thông tin cá nhân
     const [cccd, setCccd] = useState('');
     const [day_start, setDayStart] = useState('');
@@ -30,6 +31,20 @@ const UserProfileEdit = () => {
 
     useEffect(() => {
         setGender('Nam');
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`https://localhost:7267/api/Customer/get-customer/${userId}`);
+                if (response.status === 200) {
+                    setUserData(response.data);
+                    console.log(response.data);
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
     }, []);
 
 
@@ -38,10 +53,6 @@ const UserProfileEdit = () => {
     const [district, setDistrict] = useState('');
     const [ward, setWard] = useState('');
     const [street, setStreet] = useState('');
-
-
-    // bien doi mat khau
-    const [changePass, setchangePass] = useState(false);
 
 
     //object thông tin cá nhân
@@ -77,42 +88,6 @@ const UserProfileEdit = () => {
     const [errorCountry, setErrorCountry] = useState('');
     const [errorJob, setErrorJob] = useState('');
 
-
-    const handleSmokingChange = (value) => {
-        setSmoking(value);
-        // Nếu giá trị là 'No', đặt giá trị smoking_frequency về rỗng
-        if (value === 'No') {
-            setSmokingFrequency('');
-        }
-    };
-
-    const handleAlcoholChange = (value) => {
-        setAlcohol(value);
-        if (value === 'No') {
-            setAlcoholFrequency('');
-        }
-    };
-
-    const handleSportChange = (value) => {
-        setSport(value);
-        if (value === 'No') {
-            setSportDetail('');
-        }
-    };
-
-    const handleCongenitalDiseaseChange = (value) => {
-        setCongenitalDisease(value);
-        if (value === 'No') {
-            setCongenitalDiseaseDetail('');
-        }
-    };
-
-    const handleWeightLossChange = (value) => {
-        setWeightLoss(value);
-        if (value === 'No') {
-            setWeightLossDetail('');
-        }
-    };
 
     // Hàm chuyển đổi dữ liệu để match với backend
     const convertGenderToInt = (genderString) => {
@@ -150,24 +125,6 @@ const UserProfileEdit = () => {
                 nationality: country,
                 job: job
             };
-            // Health information
-            const healthInfo = {
-                height: Number(height),
-                weight: Number(weight),
-                smoking: convertToBoolean(smoking),
-                cigarettesPerDay: Number(smoking_frequency),
-                alcoholConsumption: convertToBoolean(alcohol),
-                daysPerWeekAlcohol: Number(alcohol_frequency),
-                drugUse: convertToBoolean(drug),
-                engagesInDangerousSports: convertToBoolean(sport),
-                dangerousSportsDetails: sport_detail,
-                diagnosedWithHealthConditions: convertToBoolean(cancer),
-                hasSpecificHealthConditions: convertToBoolean(congenital_disease),
-                experiencedDiseasesInLast5Years: convertToBoolean(dengue),
-                experiencedDiseasesDetails: congenital_disease_detail,
-                unexplainedWeightLoss: convertToBoolean(weight_loss),
-                unexplainedWeightLossDetails: weight_loss_detail,
-            };
 
             // Gửi POST API request để tạo InsuranceContract
             const requestData = {
@@ -202,10 +159,7 @@ const UserProfileEdit = () => {
         setErrorEmail('');
         setErrorCountry('');
         setErrorJob('');
-        setErrorHeight('');
-        setErrorWeight('');
-        setErrorSmokingFrequency('');
-        setErrorAlcoholFrequency('');
+
         // Kiểm tra nếu độ dài là 9 hoặc 12 và toàn bộ là số
         if ((cccd.length === 9 || cccd.length === 12) && /^\d+$/.test(cccd)) {
             // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
@@ -265,97 +219,48 @@ const UserProfileEdit = () => {
             setErrorJob('Nghề nghiệp chỉ được chứa kí tự chữ.');
             setFlag(0);
         }
-        // Kiểm tra chiều cao toàn bộ là số
-        if (/^\d+$/.test(height)) {
-            // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
-            setErrorHeight('');
-            //console.log('Đã nhập đúng định dạng chiều cao');
-        } else {
-            // Hiển thị thông báo lỗi và không thực hiện hành động
-            setErrorHeight('Vui lòng nhập chiều cao chỉ toàn số.');
-            setFlag(0);
-        }
-        if (/^\d+$/.test(weight)) {
-            // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
-            setErrorWeight('');
-            //console.log('Đã nhập đúng định dạng cân nặng');
-        } else {
-            // Hiển thị thông báo lỗi và không thực hiện hành động
-            setErrorWeight('Vui lòng nhập cân nặng chỉ toàn số.');
-            setFlag(0);
-        }
-        if (smoking === 'No') {
-            setErrorSmokingFrequency('');
-        }
-        else if (smoking === 'Yes' && smoking_frequency === '') {
-            setErrorSmokingFrequency('Hãy điền vào đây');
-            setFlag(0);
-        }
-        else
-        {
-             if (/^\d+$/.test(smoking_frequency)) {
-                setErrorSmokingFrequency('');
-             } else {
-                setErrorSmokingFrequency('Chỉ được nhập toàn số');
-                setFlag(0);
-             }
-        }
-        //kiểm tra điều kiện rượu / bia
-        if (alcohol === 'No') {
-            setErrorAlcoholFrequency('');
-        }
-        else if (alcohol === 'Yes' && alcohol_frequency === '') {
-            setErrorAlcoholFrequency('Hãy điền vào đây');
-            setFlag(0);
-        }
-        else { 
-             if (/^\d+$/.test(alcohol_frequency) && alcohol_frequency > 0 && alcohol_frequency < 8) {
-                setErrorAlcoholFrequency('');
-             } else {
-                setErrorAlcoholFrequency('Chỉ được nhập toàn số (Tối đa: 7)');
-                setFlag(0);
-             }
-        }
-        //kiểm tra điều kiện thể thao mạo hiểm
-        if (sport === 'No') {
-            setErrorSportDetail('');
-        }
-        else if (sport === 'Yes' && sport_detail === '') {
-            setErrorSportDetail('Hãy điền vào đây');
-            setFlag(0);
-        }
-        else {
-            setErrorSportDetail('')
-        }
-        //kiểm tra điều kiện bệnh bẩm sinh
-        if (congenital_disease === 'No') {
-            setErrorCongenitalDisease('');
-        }
-        else if (congenital_disease === 'Yes' && congenital_disease_detail === '') {
-            setErrorCongenitalDisease('Hãy điền vào đây');
-            setFlag(0);
-        }
-        else {
-            setErrorCongenitalDisease('');
-        }
-        //kiểm tra điều kiện sụt cân
-        if (weight_loss === 'No') {
-            setErrorWeightLoss('');
-        }
-        else if (weight_loss === 'Yes' && weight_loss_detail === '') {
-            setErrorWeightLoss('Hãy điền vào đây');
-            setFlag(0);
-        }
-        else {
-            setErrorWeightLoss('');
-        }
-        // Kiểm tra nếu flag = 1 thì gửi form
-        if (flag === 1) {
-            handleSendForm();
-        }
 
     };
 
+
+    // biến kiểm tra yc đổi mật khẩu
+    const [changePass, setchangePass] = useState(false);
+
+    // biến đổi mật khẩu
+    const [oldPass, setoldPass] = useState('');
+    const [newPass, setnewPass] = useState('');
+    const [confirmNewPass, setconfirmNewPass] = useState('');
+
+    const handleChangePass = async () => {
+        try {
+
+            // InsuranceId
+            const insuranceId = item;
+
+            // Gửi POST API request để tạo InsuranceContract
+            const requestData = {
+                token: localStorage.getItem('token'),
+                password: newPass,
+                ConfirmPassword: confirmNewPass
+            };
+            console.log('Request:', requestData);
+            const apiUrl = 'https://localhost:7267/api/UserAccount/reset-password';
+            const response = await axios.post(apiUrl, requestData);
+            console.log('Response:', response.data);
+            if(response.status === 200) {
+                //TODO: Hiện thông báo thành công
+                alert('Đổi password thành công');
+                setchangePass(false);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                // TODO: Nếu có lỗi, hiên thông báo lỗi
+                alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+                setErrorMessage(error.response.data);
+                console.error('Axios error:', error.response );
+            } 
+        }
+    }
 
     // useEffect(() => {
     //     if (flag === 1) {
@@ -440,30 +345,41 @@ const UserProfileEdit = () => {
                                 <div className="p-4 md:p-5 space-y-4">
                                     <form class="max-w-sm mx-auto">
                                         <div>
-                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mat khau cu</label>
-                                            <input type="password" className="focus:outline-none focus:text-black-600 p-1 w-full border rounded"/>
+                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu cũ</label>
+                                            <input 
+                                                type="password" 
+                                                className="focus:outline-none focus:text-black-600 p-1 w-full border rounded"
+                                                onChange={(e) => setoldPass(e.target.value)}/>
                                         </div>
 
                                         <div>
-                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mat khau moi</label>
-                                            <input type="password" className="focus:outline-none focus:text-black-600 p-1 w-full border rounded"/>
+                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mật khẩu mới</label>
+                                            <input 
+                                                type="password" 
+                                                className="focus:outline-none focus:text-black-600 p-1 w-full border rounded"
+                                                onChange={(e) => setnewPass(e.target.value)}/>
                                         </div>
 
                                         <div>
-                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nhap lai mat khau moi</label>
-                                            <input type="password" className="focus:outline-none focus:text-black-600 p-1 w-full border rounded"/>
+                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nhập lại mật khẩu mới</label>
+                                            <input 
+                                            type="password" 
+                                            className="focus:outline-none focus:text-black-600 p-1 w-full border rounded"
+                                            onChange={(e) => setconfirmNewPass(e.target.value)}/>
                                         </div>
                                     </form>
                                 </div>
 
                                 <div className="p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600" align="right">
-                                    <button data-modal-hide="default-modal" type="button" onClick={() => setchangePass(false)}
+                                    <button data-modal-hide="default-modal" 
+                                        type="button" 
+                                        onClick={() => handleChangePass()}
                                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                        Doi 
+                                        Đổi 
                                         </button>
                                     <button data-modal-hide="default-modal" type="button" onClick={() => setchangePass(false)}
                                             className="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
-                                        Huy
+                                        Hủy
                                     </button>
                                 </div>
                             </div>
@@ -727,12 +643,12 @@ const UserProfileEdit = () => {
 
                     <div className="flex justify-center my-8">
                         <button type="button"
-                            className="focus:outline-none text-white bg-buttonProduct hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-3xl text-sm px-20 py-3 mb-2"
+                            className="focus:outline-none text-white bg-buttonProduct hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-xl text-sm px-20 py-3 mb-2"
                             onClick={() => {
                                 handleSubmit();
                             }}
                         >
-                            Gửi phiếu thông tin
+                            Xác nhận
                         </button>
                     </div>
                 </form>
