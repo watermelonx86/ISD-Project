@@ -65,9 +65,9 @@ const UserProfile = () => {
                     </h3>
                     <div className="md:w-2/4 text-right">
                         <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={myProduct}>
-                        Chính sách bảo hiểm
+                            Chính sách bảo hiểm
                         </button>
-                        <button className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded mx-1" onClick={editt}>
+                        <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={editt}>
                             Chỉnh sửa
                         </button>
                     </div>
@@ -215,7 +215,7 @@ const UserProfile = () => {
 
             </div> */}
 
-            <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
+            {/* <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
 
                 <div className="px-4 py-5 sm:px-6 w-full inline-flex">
                     <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
@@ -254,7 +254,7 @@ const UserProfile = () => {
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> */}
             
             <Footer />
         </section>

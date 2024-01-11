@@ -318,7 +318,7 @@ const UserProfileEdit = () => {
                         </button>
 
                         <NavLink to="/me">
-                            <h5 className="bg-slate-500 hover:bg-slate-600 text-white py-2 px-4 rounded inline-block" >
+                            <h5 className="bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded inline-block" >
                                 Trở về
                             </h5>
                         </NavLink>

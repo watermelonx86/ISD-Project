@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { useLocation, NavLink } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -31,10 +32,20 @@ const MyProduct = () => {
     <>
         <Header />
         <section className="h-auto my-12 max-w-screen-xl mx-auto px-6">
-            <h1 className="text-2xl font-bold"> 
-                Các gói bảo hiểm của bạn 
-    
-            </h1>
+            <div className="inline-flex w-full">
+                <h1 className="w-3/4 text-2xl font-bold inline-block"> 
+                    Các gói bảo hiểm của bạn 
+                </h1>
+                <div className="w-1/4 text-right">
+                    <NavLink to="/me">
+                        
+                        <h5 className="bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded inline-block" >
+                            Trở về
+                        </h5>
+                    </NavLink>
+                </div>
+            </div>
+
 
             <hr className="my-2 h-[1.5px] bg-gray-400 " />
 
@@ -45,7 +56,21 @@ const MyProduct = () => {
                         className="text-bold bg-white border border-gray-250 transition transform duration-700 hover:shadow-xl hover:scale-105 px-5 py-2 rounded-lg relative">
                         
                         <div className="my-3 space-y-2">
-                            <h1 className="font-bold py-1 text-gray-900 poppins text-lg">{item.insuranceName}</h1>
+                            <div className="inline-flex w-full">
+                                <h1 className="font-bold py-1 text-gray-900 poppins text-lg inline-block">{item.insuranceName}</h1>
+                                <div className="w-1/5">
+                                    <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-[20px] ">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier"> 
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H15C15.4142 11.25 15.75 11.5858 15.75 12Z" fill="#1C274C"></path> 
+                                        </g>
+                                    </svg>
+                                </div>
+
+                                
+                                
+                            </div>
                             <div className= "w-11/12 border-b-2"></div>
                             <div className='bg-slate-200 p-1 px-3 inline-block rounded-2xl '>
 
