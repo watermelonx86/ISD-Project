@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace ISD_Project.Server.Services
@@ -223,17 +224,17 @@ namespace ISD_Project.Server.Services
         public async Task<String> GetUserRoleAsync(int userAccountId)
         {
             var userRole = _dbContext.UserRoles.FirstOrDefault(ur => ur.UserAccountId == userAccountId);
-           if (userRole == null)
+            if (userRole == null)
             {
                 return "User does not have any role";
             }
-           var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == userRole.RoleId);
+            var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == userRole.RoleId);
             if (role == null)
             {
                 return "Role does not exist";
             }
             return role.Name;
-            
+
         }
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request)
         {
@@ -280,6 +281,65 @@ namespace ISD_Project.Server.Services
                 await _dbContext.SaveChangesAsync();
                 return new OkObjectResult("Password successfully reset");
             }
+            catch (Exception ex)
+            {
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500 // Internal Server Error
+                };
+            }
+
+        }
+
+        public async Task<IActionResult> EditInfoUserAsync(UserUpdateModel model)
+        {
+            try
+            {
+                var existingUser = await _dbContext.Users.FindAsync(model.Id);
+
+                if (existingUser == null)
+                {
+                    throw new ArgumentException("User not found");
+                }
+
+                if (model.Name != null)
+                {
+                    existingUser.Name = model.Name;
+                }
+
+                if (model.Phone != null)
+                {
+                    existingUser.PhoneNumber = model.Phone;
+                }
+
+                if (model.Gender != null)
+                {
+                    existingUser.Gender = model.Gender.Value;
+                }
+
+                if (model.Address != null)
+                {
+                    existingUser.Address = model.Address;
+                }
+
+                if (model.Email != null)
+                {
+                    existingUser.Email = model.Email;
+                }
+                var validationResults = new List<ValidationResult>();
+                var validationContext = new ValidationContext(existingUser);
+
+                if (!Validator.TryValidateObject(existingUser, validationContext, validationResults, true))
+                {
+                    var errors = validationResults.SelectMany(r => r.MemberNames.Select(m => $"{m}: {r.ErrorMessage}"));
+                    return new BadRequestObjectResult(new { errors });
+                }
+
+
+                _dbContext.SaveChanges();
+                return new OkObjectResult(existingUser);
+            }
+
             catch (Exception ex)
             {
                 return new ObjectResult(ex.Message)
