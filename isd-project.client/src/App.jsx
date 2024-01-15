@@ -6,6 +6,7 @@ import RegisterForm from './containers/Auth/RegisterForm';
 import UserProfile from './containers/User/UserProfile';
 import UserProfileEdit from './containers/User/UserProfileEdit';
 import MyProduct from './containers/User/MyProduct';
+import MyHealth from './containers/User/MyHealth';
 import Health from './containers/User/Health';
 import IncurenceManage from './containers/User/InsurenceManage';
 import Product from './containers/Product/Product';
@@ -25,6 +26,7 @@ function App() {
         <Route path="/me" element={<UserProfile />} />
         <Route path="/edit" element={<UserProfileEdit />} />
         <Route path="/my-product" element={<MyProduct />} />
+        <Route path="/my-health" element={<MyHealth />} />
         <Route path="/health" element={<Health />} />
         <Route path="/insurence" element={<InsureceManage />} />
         <Route path="/san-pham-bao-hiem" element={<Product />} />
@@ -32,6 +34,7 @@ function App() {
         <Route path="/san-pham-bao-hiem/:id/dang-ky-bao-hiem" element={<FillForm />} />
         <Route path="/duyet-don-dang-ky" element={<WaitApproval />} />
         <Route path="/lich-su-duyet" element={<ApprovalHistory />} />
+
         {/* New route for account activation */}
         <Route path="/activate/:userAccountId" element={<ActivateAccount />} />
         {/* <Route path="test" element={<FillForm />} /> */}

@@ -21,8 +21,8 @@ const UserProfile = () => {
         navigate('/edit')
     }
 
-    const myProduct = () => {
-        navigate('/my-product')
+    const myHealthInfo = () => {
+        navigate('/my-health')
     }
     //này để lúc bấm vào avatar là nó tự chạy cái hàm UserInfo
     useEffect(() => {
@@ -64,8 +64,8 @@ const UserProfile = () => {
                         Thông tin người dùng
                     </h3>
                     <div className="md:w-2/4 text-right">
-                        <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={myProduct}>
-                            Chính sách bảo hiểm
+                        <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={myHealthInfo}>
+                            Thông tin sức khỏe
                         </button>
                         <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={editt}>
                             Chỉnh sửa
