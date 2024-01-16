@@ -6,6 +6,8 @@ using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +30,22 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Configure Swagger
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme { 
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey 
+    });
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+});
 
 // Add Services for Authentication and Authorization with JWT
-string tokenValue = builder.Configuration.GetSection("AppSettings:Token").Value ?? String.Empty;
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+string tokenValue = builder.Configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value ?? String.Empty;
+builder.Services.AddAuthentication().AddJwtBearer();
+/*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -42,7 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false
         };
-    });
+    });*/
 // Add Services AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -77,7 +90,6 @@ app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins); // use CORS
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import Header from '../HomePage/Header.jsx';
+import Footer from '../HomePage/Footer.jsx';
 
 const UserProfile = () => {
     
@@ -20,6 +21,9 @@ const UserProfile = () => {
         navigate('/edit')
     }
 
+    const myProduct = () => {
+        navigate('/my-product')
+    }
     //này để lúc bấm vào avatar là nó tự chạy cái hàm UserInfo
     useEffect(() => {
         UserInfo();
@@ -49,7 +53,7 @@ const UserProfile = () => {
         };
         fetchData();
     }, []);
-    
+
     return (
         <section className="bg-gray-100bg-opacity-50 h-auto">
             <Header />
@@ -59,8 +63,11 @@ const UserProfile = () => {
                     <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
                         Thông tin người dùng
                     </h3>
-                    <div className="md:w-1/4 text-right">
-                        <button className="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
+                    <div className="md:w-2/4 text-right">
+                        <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={myProduct}>
+                            Chính sách bảo hiểm
+                        </button>
+                        <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" onClick={editt}>
                             Chỉnh sửa
                         </button>
                     </div>
@@ -70,7 +77,7 @@ const UserProfile = () => {
                     <dl className="sm:divide-y sm:divide-gray-200">
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Full name 
+                                Họ và tên
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {userData.name}
@@ -78,7 +85,7 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Gender
+                                Giới tính
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {userData.gender === 0 ? 'Nam' : 'Nữ'}
@@ -86,7 +93,23 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Email address
+                                Ngày sinh
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {/* data here */}
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Nghề nghiệp
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {/* data here */}
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Email
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                  {userData.email}
@@ -94,7 +117,7 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Phone number
+                                Số điện thoại
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {userData.phoneNumber}
@@ -102,10 +125,28 @@ const UserProfile = () => {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
-                                Address
+                                CCCD/CMND
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {userData.address}
+                                {/* data here */}
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Địa chỉ
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+
+                                {/*  Đường*/}, {/*  Phường*/}, {/*  Quận Huyện*/}, {/*  Thành phố, Tỉnh*/}
+                                {/* Nguyễn Văn Cừ, Phường 1, Quận 5, Thành phố Hồ Chí Minh*/}
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Quốc tịch
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {/* data here */}
                             </dd>
                         </div>
                     </dl>
@@ -113,20 +154,81 @@ const UserProfile = () => {
 
             </div>
 
-            <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
+            {/* <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
+
+                <div className="px-4 py-5 sm:px-6 w-full inline-flex">
+                    <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
+                        Tinh trang suc khoe
+                    </h3>
+                    <div className="md:w-1/4" align="right">
+                        <button class="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
+                            Chỉnh sửa
+                        </button>
+                    </div>
+
+                </div>
+                <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+                    <dl className="sm:divide-y sm:divide-gray-200">
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Height
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                1m70    
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Weight
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                60kg
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Blood group
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                A
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Phone number
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                (123) 456-7890
+                            </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">
+                                Address
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                123 Main St<br/>
+                                Anytown, USA 12345
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+            </div> */}
+
+            {/* <div className="mx-auto container md:w-3/4 shadow-md mt-5 overflow-hidden shadow rounded-lg border mb-10">
 
                 <div className="px-4 py-5 sm:px-6 w-full inline-flex">
                     <h3 className="md:w-3/4 text-lg leading-6 font-medium text-gray-900 pt-2">
                         Danh sách gói bảo hiểm
                     </h3>
-                    {/* <div className="md:w-1/4" align="right">
+                     <div className="md:w-1/4" align="right">
                         <button class="bg-slate-400 hover:bg-slate-500 text-white py-2 px-4 rounded" onClick={editt}>
-                            
+
                         </button>
-                    </div> */}
+                    </div>
                 </div>
-                
-                <table className="w-full">
+
+                <table className="w-full select-none">
                     <thead>
                         <tr className="bg-gray-400 border-2">
                             <th className="p-2">Tên gói bảo hiểm</th>
@@ -152,8 +254,9 @@ const UserProfile = () => {
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
+            </div> */}
+            
+            <Footer />
         </section>
     )
 }

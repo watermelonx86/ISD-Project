@@ -26,7 +26,8 @@ const RegisterForm = () => {
         axios.post('https://localhost:7267/api/UserAccount/register', {
             email : email,
             password: password,
-            confirmPassword: confirmPassword
+            confirmPassword: confirmPassword,
+            role: 1
         }).then(response => {
             setSuccess(true);
             console.log(response.data, success);
