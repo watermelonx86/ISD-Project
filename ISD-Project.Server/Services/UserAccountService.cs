@@ -295,59 +295,93 @@ namespace ISD_Project.Server.Services
         {
             try
             {
-                var existingUser = await _dbContext.Users.FindAsync(model.Id);
+                if (model.Id <= 0)
+                {
+                    return new BadRequestObjectResult("Invalid user Id");
+                }
 
+                var existingUser = await _dbContext.Users.FindAsync(model.Id);
                 if (existingUser == null)
                 {
-                    throw new ArgumentException("User not found");
+                    return new NotFoundObjectResult("User not found");
                 }
 
-                if (model.Name != null)
+                bool isDataChanged = false;
+
+                if (!string.IsNullOrEmpty(model.Name) && existingUser.Name != model.Name)
                 {
                     existingUser.Name = model.Name;
+                    isDataChanged = true;
                 }
 
-                if (model.Phone != null)
+                if (!string.IsNullOrEmpty(model.Phone) && existingUser.PhoneNumber != model.Phone)
                 {
                     existingUser.PhoneNumber = model.Phone;
+                    isDataChanged = true;
                 }
 
-                if (model.Gender != null)
+                if (model.Gender.HasValue && model.Gender >= 0 && model.Gender <= 1 && existingUser.Gender != model.Gender)
                 {
                     existingUser.Gender = model.Gender.Value;
+                    isDataChanged = true;
                 }
 
-                if (model.Address != null)
+                if (!string.IsNullOrEmpty(model.Address) && existingUser.Address != model.Address)
                 {
                     existingUser.Address = model.Address;
+                    isDataChanged = true;
                 }
 
-                if (model.Email != null)
+                if (!string.IsNullOrEmpty(model.Email) && existingUser.Email != model.Email)
                 {
                     existingUser.Email = model.Email;
+                    isDataChanged = true;
                 }
-                var validationResults = new List<ValidationResult>();
-                var validationContext = new ValidationContext(existingUser);
 
-                if (!Validator.TryValidateObject(existingUser, validationContext, validationResults, true))
+                if (!string.IsNullOrEmpty(model.IdentityDocumentId) && existingUser.IdentityDocumentId != model.IdentityDocumentId)
                 {
-                    var errors = validationResults.SelectMany(r => r.MemberNames.Select(m => $"{m}: {r.ErrorMessage}"));
-                    return new BadRequestObjectResult(new { errors });
+                    existingUser.IdentityDocumentId = model.IdentityDocumentId;
+                    isDataChanged = true;
                 }
 
+                if (model.DateIssued != null && model.DateIssued != DateOnly.FromDateTime(DateTime.Today) && existingUser.DateIssued != model.DateIssued)
+                {
+                    existingUser.DateIssued = (DateOnly)model.DateIssued;
+                    isDataChanged = true;
+                }
 
+                if (model.DateIssued != null && model.ValidUntil != DateOnly.FromDateTime(DateTime.Today) && existingUser.ValidUntil != model.ValidUntil)
+                {
+                    existingUser.ValidUntil = (DateOnly)model.ValidUntil;
+                    isDataChanged = true;
+                }
+
+                if (model.DateIssued != null && model.DateOfBirth != DateOnly.FromDateTime(DateTime.Today) && existingUser.DateOfBirth != model.DateOfBirth)
+                {
+                    existingUser.DateOfBirth = (DateOnly)model.DateOfBirth;
+                    isDataChanged = true;
+                }
+
+                // If no data changes, return message
+                if (!isDataChanged)
+                {
+                    return new OkObjectResult("Updated user information successfully, but nothing changed");
+                }
+
+                // Update and save changes
+                _dbContext.Update(existingUser);
                 _dbContext.SaveChanges();
                 return new OkObjectResult(existingUser);
             }
-
             catch (Exception ex)
             {
+
                 return new ObjectResult(ex.Message)
                 {
-                    StatusCode = 500 // Internal Server Error
+                    StatusCode = 500
                 };
             }
-
         }
+
     }
 }

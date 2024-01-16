@@ -73,7 +73,7 @@ namespace ISD_Project.Server.Controllers
             return _userAccountService.ResetPassword(request);
         }
 
-        [HttpPut("edit-info-user/{id}")]
+        [HttpPut("edit-info-user")]
         public Task<IActionResult> EditInfoUserAsync(UserUpdateModel request)
         {
             return _userAccountService.EditInfoUserAsync(request);
