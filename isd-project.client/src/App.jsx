@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import React from 'react';
 import HomePage from './containers/HomePage/HomePage';
 import LoginForm from './containers/Auth/LoginForm';
@@ -15,10 +15,13 @@ import FillForm from './containers/Product/FillForm';
 import WaitApproval from './containers/Employee/WaitApproval';
 import ApprovalHistory from './containers/Employee/ApprovalHistory';
 import ActivateAccount from './containers/User/ActivateAccount';
+
+import { Dashboard, Auth } from "./containers/Admin/layouts";
+
 import InsureceManage from './containers/User/InsurenceManage';
 function App() {
   return (
-    <Router>
+    //<Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
@@ -37,9 +40,11 @@ function App() {
 
         {/* New route for account activation */}
         <Route path="/activate/:userAccountId" element={<ActivateAccount />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
         {/* <Route path="test" element={<FillForm />} /> */}
       </Routes>
-    </Router>
+    //</Router>
   );
 }
 

@@ -48,7 +48,7 @@ namespace ISD_Project.Server.Services
                 new Claim(ClaimTypes.Email, userAccount.Email)
             };
 
-            string tokenValue = _configuration.GetSection("AppSettings:Token").Value ?? string.Empty;
+            string tokenValue = _configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value ?? string.Empty;
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var token = new JwtSecurityToken(
