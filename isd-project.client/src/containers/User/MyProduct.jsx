@@ -58,15 +58,8 @@ const MyProduct = () => {
                         <div className="my-3 space-y-2">
                             <div className="inline-flex w-full">
                                 <h1 className="font-bold py-1 text-gray-900 poppins text-lg inline-block">{item.insuranceName}</h1>
-                                <div className="w-1/5">
-                                    <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-[20px] ">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier"> 
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H15C15.4142 11.25 15.75 11.5858 15.75 12Z" fill="#1C274C"></path> 
-                                        </g>
-                                    </svg>
-                                </div>
+                                
+                                    
 
                                 
                                 
@@ -112,6 +105,15 @@ const MyProduct = () => {
                             </div>
 
                             <p className="py-3 text-gray-500 poppins text-sm text-center">{item.summaryDescription}</p>
+                            
+                            <div className="grid grid-cols-2 item-center" >
+                                <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded mx-1" >
+                                    Thanh toán
+                                </button>
+                                <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded mx-1" >
+                                    gì đó
+                                </button>
+                            </div>
 
                             
                         </div>
