@@ -81,5 +81,26 @@ namespace ISD_Project.Server.Services
             }
         }
 
+        public async Task<IActionResult> GetInsurancesAsync()
+        {
+            try
+            {
+                var listInsurances = await _dbContext.Insurances.ToListAsync();
+                if (listInsurances == null)
+                {
+                    return new BadRequestObjectResult("Insurance Type does not exist");
+                }
+
+                var listInsuranceDto = _mapper.Map<List<Insurance>, List<InsuranceDto>>(listInsurances);
+                return new OkObjectResult(listInsuranceDto);
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
     }
 }
