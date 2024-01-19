@@ -49,7 +49,7 @@ namespace ISD_Project.Server.Services
                     };
                     // If not customer then activate userAccount by default
                     userAccount.IsActivated = request.Role == RoleType.Customer ? (int)AccountStatus.Inactive : (int)AccountStatus.Active;
-                    var token = await _cryptoService.CreateTokenAsync(userAccount);
+                    var token = await _cryptoService.CreateTokenAsync(userAccount, request.Role.ToString());
                     if (token != null)
                     {
                         userAccount.VerificationToken = token;

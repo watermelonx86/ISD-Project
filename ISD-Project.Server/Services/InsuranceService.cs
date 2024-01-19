@@ -88,7 +88,7 @@ namespace ISD_Project.Server.Services
                 var listInsurances = await _dbContext.Insurances.ToListAsync();
                 if (listInsurances == null)
                 {
-                    return new BadRequestObjectResult("Insurance Type does not exist");
+                    return new BadRequestObjectResult("Insurance does not exist");
                 }
 
                 var listInsuranceDto = _mapper.Map<List<Insurance>, List<InsuranceDto>>(listInsurances);
