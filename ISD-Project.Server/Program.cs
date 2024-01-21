@@ -44,8 +44,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Add Services for Authentication and Authorization with JWT
 string tokenValue = builder.Configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value ?? String.Empty;
-builder.Services.AddAuthentication().AddJwtBearer();
-/*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -55,7 +54,7 @@ builder.Services.AddAuthentication().AddJwtBearer();
             ValidateIssuer = false,
             ValidateAudience = false
         };
-    });*/
+    });
 // Add Services AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

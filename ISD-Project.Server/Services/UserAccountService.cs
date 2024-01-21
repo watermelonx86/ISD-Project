@@ -68,7 +68,6 @@ namespace ISD_Project.Server.Services
                         var role = request.Role;
                         switch (role)
                         {
-
                             case RoleType.Admin:
                                 var admin = new Admin(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
                                 var v1 = await _dbContext.Admins.AddAsync(admin);

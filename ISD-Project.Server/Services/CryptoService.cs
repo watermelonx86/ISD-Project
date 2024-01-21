@@ -48,7 +48,7 @@ namespace ISD_Project.Server.Services
                 new Claim(ClaimTypes.Email, userAccount.Email)
             };
             if (!string.IsNullOrEmpty(role))
-                claims.Add(new Claim(ClaimTypes.Role, $"{userAccount.UserRole}"));
+                claims.Add(new Claim(ClaimTypes.Role, $"{role}"));
 
             string tokenValue = _configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value ?? string.Empty;
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue));
