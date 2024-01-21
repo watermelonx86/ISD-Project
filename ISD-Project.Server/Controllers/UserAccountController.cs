@@ -12,10 +12,10 @@ namespace ISD_Project.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     //TODO: Avoid providing too much information in error messages Register, Login, Verify
     //DONE: Fix violates principles single responsibility in CreatePasswordHash, CreateRandomToken, VerifyPasswordHash
-    //TODO: Use authentication
+    //DONE: Use authentication
 
     public class UserAccountController : ControllerBase
     {
