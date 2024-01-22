@@ -6,6 +6,7 @@ using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace ISD_Project.Server.Services
 {
     public class UserAccountService : IUserAccountService
@@ -219,17 +220,17 @@ namespace ISD_Project.Server.Services
         public async Task<String> GetUserRoleAsync(int userAccountId)
         {
             var userRole = _dbContext.UserRoles.FirstOrDefault(ur => ur.UserAccountId == userAccountId);
-           if (userRole == null)
+            if (userRole == null)
             {
                 return "User does not have any role";
             }
-           var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == userRole.RoleId);
+            var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == userRole.RoleId);
             if (role == null)
             {
                 return "Role does not exist";
             }
             return role.Name;
-            
+
         }
         public async Task<IActionResult> ForgotPassword(UserForgotPasswordRequest request)
         {
@@ -285,5 +286,98 @@ namespace ISD_Project.Server.Services
             }
 
         }
+
+        public async Task<IActionResult> EditInfoUserAsync(UserUpdateModel model)
+        {
+            try
+            {
+                if (model.Id <= 0)
+                {
+                    return new BadRequestObjectResult("Invalid user Id");
+                }
+
+                var existingUser = await _dbContext.Users.FindAsync(model.Id);
+                if (existingUser == null)
+                {
+                    return new NotFoundObjectResult("User not found");
+                }
+
+                bool isDataChanged = false;
+
+                if (!string.IsNullOrEmpty(model.Name) && existingUser.Name != model.Name)
+                {
+                    existingUser.Name = model.Name;
+                    isDataChanged = true;
+                }
+
+                if (!string.IsNullOrEmpty(model.Phone) && existingUser.PhoneNumber != model.Phone)
+                {
+                    existingUser.PhoneNumber = model.Phone;
+                    isDataChanged = true;
+                }
+
+                if (model.Gender.HasValue && model.Gender >= 0 && model.Gender <= 1 && existingUser.Gender != model.Gender)
+                {
+                    existingUser.Gender = model.Gender.Value;
+                    isDataChanged = true;
+                }
+
+                if (!string.IsNullOrEmpty(model.Address) && existingUser.Address != model.Address)
+                {
+                    existingUser.Address = model.Address;
+                    isDataChanged = true;
+                }
+
+                if (!string.IsNullOrEmpty(model.Email) && existingUser.Email != model.Email)
+                {
+                    existingUser.Email = model.Email;
+                    isDataChanged = true;
+                }
+
+                if (!string.IsNullOrEmpty(model.IdentityDocumentId) && existingUser.IdentityDocumentId != model.IdentityDocumentId)
+                {
+                    existingUser.IdentityDocumentId = model.IdentityDocumentId;
+                    isDataChanged = true;
+                }
+
+                if (model.DateIssued != null && model.DateIssued != DateOnly.FromDateTime(DateTime.Today) && existingUser.DateIssued != model.DateIssued)
+                {
+                    existingUser.DateIssued = (DateOnly)model.DateIssued;
+                    isDataChanged = true;
+                }
+
+                if (model.DateIssued != null && model.ValidUntil != DateOnly.FromDateTime(DateTime.Today) && existingUser.ValidUntil != model.ValidUntil)
+                {
+                    existingUser.ValidUntil = (DateOnly)model.ValidUntil;
+                    isDataChanged = true;
+                }
+
+                if (model.DateIssued != null && model.DateOfBirth != DateOnly.FromDateTime(DateTime.Today) && existingUser.DateOfBirth != model.DateOfBirth)
+                {
+                    existingUser.DateOfBirth = (DateOnly)model.DateOfBirth;
+                    isDataChanged = true;
+                }
+
+                // If no data changes, return message
+                if (!isDataChanged)
+                {
+                    return new OkObjectResult("Updated user information successfully, but nothing changed");
+                }
+
+                // Update and save changes
+                _dbContext.Update(existingUser);
+                _dbContext.SaveChanges();
+                return new OkObjectResult(existingUser);
+            }
+            catch (Exception ex)
+            {
+
+                return new ObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+
     }
 }
