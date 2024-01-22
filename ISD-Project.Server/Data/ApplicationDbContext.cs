@@ -1,5 +1,5 @@
 ﻿using ISD_Project.Server.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using ISD_Project.Server.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace ISD_Project.Server.DataAccess

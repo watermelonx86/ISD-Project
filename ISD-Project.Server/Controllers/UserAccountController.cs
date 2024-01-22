@@ -1,12 +1,7 @@
-﻿using ISD_Project.Server.DataAccess;
-using ISD_Project.Server.Models;
-using ISD_Project.Server.Models.DTOs;
+﻿using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace ISD_Project.Server.Controllers
 {
@@ -25,25 +20,25 @@ namespace ISD_Project.Server.Controllers
             this._userAccountService = userService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("register"), Authorize(Roles = "Admin")]
         public Task<IActionResult> Register([FromBody] UserAccountRegisterRequest request)
         {
             return _userAccountService.Register(request);
         }
 
-        [HttpPost("login")]
+        [HttpPost("login"), AllowAnonymous]
         public Task<IActionResult> Login([FromBody] UserAccountLoginRequest request)
         {
             return _userAccountService.Login(request);
         }
 
-        [HttpGet("get-user-account")]
+        [HttpGet("get-user-account"), Authorize(Roles = "Admin")]
         public Task<IActionResult> GetUserAccount()
         {
             return _userAccountService.GetUserAccountAsync();
         }
 
-        [HttpGet("get-user-account/{id}")]
+        [HttpGet("get-user-account/{id}"), Authorize(Roles = "Admin")]
         public Task<IActionResult> GetUserAccount(int id)
         {
             return _userAccountService.GetUserAccountAsync(id);

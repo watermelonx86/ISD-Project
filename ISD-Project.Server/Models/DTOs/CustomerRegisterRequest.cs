@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ISD_Project.Server.Models;
 
-namespace ISD_Project.Server;
+namespace ISD_Project.Server.Models.DTOs;
 
 public class CustomerRegisterRequest
 {

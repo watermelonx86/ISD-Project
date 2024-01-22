@@ -3,11 +3,8 @@ using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace ISD_Project.Server.Services
 {

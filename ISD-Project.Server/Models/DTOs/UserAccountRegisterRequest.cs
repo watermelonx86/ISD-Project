@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
 
 namespace ISD_Project.Server.Models.DTOs
 {
@@ -21,12 +20,12 @@ namespace ISD_Project.Server.Models.DTOs
         }
         //Validates that the email is in the correct format
         [Required, EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; }
         [Required]
-        public string Password { get; set; } = string.Empty;
+        public string Password { get; set; }
         //Makes sure that the password and confirm password are the same
         [Required, Compare("Password")]
-        public string ConfirmPassword { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; }
         public RoleType Role { get; set; }
     }
 
