@@ -12,7 +12,7 @@ const ProductDetail = () => {
     const location = useLocation();
     const item = location.pathname.split('/').pop();
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(true); //Thêm loading state in  component. This loading state will initially be set to true and will be set to false once the data has been fetched from the API
     const array = Array.from({ length: 5 }, (_, index) => index + 1); //test
 
     const [insuranceData, setInsuranceData] = useState([]);
@@ -20,25 +20,40 @@ const ProductDetail = () => {
     const pathSegments = window.location.pathname.split('/');
     const id = pathSegments[pathSegments.length - 1];
 
-    console.log( insuranceData[0]); 
+    console.log( insuranceData[0]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7267/api/Insurance/get-insurance-detail/${id}`); 
+                setLoading(true);
+                const response = await axios.get(`https://localhost:7267/api/Insurance/get-insurance-detail/${id}`);
                 if (response.status === 200) {
                     const newData = Array.isArray(response.data) ? response.data : [response.data];
                     setInsuranceData(newData);
                 } else {
                     console.error("Error fetching user data");
+                    // Check if error response status is 404
+                    if (response.status === 404) {
+                        navigate('/404');
+                    }
+                    
                 }
+                setLoading(false);
             } catch (error) {
-                console.error("Error during API request:", error);
+                if (error.response && error.response.status === 404) {
+                    navigate('/404');
+                } else {
+                    console.error("Error during API request:", error);
+                }
+                setLoading(false);
             }
         };
         fetchData();
     }, []);
 
+    if (loading) {
+        return <div>Loading...</div>; 
+    }
 
     const handleForm = () => {
         // Truy cập thông tin sản phẩm (item) tại đây và thực hiện công việc cần thiết
