@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using ISD_Project.Server.Models;
+﻿using ISD_Project.Server.Models;
+using ISD_Project.Server.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Services.Interfaces;

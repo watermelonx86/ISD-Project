@@ -1,5 +1,4 @@
 ﻿using ISD_Project.Server.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Services.Interfaces
 {
@@ -8,7 +7,7 @@ namespace ISD_Project.Server.Services.Interfaces
 
         Task<(byte[] passwordHash, byte[] passwordSalt)> CreatePasswordHashAsync(string password);
         Task<string> CreateRandomTokenAsync();
-        Task<string> CreateTokenAsync(UserAccount userAccount);
+        Task<string> CreateTokenAsync(UserAccount userAccount, string role);
         Task<bool> VerifyPasswordHashAsync(string password, byte[] storedHash, byte[] storedSalt);
 
     }

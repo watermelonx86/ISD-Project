@@ -3,12 +3,9 @@ using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Models;
 using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
+
 
 namespace ISD_Project.Server.Services
 {
@@ -50,7 +47,7 @@ namespace ISD_Project.Server.Services
                     };
                     // If not customer then activate userAccount by default
                     userAccount.IsActivated = request.Role == RoleType.Customer ? (int)AccountStatus.Inactive : (int)AccountStatus.Active;
-                    var token = await _cryptoService.CreateTokenAsync(userAccount);
+                    var token = await _cryptoService.CreateTokenAsync(userAccount, request.Role.ToString());
                     if (token != null)
                     {
                         userAccount.VerificationToken = token;
@@ -69,7 +66,6 @@ namespace ISD_Project.Server.Services
                         var role = request.Role;
                         switch (role)
                         {
-
                             case RoleType.Admin:
                                 var admin = new Admin(request.Email, userAccountResult.Entity.Id, userAccountResult.Entity);
                                 var v1 = await _dbContext.Admins.AddAsync(admin);

@@ -1,9 +1,7 @@
-using ISD_Project.Server;
 using ISD_Project.Server.DataAccess;
 using ISD_Project.Server.Profiles;
 using ISD_Project.Server.Services;
 using ISD_Project.Server.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,12 +9,12 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // CORS: https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-8.0
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(MyAllowSpecificOrigins,
+    options.AddPolicy(myAllowSpecificOrigins,
         policy =>
         {
             policy.WithOrigins("https://localhost:5173", "http://localhost:5174")
@@ -44,8 +42,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Add Services for Authentication and Authorization with JWT
 string tokenValue = builder.Configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value ?? String.Empty;
-builder.Services.AddAuthentication().AddJwtBearer();
-/*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -55,7 +52,7 @@ builder.Services.AddAuthentication().AddJwtBearer();
             ValidateIssuer = false,
             ValidateAudience = false
         };
-    });*/
+    });
 // Add Services AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -88,7 +85,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(MyAllowSpecificOrigins); // use CORS
+app.UseCors(myAllowSpecificOrigins); // use CORS
 
 app.UseAuthorization();
 

@@ -15,7 +15,13 @@ namespace ISD_Project.Server.Controllers
             this._insuranceService = insuranceService;
         }
 
-        [HttpGet("get-insurance/{id}")]
+        [HttpGet("get-insurance"), AllowAnonymous]
+        public Task<IActionResult> GetInsurances()
+        {
+            return _insuranceService.GetInsurancesAsync();
+        }
+
+        [HttpGet("get-insurance/{id}"), AllowAnonymous]
         public Task<IActionResult> GetInsurances(int id)
         {
             return _insuranceService.GetInsuranceByTypesAsync(id);

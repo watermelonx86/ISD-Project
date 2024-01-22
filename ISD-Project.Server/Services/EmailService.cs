@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using ISD_Project.Server.Services.Interfaces;
 
-namespace ISD_Project.Server;
+namespace ISD_Project.Server.Services;
 
 public class EmailService : IEmailService
 {

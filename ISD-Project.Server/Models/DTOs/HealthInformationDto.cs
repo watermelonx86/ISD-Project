@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ISD_Project.Server.Models.DTOs
+﻿namespace ISD_Project.Server.Models.DTOs
 {
     public class HealthInformationDto
     {

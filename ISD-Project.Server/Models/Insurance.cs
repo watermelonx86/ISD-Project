@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ISD_Project.Server.Models.DTOs;
 
 namespace ISD_Project.Server.Models
 {
