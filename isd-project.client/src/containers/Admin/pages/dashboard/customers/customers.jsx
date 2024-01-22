@@ -8,6 +8,7 @@ import {
 } from "@material-tailwind/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { customersTableData } from "../../../data";
+import axios from 'axios';
 
 import EditCustomer from "./editCustomer";
 import DeleteCustomer from "./deleteCustomer";
@@ -98,6 +99,26 @@ export function Customers() {
         };
     }, [isOpenEdit, isOpenDelete]);
 
+    const [insuranceType, setInsuranceType] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`https://localhost:7267/api/UserAccount/get-user-account`);
+                if (response.status === 200) {
+                    
+                    setInsuranceType(response.data);
+                    
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
     // thực hiện cập nhật thông tin tài khoản khách hàng
     const handleEditCustomer = (event) => {
         event.preventDefault();
@@ -148,7 +169,8 @@ export function Customers() {
                     </tr>
                     </thead>
                     <tbody>
-                    {customersTableData.map(
+
+                    {insuranceType.map(
                         ({ id, name, email, country, status}, key) => {
                         const className = `py-3 px-10 ${
                             key === customersTableData.length - 1
@@ -220,6 +242,7 @@ export function Customers() {
                 </table>
                 </CardBody>
             </Card>
+
             {/* truyền các props cần thiết qua editCustomer.jsx */}
             <EditCustomer isOpen= {isOpenEdit}
                    handleClose = {hideEdit}
@@ -235,6 +258,7 @@ export function Customers() {
                    status= {status}
                    setStatus= {setStatus}
                    />
+
             {/* truyền các props cần thiết qua deleteCustomer.jsx */}
             <DeleteCustomer isOpen= {isOpenDelete}
                    handleClose = {hideDelete}
