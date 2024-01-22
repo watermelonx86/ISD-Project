@@ -1,8 +1,4 @@
-﻿using ISD_Project.Server.Models;
-
-using ISD_Project.Server.Models.DTOs;
-
-using ISD_Project.Server.Services.Interfaces;
+﻿using ISD_Project.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +21,7 @@ namespace ISD_Project.Server.Controllers
             return _userService.GetUserAsync();
         }
 
-        [HttpGet("get-user/{id}"),Authorize(Roles = "Admin")]
+        [HttpGet("get-user/{id}"),Authorize(Roles = "Admin, Customer, FinancialDepartment, ValidationDepartment, CustomerCareDepartment")]
         public Task<IActionResult> GetUserById(int id)
         {
             return _userService.GetUserByIdAsync(id);

@@ -129,7 +129,7 @@ const Header = () => {
                             </li>
                             <li>
                                 <NavLink to="/my-product" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-600 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-gray-500 hover:bg-gray-700 lg:hover:bg-transparent border-gray-700">
-                                    Chính sách bảo hiểm
+                                    Quản lý gói bảo hiểm
                                 </NavLink>
                             </li>
                             {role === "ValidationDepartment" && (
@@ -157,12 +157,13 @@ const Header = () => {
                                 </div>
                             </li> 
                             )}
-                            {/* xét role admin ở đây */}
+                            {role === "Admin" &&(
                             <li>
                                 <NavLink to="/dashboard/home" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-600 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 text-gray-400 lg:hover:text-gray-500 hover:bg-gray-700 lg:hover:bg-transparent border-gray-700">
                                     Admin
                                 </NavLink>
                             </li>
+                            )}
                         </ul>
                     </div>
                 </div>
