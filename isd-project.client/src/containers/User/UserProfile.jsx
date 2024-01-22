@@ -36,14 +36,19 @@ const UserProfile = () => {
     const userId = localStorage.getItem('userId');
     
     const [userData, setUserData] = useState('');
-   
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7267/api/User/get-user/${userId}`);
+                const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+                const response = await axios.get(`https://localhost:7267/api/User/get-user/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+                    }
+                });
                 if (response.status === 200) {
                     setUserData(response.data);
-                    console.log(response.data);
+                    //console.log(response.data); //Log data for debugging purposes
                 } else {
                     console.error("Error fetching user data");
                 }
@@ -96,17 +101,10 @@ const UserProfile = () => {
                                 Ngày sinh
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {/* data here */}
+                                {userData.dateOfBirth}
                             </dd>
                         </div>
-                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">
-                                Nghề nghiệp
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {/* data here */}
-                            </dd>
-                        </div>
+                        
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt className="text-sm font-medium text-gray-500">
                                 Email
@@ -128,7 +126,7 @@ const UserProfile = () => {
                                 CCCD/CMND
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {/* data here */}
+                                {userData.identityDocumentId}
                             </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -136,19 +134,10 @@ const UserProfile = () => {
                                 Địa chỉ
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-
-                                {/*  Đường*/}, {/*  Phường*/}, {/*  Quận Huyện*/}, {/*  Thành phố, Tỉnh*/}
-                                {/* Nguyễn Văn Cừ, Phường 1, Quận 5, Thành phố Hồ Chí Minh*/}
+                                {userData.address}
                             </dd>
                         </div>
-                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt className="text-sm font-medium text-gray-500">
-                                Quốc tịch
-                            </dt>
-                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {/* data here */}
-                            </dd>
-                        </div>
+                       
                     </dl>
                 </div>
 
