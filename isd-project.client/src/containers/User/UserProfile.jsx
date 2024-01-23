@@ -36,7 +36,7 @@ const UserProfile = () => {
     const userId = localStorage.getItem('userId');
     
     const [userData, setUserData] = useState('');
-
+   
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -48,7 +48,7 @@ const UserProfile = () => {
                 });
                 if (response.status === 200) {
                     setUserData(response.data);
-                    //console.log(response.data); //Log data for debugging purposes
+                    console.log(response.data);
                 } else {
                     console.error("Error fetching user data");
                 }
@@ -137,7 +137,6 @@ const UserProfile = () => {
                                 {userData.address}
                             </dd>
                         </div>
-                       
                     </dl>
                 </div>
 

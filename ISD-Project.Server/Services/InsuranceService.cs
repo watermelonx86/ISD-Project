@@ -46,7 +46,10 @@ namespace ISD_Project.Server.Services
             try
             {
                 var insuranceType = await _dbContext.InsuranceTypes.ToListAsync();
-
+                if (insuranceType == null)
+                {
+                    return new NotFoundResult();
+                }
                 var listInsuranceDto = _mapper.Map<List<InsuranceType>>(insuranceType);
                 return new OkObjectResult(listInsuranceDto);
             }
@@ -66,7 +69,7 @@ namespace ISD_Project.Server.Services
                 var listInsurances = await _dbContext.Insurances.FirstOrDefaultAsync(u => u.InsuranceId == id);
                 if (listInsurances == null)
                 {
-                    return new BadRequestObjectResult("Insurance does not exist");
+                    return new NotFoundResult();
                 }
                 // var listInsuranceDto = _mapper.Map<List<Insurance>, List<InsuranceDto>>(listInsurances);
                 return new OkObjectResult(listInsurances);

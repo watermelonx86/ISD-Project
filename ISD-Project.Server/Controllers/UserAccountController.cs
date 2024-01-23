@@ -27,6 +27,30 @@ namespace ISD_Project.Server.Controllers
             return _userAccountService.Register(request);
         }
 
+        [HttpPost("login"), AllowAnonymous]
+        public Task<IActionResult> Login([FromBody] UserAccountLoginRequest request)
+        {
+            return _userAccountService.Login(request);
+        }
+
+        [HttpGet("get-user-account"), Authorize(Roles = "Admin")]
+        public Task<IActionResult> GetUserAccount()
+        {
+            return _userAccountService.GetUserAccountAsync();
+        }
+        
+        [HttpGet("get-user-account/{id}"), Authorize(Roles = "Admin")]
+        public Task<IActionResult> GetUserAccount(int id)
+        {
+            return _userAccountService.GetUserAccountAsync(id);
+        }
+
+        [HttpGet("get-role/{id}"), Authorize(Roles = "Admin")]
+        public Task<string> GetRole(int id)
+        {
+            return _userAccountService.GetUserRoleAsync(id);
+        }
+        
         [HttpPost("add-user-example"), AllowAnonymous]
         public async Task<IActionResult>  AddUserExample()
         {
@@ -45,7 +69,7 @@ namespace ISD_Project.Server.Controllers
                 ConfirmPassword = "string",
                 Role = RoleType.FinancialDepartment
             };
-            
+
             var userValidationDepartment = new UserAccountRegisterRequest
             {
                 Email = "validdep@example.com",
@@ -53,7 +77,7 @@ namespace ISD_Project.Server.Controllers
                 ConfirmPassword = "string",
                 Role = RoleType.ValidationDepartment
             };
-            
+
             var userCustomerCareDepartment = new UserAccountRegisterRequest
             {
                 Email = "customercaredep@example.com",
@@ -75,33 +99,8 @@ namespace ISD_Project.Server.Controllers
                     StatusCode = 500 // Internal Server Error
                 };
             }
-            
-            
-        }
-        
 
-        [HttpPost("login"), AllowAnonymous]
-        public Task<IActionResult> Login([FromBody] UserAccountLoginRequest request)
-        {
-            return _userAccountService.Login(request);
-        }
 
-        [HttpGet("get-user-account"), Authorize(Roles = "Admin")]
-        public Task<IActionResult> GetUserAccount()
-        {
-            return _userAccountService.GetUserAccountAsync();
-        }
-
-        [HttpGet("get-user-account/{id}"), Authorize(Roles = "Admin")]
-        public Task<IActionResult> GetUserAccount(int id)
-        {
-            return _userAccountService.GetUserAccountAsync(id);
-        }
-
-        [HttpGet("get-role/{id}"), Authorize(Roles = "Admin")]
-        public Task<string> GetRole(int id)
-        {
-            return _userAccountService.GetUserRoleAsync(id);
         }
 
         [HttpPost("verify"), AllowAnonymous]
@@ -122,7 +121,7 @@ namespace ISD_Project.Server.Controllers
             return _userAccountService.ResetPassword(request);
         }
 
-        [HttpPut("edit-info-user")]
+        [HttpPut("edit-info-user"), AllowAnonymous]
         public Task<IActionResult> EditInfoUserAsync(UserUpdateModel request)
         {
             return _userAccountService.EditInfoUserAsync(request);

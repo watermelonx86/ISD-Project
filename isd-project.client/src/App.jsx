@@ -16,6 +16,9 @@ import WaitApproval from './containers/Employee/WaitApproval';
 import ApprovalHistory from './containers/Employee/ApprovalHistory';
 import ActivateAccount from './containers/User/ActivateAccount';
 
+import Page404 from './containers/Pages/404';
+import Page403 from './containers/Pages/403';
+
 import { Dashboard, Auth } from "./containers/Admin/layouts";
 
 import InsureceManage from './containers/User/InsurenceManage';
@@ -37,6 +40,10 @@ function App() {
         <Route path="/san-pham-bao-hiem/:id/dang-ky-bao-hiem" element={<FillForm />} />
         <Route path="/duyet-don-dang-ky" element={<WaitApproval />} />
         <Route path="/lich-su-duyet" element={<ApprovalHistory />} />
+
+        {/* test 403, 404 */}
+        <Route path="/403" element={<Page403 />} />
+        <Route path="/404" element={<Page404 />} />
 
         {/* New route for account activation */}
         <Route path="/activate/:userAccountId" element={<ActivateAccount />} />
