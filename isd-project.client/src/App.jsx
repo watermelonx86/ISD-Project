@@ -15,7 +15,8 @@ import FillForm from './containers/Product/FillForm';
 import WaitApproval from './containers/Employee/WaitApproval';
 import ApprovalHistory from './containers/Employee/ApprovalHistory';
 import ActivateAccount from './containers/User/ActivateAccount';
-import PrivateRoutes from '../../isd-project.client/src/containers/Utils/privateRoute';
+import PrivateRoutesAdmin from './containers/Utils/privateRouteAdmin';
+import PrivateRoutesUser from '../../isd-project.client/src/containers/Utils/privateRouteUser';
 
 import Page404 from './containers/Pages/404';
 import Page403 from './containers/Pages/403';
@@ -30,10 +31,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<RegisterForm />} />
-        <Route path="/me" element={<UserProfile />} />
-        <Route path="/edit" element={<UserProfileEdit />} />
-        <Route path="/my-product" element={<MyProduct />} />
-        <Route path="/my-health" element={<MyHealth />} />
+        
+        
         <Route path="/health" element={<Health />} />
         <Route path="/insurence" element={<InsureceManage />} />
         <Route path="/san-pham-bao-hiem" element={<Product />} />
@@ -49,8 +48,15 @@ function App() {
         {/* New route for account activation */}
         <Route path="/activate/:userAccountId" element={<ActivateAccount />} />
 
-        <Route element={<PrivateRoutes />}>
+        <Route element={<PrivateRoutesAdmin />}>
                 <Route element={<Dashboard/>} path="/dashboard/*" exact/>
+        </Route>
+
+        <Route element={<PrivateRoutesUser />}>
+                <Route element={<UserProfile />} path="/me" exact/>
+                <Route path="/edit" element={<UserProfileEdit />} exact/>
+                <Route path="/my-product" element={<MyProduct />} exact/>
+                <Route path="/my-health" element={<MyHealth />} exact/>
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
