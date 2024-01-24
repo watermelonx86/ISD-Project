@@ -19,7 +19,9 @@ const Header = () => {
 
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [openProfile, setOpenProfile] = useState(false);
     const dropdownRef = useRef(null);
+    const dropdownProfile = useRef(null);
     const [isCustomer, setIsCustomer] = useState(false);
 
     const handleCustomer = () => {
@@ -34,18 +36,27 @@ const Header = () => {
         setIsOpen(!isOpen);
     };
 
+    const toggleDropdown_Profile = () => {
+        setOpenProfile(!openProfile);
+    };
+
     const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
             setIsOpen(false);
         }
+        if (dropdownProfile.current && !dropdownProfile.current.contains(event.target)) {
+            setOpenProfile(false);
+        }
     };
 
     useEffect(() => {
-        document.addEventListener('click', handleClickOutside);
+        if (isOpen || openProfile) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
         return () => {
-            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [isOpen, openProfile]);
 
     const toggleMobileMenu = () => {
         console.log(role);
@@ -54,6 +65,12 @@ const Header = () => {
 
     const profile = () => {
         navigate('/me');
+    }
+
+    const handleLogout = () => {
+        logout();
+        localStorage.removeItem('role');
+        localStorage.removeItem('token');
     }
 
     return (
@@ -69,13 +86,28 @@ const Header = () => {
                   
                     <div className="flex items-center lg:order-2">
                         {isLoggedIn ? (
-                            <div className='relative'>
+                            <div className='relative' ref={dropdownProfile}> 
                                 <motion.img whileTap={{ scale: 0.6 }}
+                                    /* ref={dropdownProfile} */
                                     src={Avatar}
-                                    className='w-10 min-w-[40px] h-10 min-h-[40px]  drop-shadow-xl cursor-pointer'
+                                    className="w-10 min-w-[40px] h-10 min-h-[40px]  drop-shadow-xl cursor-pointer"
                                     alt='userprofile'
-                                    onClick={profile}
+                                    onClick={toggleDropdown_Profile}
+                                    
                                 />
+                                <div
+                                    className={`lg:right-[-20px] absolute z-[100] transition-[opacity,margin] duration-300 ${openProfile ? 'opacity-100' : 'opacity-0'} ${openProfile ? 'block' : 'hidden'
+                                        } min-w-[12rem] bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full`}
+                                    aria-labelledby="hs-dropdown-default"
+                                >
+                                    <NavLink to="/me" className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 font-semibold hover:bg-gray-100 focus:outline-none focus:bg-gray-100">
+                                        Thông tin người dùng
+                                    </NavLink>
+                                    <p className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 font-semibold hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                        onClick={handleLogout}>
+                                        Đăng xuất
+                                    </p>
+                                </div>
                             </div>) : (
                         <div>
                             <NavLink to="/login" className="text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 hover:bg-gray-400 focus:outline-none focus:ring-gray-800">
@@ -145,14 +177,14 @@ const Header = () => {
                                 >
                                     Duyệt đơn đăng ký
                                     <div
-                                        className={`absolute z-10 transition-[opacity,margin] duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} ${isOpen ? 'block' : 'hidden'
+                                        className={`absolute z-[100] transition-[opacity,margin] duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} ${isOpen ? 'block' : 'hidden'
                                             } min-w-[10rem] bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full`}
                                         aria-labelledby="hs-dropdown-default"
                                     >
-                                        <NavLink to="/duyet-don-dang-ky" className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="#">
+                                        <NavLink to="/duyet-don-dang-ky" className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100">
                                             Đơn đăng ký chờ duyệt
                                         </NavLink>
-                                        <NavLink to="/lich-su-duyet" className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100" href="#">
+                                        <NavLink to="/lich-su-duyet" className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100">
                                             Lịch sử duyệt
                                         </NavLink>
                                     </div>

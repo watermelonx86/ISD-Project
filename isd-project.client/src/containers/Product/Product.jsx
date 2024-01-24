@@ -5,7 +5,6 @@ import Footer from "../HomePage/Footer";
 import axios from 'axios';
 
 const Product = () => {
-    const [menuTab, setMenuTab] = useState('')
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
@@ -73,7 +72,7 @@ const Product = () => {
             <section className="h-auto my-12 max-w-screen-xl mx-auto px-6">
                 <div  className="flex items-center justify-center space-x-6">
                     {insuranceType.map(type  => (
-                        <p key={type.id} className={menuTab === (type.id) ? "active_menu_tab poppins bg-gray-500" : "menu_tab poppins"}
+                        <p key={type.id} className={selectedId === (type.id) ? "active_menu_tab poppins bg-gray-500" : "menu_tab poppins"}
                             onClick={() => handleMenuTabs(type.id)}>
                             {type.name}
                         </p>
