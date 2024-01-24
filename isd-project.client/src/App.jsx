@@ -15,6 +15,7 @@ import FillForm from './containers/Product/FillForm';
 import WaitApproval from './containers/Employee/WaitApproval';
 import ApprovalHistory from './containers/Employee/ApprovalHistory';
 import ActivateAccount from './containers/User/ActivateAccount';
+import PrivateRoutes from '../../isd-project.client/src/containers/Utils/privateRoute';
 
 import Page404 from './containers/Pages/404';
 import Page403 from './containers/Pages/403';
@@ -47,7 +48,11 @@ function App() {
 
         {/* New route for account activation */}
         <Route path="/activate/:userAccountId" element={<ActivateAccount />} />
-        <Route path="/dashboard/*" element={<Dashboard />} />
+
+        <Route element={<PrivateRoutes />}>
+                <Route element={<Dashboard/>} path="/dashboard/*" exact/>
+        </Route>
+
         <Route path="*" element={<Navigate to="/" replace />} />
         {/* <Route path="test" element={<FillForm />} /> */}
       </Routes>

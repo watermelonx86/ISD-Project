@@ -104,7 +104,13 @@ export function Customers() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7267/api/UserAccount/get-user-account`);
+                const token = localStorage.getItem('token'); 
+                const response = await axios.get('https://localhost:7267/api/User/get-user',
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, 
+                    }
+                });
                 if (response.status === 200) {
                     
                     setInsuranceType(response.data);
