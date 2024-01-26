@@ -15,13 +15,13 @@ namespace ISD_Project.Server.Controllers
             this._userService = userService;
         }
 
-        [HttpGet("get-user"), Authorize(Roles="Admin")]
+        [HttpGet("get-user"), AllowAnonymous]
         public Task<IActionResult> GetUser()
         {
             return _userService.GetUserAsync();
         }
 
-        [HttpGet("get-user/{id}"),Authorize(Roles = "Admin, Customer, FinancialDepartment, ValidationDepartment, CustomerCareDepartment")]
+        [HttpGet("get-user/{id}"), Authorize(Roles = "Admin, Customer, FinancialDepartment, ValidationDepartment, CustomerCareDepartment")]
         public Task<IActionResult> GetUserById(int id)
         {
             return _userService.GetUserByIdAsync(id);

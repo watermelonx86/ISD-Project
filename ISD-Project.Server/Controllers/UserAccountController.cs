@@ -21,7 +21,7 @@ namespace ISD_Project.Server.Controllers
             this._userAccountService = userService;
         }
 
-        [HttpPost("register"), Authorize(Roles = "Admin")]
+        [HttpPost("register"), AllowAnonymous]
         public Task<IActionResult> Register([FromBody] UserAccountRegisterRequest request)
         {
             return _userAccountService.Register(request);
@@ -38,7 +38,7 @@ namespace ISD_Project.Server.Controllers
         {
             return _userAccountService.GetUserAccountAsync();
         }
-        
+
         [HttpGet("get-user-account/{id}"), Authorize(Roles = "Admin")]
         public Task<IActionResult> GetUserAccount(int id)
         {
@@ -50,9 +50,9 @@ namespace ISD_Project.Server.Controllers
         {
             return _userAccountService.GetUserRoleAsync(id);
         }
-        
+
         [HttpPost("add-user-example"), AllowAnonymous]
-        public async Task<IActionResult>  AddUserExample()
+        public async Task<IActionResult> AddUserExample()
         {
             var userAdmin = new UserAccountRegisterRequest
             {
@@ -92,7 +92,8 @@ namespace ISD_Project.Server.Controllers
                 await _userAccountService.Register(userValidationDepartment);
                 await _userAccountService.Register(userCustomerCareDepartment);
                 return new OkObjectResult("Users example data added successfully");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ObjectResult(ex.Message)
                 {

@@ -40,7 +40,7 @@ export const routes = [
       },
       {
         icon: <BuildingOfficeIcon {...icon} />,
-        name: "employees",
+        name: "users",
         path: "/employees",
         element: <Employees />,
       },

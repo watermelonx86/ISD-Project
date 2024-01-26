@@ -55,7 +55,7 @@ namespace ISD_Project.Server.Services
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddDays(1),
+                    expires: DateTime.Now.AddDays(7),
                     signingCredentials: cred
             );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

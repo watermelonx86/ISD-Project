@@ -1,13 +1,13 @@
 ﻿using ISD_Project.Server.Models.DTOs;
 using ISD_Project.Server.Services.Interfaces;
-    using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ISD_Project.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -17,7 +17,7 @@ namespace ISD_Project.Server.Controllers
 
         }
 
-        [HttpPost("add-customer"), Authorize(Roles = "Admin")]
+        [HttpPost("add-customer")]
         public async Task<IActionResult> AddCustomer(CustomerRegisterRequest request)
         {
             var result = await _customerService.AddCustomerAsync(request);
@@ -29,7 +29,7 @@ namespace ISD_Project.Server.Controllers
         {
             return _customerService.DeleteCustomerForceAsync(id);
         }
-        [HttpGet("get-customer"), Authorize(Roles = "Admin")]
+        [HttpGet("get-customer"), AllowAnonymous]
         public Task<IActionResult> GetCustomer()
         {
             return _customerService.GetCustomerAsync();
@@ -40,5 +40,7 @@ namespace ISD_Project.Server.Controllers
         {
             return _customerService.GetCustomerAsync(id);
         }
+
+
     }
 }

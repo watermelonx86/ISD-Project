@@ -40,7 +40,7 @@ export function Customers() {
 
     // mở cửa sổ cập nhật thông tin tài khoản khách hàng
     const showEdit = (id) => {
-        const customer = customersTableData.find((item) => item.id === id);
+        const customer = insuranceType.find((item) => item.id === id);
         const [fn, ln] = customer.name.split(' ');
         setSelectedCustomer(customer);
         setFirstName(fn);
@@ -92,7 +92,6 @@ export function Customers() {
         if (isOpenEdit || isOpenDelete) {
           document.addEventListener("mousedown", handleOutsideClick);
         }
-    
         // Cleanup sự kiện khi component unmount
         return () => {
           document.removeEventListener("mousedown", handleOutsideClick);
@@ -104,16 +103,12 @@ export function Customers() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token'); 
-                const response = await axios.get('https://localhost:7267/api/User/get-user',
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`, 
-                    }
-                });
+                const response = await axios.get('https://localhost:7267/api/Customer/get-customer')
+               
                 if (response.status === 200) {
                     
                     setInsuranceType(response.data);
+                    console.log("Tess",insuranceType);
                     
                 } else {
                     console.error("Error fetching user data");
@@ -159,7 +154,7 @@ export function Customers() {
                 <table className="w-full min-w-[640px] table-auto">
                     <thead className="relative">
                     <tr className="sticky top-[-5px] z-300 bg-white">
-                        {["id", "name", "email", "country", "status", "actions"].map((el) => (
+                        {["id", "name", "email", "country", "CCCD", "actions"].map((el) => (
                         <th
                             key={el}
                             className="border-b border-blue-gray-50 py-3 px-10 text-left"
@@ -177,7 +172,7 @@ export function Customers() {
                     <tbody>
 
                     {insuranceType.map(
-                        ({ id, name, email, country, status}, key) => {
+                        ({ id, name, email, nationality, identityDocumentId}, key) => {
                         const className = `py-3 px-10 ${
                             key === customersTableData.length - 1
                             ? ""
@@ -215,17 +210,27 @@ export function Customers() {
                                 <Typography
                                     className="text-xs font-medium text-gray-600"
                                 >
-                                    {country}
+                                    {nationality}
                                 </Typography>
                             </td>
+
                             <td className={className}>
+                                <Typography
+                                    className="text-xs font-medium text-gray-600"
+                                >
+                                    {identityDocumentId}
+                                </Typography>
+                            </td>
+
+                            {/* <td className={className}>
                                 <Chip
                                     variant="gradient"
                                     color={status === "Active" ? "green" : "red"}
                                     value={status}
                                     className="static py-0.5 px-2 text-[11px] font-medium w-fit"
                                 />
-                            </td>
+                            </td> */}
+
                             <td className="py-3 px-10 border-b border-blue-gray-50 space-x-2 whitespace-nowrap">
                                 <button type="button" id="updateProductButton" data-drawer-target="drawer-update-product-default" data-drawer-show="drawer-update-product-default" aria-controls="drawer-update-product-default" data-drawer-placement="right" 
                                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300"
@@ -254,7 +259,7 @@ export function Customers() {
                    handleClose = {hideEdit}
                    handleSubmit = {handleEditCustomer}
                    editRef={editRef}
-                   id = {selectedCustomer.id}
+                   id = {insuranceType.id}
                    fname = {firstName}
                    setFName= {setFirstName}
                    lname = {lastName}

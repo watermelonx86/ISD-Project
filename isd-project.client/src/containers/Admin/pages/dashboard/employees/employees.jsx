@@ -11,6 +11,7 @@ import { employeesTableData } from "../../../data";
 import AddEmployee from "./addEmployee";
 import EditEmployee from "./editEmployee";
 import DeleteEmployee from "./deleteEmployee";
+import axios from 'axios';
 
 export function Employees() {
 
@@ -134,6 +135,26 @@ export function Employees() {
         }
     };
 
+    const [userList, setUserList] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`https://localhost:7267/api/User/get-user`);
+                if (response.status === 200) {
+                    
+                    setUserList(response.data);
+                    
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
     useEffect(() => {
         // Thêm sự kiện mousedown toàn cầu khi cửa sổ mở
         if (isOpenAdd || isOpenEdit || isOpenDelete) {
@@ -174,7 +195,7 @@ export function Employees() {
             <Card>
                 <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
                 <Typography variant="h6" color="white">
-                    All Employees
+                    All Users
                 </Typography>
                 </CardHeader>
                 <div className="items-center justify-end mx-4 mb-4 block sm:flex md:divide-x md:divide-gray-100">
@@ -204,8 +225,8 @@ export function Employees() {
                     </tr>
                     </thead>
                     <tbody>
-                    {employeesTableData.map(
-                        ({ id, name, email, position}, key) => {
+                    {userList.map(
+                        ({ id, name, email, discriminator}, key) => {
                         const className = `py-3 px-10 ${
                             key === employeesTableData.length - 1
                             ? ""
@@ -243,7 +264,7 @@ export function Employees() {
                                 <Typography
                                     className="text-xs font-medium text-gray-600"
                                 >
-                                    {position}
+                                    {discriminator}
                                 </Typography>
                             </td>
                             <td className="py-3 px-10 border-b border-blue-gray-50 space-x-2 whitespace-nowrap">
