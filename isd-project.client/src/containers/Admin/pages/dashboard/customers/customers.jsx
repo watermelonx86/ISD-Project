@@ -222,14 +222,6 @@ export function Customers() {
                                 </Typography>
                             </td>
 
-                            {/* <td className={className}>
-                                <Chip
-                                    variant="gradient"
-                                    color={status === "Active" ? "green" : "red"}
-                                    value={status}
-                                    className="static py-0.5 px-2 text-[11px] font-medium w-fit"
-                                />
-                            </td> */}
 
                             <td className="py-3 px-10 border-b border-blue-gray-50 space-x-2 whitespace-nowrap">
                                 <button type="button" id="updateProductButton" data-drawer-target="drawer-update-product-default" data-drawer-show="drawer-update-product-default" aria-controls="drawer-update-product-default" data-drawer-placement="right" 

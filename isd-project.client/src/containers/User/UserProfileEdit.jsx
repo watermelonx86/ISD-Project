@@ -8,11 +8,9 @@ import { NavLink } from 'react-router-dom';
 const UserProfileEdit = () => {
     const location = useLocation();
     const item = location.pathname.split('/')[2];
-    const [flag, setFlag] = useState();
     const [success, setSuccess] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [openToast, setOpenToast] = useState(false);
-    const navigate = useNavigate();
     
     //biến thông tin lỗi
     const [errorMessage, setErrorMessage] = useState('');
@@ -26,16 +24,36 @@ const UserProfileEdit = () => {
     const [gender, setGender] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
-    const [country, setCountry] = useState('');
-    const [job, setJob] = useState('');
+
+    const userId = localStorage.getItem('userId');
+    const [userData, setUserData] = useState('');
 
     useEffect(() => {
-        setGender('Nam');
+        setGender("Nam");
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://localhost:7267/api/User/get-user/${userId}`);
+                const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+                const response = await axios.get(`https://localhost:7267/api/User/get-user/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Include the token in the Authorization header
+                    }
+                });
                 if (response.status === 200) {
                     setUserData(response.data);
+
+                    setFullName(response.data.name);
+
+                    setDayStart(response.data.dateIssued);
+
+                    setDayEnd(response.data.validUntil);
+
+                    setCccd(response.data.identityDocumentId);
+
+                    setEmail(response.data.email);
+
+                    setBirthDay(response.data.dateOfBirth);
+
+                    setPhoneNumber(response.data.phoneNumber);
                     console.log(response.data);
                 } else {
                     console.error("Error fetching user data");
@@ -47,198 +65,18 @@ const UserProfileEdit = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.put(`https://localhost:7267/api/UserAccount/edit-info-user`);
-                if (response.status === 200) {
-                    setUserData(response.data);
-                    console.log(response.data);
-                } else {
-                    console.error("Error fetching user data");
-                }
-            } catch (error) {
-                console.error("Error during API request:", error);
-            }
-        };
-        fetchData();
-    }, []);
 
 
-    //biến thông tin địa chỉ
     const [city, setCity] = useState('');
     const [district, setDistrict] = useState('');
     const [ward, setWard] = useState('');
     const [street, setStreet] = useState('');
-
-
-    //object thông tin cá nhân
-    const information = {
-        "Bảo hiểm": item,
-        "CCCD": cccd,
-        "Ngày cấp": day_start,
-        "Có giá trị đến": day_end,
-        "Họ tên": fullname,
-        "Ngày sinh": birthday,
-        "Giới tính": gender,
-        "Số điện thoại": phoneNumber,
-        "Email": email,
-        "Quốc tịch": country,
-        "Nghề nghiệp": job,
-    };
-
-
-    //object thông tin địa chỉ
-    const address = {
-        "Thành phố / Tỉnh": city,
-        "Quận / Huyện": district,
-        "Phường / Xã": ward,
-        "Đường / Ấp": street,
-    };
-
 
     const [errorCCCD, setErrorCCCD] = useState('');
     const [errorDate, setErrorDate] = useState('');
     const [errorFullName, setErrorFullname] = useState('');
     const [errorPhoneNumber, setErrorPhoneNumber] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
-    const [errorCountry, setErrorCountry] = useState('');
-    const [errorJob, setErrorJob] = useState('');
-
-
-    // Hàm chuyển đổi dữ liệu để match với backend
-    const convertGenderToInt = (genderString) => {
-        if (genderString === 'Nam') return 0;
-        else if (genderString === 'Nữ') return 1;
-    }
-
-    const convertPhoneNumber = (phoneNumber) => {
-        return phoneNumber.replace('0', '+84');
-    }
-
-    const convertToBoolean = (value) => {
-        if (value === 'Yes') return true;
-        else if (value === 'No') return false;
-    }
-
-    const handleSendForm = async () => {
-        try {
-            const genderInt = convertGenderToInt(gender);
-            const formattedPhoneNumber = convertPhoneNumber(phoneNumber);
-            // InsuranceId
-            const insuranceId = item;
-
-            // Customer information
-            const customerInfo = {
-                identityDocumentId: cccd,
-                dateIssued: day_start,
-                validUntil: day_end,
-                email: email,
-                name: fullname,
-                gender: genderInt,
-                dateOfBirth: birthday,
-                address: street + ", " + ward + ", " + district + ", " + city,
-                phoneNumber: formattedPhoneNumber,
-                nationality: country,
-                job: job
-            };
-
-            // Gửi POST API request để tạo InsuranceContract
-            const requestData = {
-                insuranceId: insuranceId,
-                customerRegisterRequest: customerInfo,
-                healthInformationDto: healthInfo
-            };
-            console.log('Request:', requestData);
-            const apiUrl = 'https://localhost:7267/api/Validate/validate-insurance-contract';
-            const response = await axios.post(apiUrl, requestData);
-            console.log('Response:', response.data);
-            if(response.status === 200) {
-                //TODO: Hiện thông báo thành công
-                alert('Đã gửi đơn đăng ký bảo hiểm của bạn. Xin hãy đợi kết quả duyệt hồ sơ của chúng tôi');
-            }
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                // TODO: Nếu có lỗi, hiên thông báo lỗi
-                alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
-                setErrorMessage(error.response.data);
-                console.error('Axios error:', error.response );
-            } 
-        }
-    };
-
-    const handleSubmit = () => {
-        setFlag(1);
-        setErrorCCCD('');
-        setErrorDate('');
-        setErrorFullname('');
-        setErrorPhoneNumber('');
-        setErrorEmail('');
-        setErrorCountry('');
-        setErrorJob('');
-
-        // Kiểm tra nếu độ dài là 9 hoặc 12 và toàn bộ là số
-        if ((cccd.length === 9 || cccd.length === 12) && /^\d+$/.test(cccd)) {
-            // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
-            setErrorCCCD('');
-            //console.log('Đã nhập đúng định dạng CCCD');
-        } else {
-            // Hiển thị thông báo lỗi và không thực hiện hành động
-            setErrorCCCD('Định dạng không đúng. Vui lòng nhập 9 hoặc 12 ký tự số.');
-            setFlag(0);
-        }
-        if (day_end > day_start) {
-            setErrorDate('');
-            //console.log('Đã nhập đúng định dạng ngày cấp và ngày hết hạn CCCD');
-        } else {
-            setErrorDate('Ngày "Có giá trị đến" phải lớn hơn ngày "Ngày cấp".');
-            setFlag(0);
-        }
-        // Kiểm tra nếu tên chỉ chứa kí tự chữ
-        if (/^[a-zA-ZÀ-ỹ\s]+$/.test(fullname)) {
-            setErrorFullname('');
-            //console.log('Đã nhập đúng định dạng họ tên');
-        } else {
-            setErrorFullname('Tên chỉ được chứa kí tự chữ.');
-            setFlag(0);
-        }
-        // kiểm tra sđt chỉ toàn số
-        if (/^\d+$/.test(phoneNumber)) {
-            // Điều kiện thỏa mãn, thực hiện các hành động cần thiết ở đây
-            setErrorPhoneNumber('');
-            //console.log('Đã nhập đúng định dạng SĐT');
-        } else {
-            // Hiển thị thông báo lỗi và không thực hiện hành động
-            setErrorPhoneNumber('Định dạng không đúng. Vui lòng chỉ điền ký tự số.');
-            setFlag(0);
-        }
-        // Kiểm tra xem địa chỉ email có chứa ký tự @ hay không
-        if (email.includes('@')) {
-            setErrorEmail('');
-            //console.log('Đã nhập đúng định dạng email');
-        } else {
-            setErrorEmail('Vui lòng điền đúng định dạng email.');
-            setFlag(0);
-        }
-        // Kiểm tra nếu quốc tịch chỉ chứa kí tự chữ
-        if (/^[a-zA-ZÀ-ỹ\s]+$/.test(country)) {
-            setErrorCountry('');
-            //console.log('Đã nhập đúng định dạng quốc tịch');
-        } else {
-            setErrorCountry('Quốc tịch chỉ được chứa kí tự chữ.');
-            setFlag(0);
-        }
-        // Kiểm tra nếu nghề nghiệp chỉ chứa kí tự chữ
-        if (/^[a-zA-ZÀ-ỹ\s]+$/.test(job)) {
-            setErrorJob('');
-            //console.log('Đã nhập đúng định dạng nghề nghiệp');
-        } else {
-            setErrorJob('Nghề nghiệp chỉ được chứa kí tự chữ.');
-            setFlag(0);
-        }
-
-    };
-
 
     // biến kiểm tra yc đổi mật khẩu
     const [changePass, setchangePass] = useState(false);
@@ -248,15 +86,22 @@ const UserProfileEdit = () => {
     const [newPass, setnewPass] = useState('');
     const [confirmNewPass, setconfirmNewPass] = useState('');
 
+
     const handleChangePass = async () => {
         try {
+            console.log(email);
+            const getTokenReset = 'https://localhost:7267/api/UserAccount/forgot-password';
 
-            // InsuranceId
-            const insuranceId = item;
+            const getEmail = {
+                email: email
+            }
 
-            // Gửi POST API request để tạo InsuranceContract
+            const rspwt = await axios.post(getTokenReset, getEmail);
+
+            console.log("rspt", rspwt.data);
+
             const requestData = {
-                token: localStorage.getItem('token'),
+                token: rspwt.data,
                 password: newPass,
                 ConfirmPassword: confirmNewPass
             };
@@ -265,13 +110,41 @@ const UserProfileEdit = () => {
             const response = await axios.post(apiUrl, requestData);
             console.log('Response:', response.data);
             if(response.status === 200) {
-                //TODO: Hiện thông báo thành công
                 alert('Đổi password thành công');
                 setchangePass(false);
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                // TODO: Nếu có lỗi, hiên thông báo lỗi
+                alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+                setErrorMessage(error.response.data);
+                console.error('Axios error:', error.response );
+            } 
+        }
+    }
+    
+    const handleEditInfo = async () => {
+        try {
+            const requestData = {
+                id: userId,
+                name: fullname,
+                email: email,
+                phone: phoneNumber,
+                identityDocumentId: cccd,
+                dateIssued: day_start,
+                validUntil: day_end,
+                dateOfBirth: birthday,
+                gender: 0,
+                address: "123 ABC"
+            };
+            console.log('Request:', requestData);
+            const apiUrl = 'https://localhost:7267/api/UserAccount/edit-info-user';
+            const response = await axios.put(apiUrl, requestData);
+            console.log('Response:', response.data);
+            if(response.status === 200) {
+                alert('Cập nhật thông tin thành công');
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
                 alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
                 setErrorMessage(error.response.data);
                 console.error('Axios error:', error.response );
@@ -279,33 +152,15 @@ const UserProfileEdit = () => {
         }
     }
 
-
     useEffect(() => {
-        // Kiểm tra thay đổi của success và thực hiện hành động nếu success là true
         if (success) {
             setOpenModal(true);
         }
     }, [success]);
 
-    // mở modal thông báo gửi form thành công
-    /*const handleOpenModal = () => {
-        setOpenModal(true);
-    }*/
-
     const handleCloseModal = () => {
         setOpenModal(false);
-        //navigate('/san-pham-bao-hiem');
     }
-
-    useEffect(() => {
-        if (openToast) {
-          const timeoutId = setTimeout(() => {
-            setOpenToast(false);
-          }, 4000);
-          return () => clearTimeout(timeoutId);
-        }
-      }, [openToast]);
-
 
     return (
         <React.Fragment>
@@ -393,7 +248,6 @@ const UserProfileEdit = () => {
 
                 <form className="mx-auto m-auto max-w-[790px] mt-5">
 
-                    {/* Câu hỏi thông tin cá nhân */}
                     <p className="text-md font-bold text-[#1C1D1F] md:my-5 xs:my-4">Thông tin cá nhân</p>
                     <div className= "flex flex-wrap justify-between border-box">
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
@@ -451,6 +305,7 @@ const UserProfileEdit = () => {
                                 </div>
                             </div>
                         </div>
+
                         <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
                             <div className="inline-flex flex-col relative w-full">
                                 <input type="text" name="name" id="name"
@@ -458,7 +313,7 @@ const UserProfileEdit = () => {
                                     className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer
                                     ${errorFullName && 'border-red-500'
                                         }`}
-                                    placeholder=" "
+                                    placeholder=""
                                     onChange={(e) => setFullName(e.target.value)}
                                     required />
                                 <label htmlFor="name"
@@ -469,6 +324,7 @@ const UserProfileEdit = () => {
                                 {errorFullName && <div className="text-red-500 text-sm mt-1">{errorFullName}</div>}
                             </div>
                         </div>
+
                         <div className="w-[48%] flex flex-row justify-between z-0 pt-6 pl-8 mb-5 group">
                             <div className="w-[48%] mr-2">
                                 <div className="inline-flex flex-col relative w-full">
@@ -494,9 +350,9 @@ const UserProfileEdit = () => {
                                     </label>
                                     <select id="gender"
                                         className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                                        value={gender}
-                                        onChange={(e) => setGender(e.target.value)}
+                                        value={userData.gender}
                                         
+                                        disabled
                                     >
                                         <option value="Nam">Nam</option>
                                         <option value="Nữ">Nữ</option>
@@ -540,114 +396,14 @@ const UserProfileEdit = () => {
                                 {errorEmail && <div className="text-red-500 text-sm mt-1">{errorEmail}</div>}
                             </div>
                         </div>
-                        <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
-                            <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="country" id="country"
-                                    value={country}
-                                    className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer
-                                    ${errorCountry && 'border-red-500'
-                                        }`}
-                                    placeholder=" "
-                                    onChange={(e) => setCountry(e.target.value)}
-                                    required />
-                                <label htmlFor="country"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Quốc tịch
-                                    <span className="text-require font-bold mt-[5px]"> *</span>
-                                </label>
-                                {errorCountry && <div className="text-red-500 text-sm mt-1">{errorCountry}</div>}
-                            </div>
-                        </div>
-                        <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
-                            <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="job" id="job"
-                                    value={job}
-                                    className={`block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer
-                                    ${errorJob && 'border-red-500'
-                                        }`}
-                                    placeholder=" "
-                                    onChange={(e) => setJob(e.target.value)}
-                                    required />
-                                <label htmlFor="job"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Nghề nghiệp
-                                    <span className="text-require font-bold mt-[5px]"> *</span>
-                                </label>
-                                {errorJob && <div className="text-red-500 text-sm mt-1">{errorJob}</div>}
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Câu hỏi địa chỉ */}
-                    <p className="text-md font-bold text-[#1C1D1F] md:my-8 xs:my-4">Địa chỉ</p>
-                    <div className="flex flex-wrap justify-between border-box">
-                        <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
-                            <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="city" id="city"
-                                    value={city}
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                    onChange={(e) => setCity(e.target.value)}
-                                    required />
-                                <label htmlFor="city"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Thành phố / Tỉnh
-                                    <span className="text-require font-bold mt-[5px]"> *</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
-                            <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="district" id="district"
-                                    value={district}
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                    onChange={(e) => setDistrict(e.target.value)}
-                                    required />
-                                <label htmlFor="district"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Quận / Huyện
-                                    <span className="text-require font-bold mt-[5px]"> *</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
-                            <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="ward" id="ward"
-                                    value={ward}
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                    onChange={(e) => setWard(e.target.value)}
-                                    required />
-                                <label htmlFor="ward"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Phường / Xã
-                                    <span className="text-require font-bold mt-[5px]"> *</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div className="w-[48%] z-0 pt-6 pl-8 mb-5 group">
-                            <div className="inline-flex flex-col relative w-full">
-                                <input type="text" name="street" id="street"
-                                    value={street}
-                                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                    placeholder=" "
-                                    onChange={(e) => setStreet(e.target.value)}
-                                    required />
-                                <label htmlFor="street"
-                                    className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
-                                    Đường / Ấp
-                                    <span className="text-require font-bold mt-[5px]"> *</span>
-                                </label>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="flex justify-center my-8">
                         <button type="button"
                             className="focus:outline-none text-white bg-buttonProduct hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-xl text-sm px-20 py-3 mb-2"
                             onClick={() => {
-                                handleSubmit();
+                                handleEditInfo();
                             }}
                         >
                             Xác nhận

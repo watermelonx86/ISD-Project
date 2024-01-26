@@ -242,13 +242,13 @@ namespace ISD_Project.Server.Services
                 user.PasswordResetToken = await _cryptoService.CreateRandomTokenAsync();
                 user.RestTokenExpires = System.DateTime.UtcNow.AddHours(1);
                 await _dbContext.SaveChangesAsync();
-                return new OkObjectResult("You may now reset your password");
+                return new OkObjectResult(user.PasswordResetToken);
             }
             catch (Exception ex)
             {
                 return new ObjectResult(ex.Message)
                 {
-                    StatusCode = 500 // Internal Server Error
+                    StatusCode = 500
                 };
             }
 
