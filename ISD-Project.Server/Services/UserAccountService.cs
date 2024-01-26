@@ -153,8 +153,6 @@ namespace ISD_Project.Server.Services
                 UserId = user.UserId ?? 0,
                 IsActivated = user.IsActivated
             };
-
-
             return new OkObjectResult(userDto);
         }
         public async Task<IActionResult> Verify(string token)
