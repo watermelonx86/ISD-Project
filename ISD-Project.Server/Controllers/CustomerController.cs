@@ -24,7 +24,7 @@ namespace ISD_Project.Server.Controllers
             return result.result;
         }
 
-        [HttpDelete("delete-customer/{id}"), Authorize(Roles = "Admin")]
+        [HttpDelete("delete-customer/{id}"), AllowAnonymous]
         public Task<IActionResult> DeleteCustomer(int id)
         {
             return _customerService.DeleteCustomerForceAsync(id);

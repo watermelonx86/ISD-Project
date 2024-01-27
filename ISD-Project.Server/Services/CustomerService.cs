@@ -66,12 +66,12 @@ namespace ISD_Project.Server.Services
                         return new BadRequestObjectResult("Customer doesn't exist");
                     }
 
-                    var healthInformation = await _dbContext.HealthInformation.FirstOrDefaultAsync(c => c.CustomerId == userId);
-                    if (healthInformation is not null)
-                    {
-                        _dbContext.HealthInformation.Remove(healthInformation);
-                        await _dbContext.SaveChangesAsync();
-                    }
+                    // var healthInformation = await _dbContext.HealthInformation.FirstOrDefaultAsync(c => c.CustomerId == userId);
+                    // if (healthInformation is not null)
+                    // {
+                    //     _dbContext.HealthInformation.Remove(healthInformation);
+                    //     await _dbContext.SaveChangesAsync();
+                    // }
 
                     var userAccount = await _dbContext.UserAccounts.FirstOrDefaultAsync(ua => ua.UserId == userId);
                     if (userAccount is not null)

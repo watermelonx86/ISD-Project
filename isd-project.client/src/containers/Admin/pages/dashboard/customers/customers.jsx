@@ -61,12 +61,13 @@ export function Customers() {
     // mở cửa sổ xóa tài khoản khách hàng
     const showDelete = (id) => {
         setIDDelete(id);
+        console.log("id ne", idDelete)
         setIsOpenDelete(true);
     };
 
     const hideDelete = () => {
         setIsOpenDelete(false);
-        setIDDelete("");
+        // setIDDelete("");
     };
 
     const handleOutsideClick = (event) => {
@@ -103,7 +104,7 @@ export function Customers() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://localhost:7267/api/Customer/get-customer')
+                const response = await axios.get('https://localhost:7267/api/Customer/get-customer');
                
                 if (response.status === 200) {
                     
@@ -129,9 +130,21 @@ export function Customers() {
     }
     
     // thực hiện xóa tài khoản khách hàng
-    const handleDeleteCustomer = () => {
-        alert("Xóa tài khoản khách hàng thành công!");
-        console.log(idDelete);
+    const handleDeleteCustomer = async () => {
+        console.log("id delete:", idDelete);
+        try {
+            const response = await axios.delete(`https://localhost:7267/api/Customer/delete-customer/${idDelete}`);
+            console.log("id delete:", response);
+            
+            if(response.status === 200) {
+                alert("Xóa tài khoản khách hàng thành công!");
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                alert('Có lỗi, hãy thử lại sau.');
+                console.error('Axios error:', error.response );
+            } 
+        }
         hideDelete();
     }
 

@@ -44,8 +44,6 @@ namespace ISD_Project.Server.Models
 
         public string Address { get; set; } = String.Empty;
 
-        public string Discriminator { get; set; } = String.Empty;
-
         [Required]
         [RegularExpression(@"^\+84[0-9]*$", ErrorMessage = "The phone number must start with the country code +84.")]
         [StringLength(13)]
